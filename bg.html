@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+	
+	<head>
+		<meta charset="UTF-8">
+		<title>Sprite</title>
+	</head>
+	
+	<body>
+		<div style = "text-align:center;">
+			<canvas id="myCanvas" width="1000" height="500" style="border:solid 3px purple">
+				Your browser does not support HTML5 Canvas.
+			</canvas>
+		</div>
+        
+	<script>
+		const canvas = document.querySelector('#myCanvas');
+		const ctx = canvas.getContext("2d");
+		
+		const W = canvas.width, H = canvas.height;
+		
+		var image = new Image();
+		image.src = 'images/kitty.png';
+		
+		
+        
+
+
+		image.onload = function () {
+			setInterval(render, 1000 / 5);
+			// ctx.drawImage(item, Math.random()*(canvas.width-50) , Math.random()*(canvas.height-100), 50, 50);
+			// console.log('working');
+		};
+		
+		
+		</script>
+</body>
+
+</html>

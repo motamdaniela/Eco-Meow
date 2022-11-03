@@ -7,9 +7,11 @@
 	</head>
 	
 	<body>
-		<canvas id="myCanvas" width="800" height="500" style="border:solid 3px purple">
-			Your browser does not support HTML5 Canvas.
-	</canvas>
+		<div style = "text-align:center;">
+			<canvas id="myCanvas" width="1000" height="500" style="border:solid 3px purple">
+				Your browser does not support HTML5 Canvas.
+			</canvas>
+		</div>
 	<script>
 		const canvas = document.querySelector('#myCanvas');
 		const ctx = canvas.getContext("2d");
@@ -120,7 +122,7 @@
 			}
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			// main();
-            ctx.drawImage(image, frameIndex * 192/4, 0, 192/4,192/4, x, y, 192/4/2,192/4);
+            ctx.drawImage(image, frameIndex * 192/4, 0, 192/4,192/4, x, y, 192,192);
 			
 		}	
 		
