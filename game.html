@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+	
+	<head>
+		<meta charset="UTF-8">
+		<title>Sprite</title>
+	</head>
+	
+	<body>
+		<canvas id="myCanvas" width="800" height="500" style="border:solid 3px purple">
+			Your browser does not support HTML5 Canvas.
+	</canvas>
+	<script>
+		const canvas = document.querySelector('#myCanvas');
+		const ctx = canvas.getContext("2d");
+		
+		const W = canvas.width, H = canvas.height;
+		
+		var image = new Image();
+		image.src = 'images/kitty.png';
+		
+		var item = new Image();
+		// item.src = 'images/diamond.png', main;
+		// var bg = loadImage('images/seedshop.png', main);
+		// var menu = loadImage('images/menu.png', main);
+		
+		function loadImage(src, onload) {
+			var img = new Image();
+			img.onload = onload;
+			img.src = src;
+			return img;
+		}
+		
+		//sprite frame counter 		
+		let frameIndex = 0;
+		
+		let x = canvas.width / 2;
+		let y = canvas.height / 2;
+		
+		let rightKey = false; //only for Canvas#2
+		let leftKey = false;
+		let upKey = false;
+		let downKey = false;
+		
+		
+		
+		//handler for keydown
+		function ArrowPressed(e) {
+			if (e.key == 'ArrowRight') {
+				rightKey = true; //Canvas#2
+			}
+			else if (e.key == 'ArrowLeft'){
+				leftKey = true; //Canvas#
+			}
+			else if (e.key == 'ArrowUp') {
+				upKey = true; //Canvas#2
+			}
+			else if (e.key == 'ArrowDown'){
+				downKey = true; //Canvas#
+			}
+			
+		}
+		//handler for keyup
+		function ArrowReleased(e) {
+			if (e.key == 'ArrowRight'){
+				rightKey = false; //Canvas#2
+				frameIndex = 2;
+			}
+			else if (e.key == 'ArrowLeft')
+				leftKey = false; //Canvas#2
+				else if (e.key == 'ArrowUp'){
+					upKey = false;
+					frameIndex = 0
+				}
+				else if (e.key == 'ArrowDown'){
+					downKey = false;
+					frameIndex = 0;
+				}
+			}
+			
+			//sets handlers for events keydown & keyup
+			window.addEventListener('keydown', ArrowPressed);
+			window.addEventListener('keyup', ArrowReleased);
+			
+			
+			function walkside() {
+				frameIndex++;
+				if (frameIndex == 4)
+				frameIndex = 2;
+				ctx.drawImage(image, frameIndex * 192/4, 0, 192/4,192/4, x, y, 192/4/2,192/4);
+			}
+			
+			function walkdown() {
+				frameIndex++;
+				if (frameIndex == 2)
+				frameIndex = 0;
+				ctx.drawImage(image, frameIndex * 192/4, 0, 192/4,192/4, x, y, 192/4/2,192/4);
+			}
+			
+			function render() {
+			
+			if (rightKey && x < canvas.width - 50){
+				x+=10;
+				let frameIndex = 2
+				walkside()
+			}
+			else if (leftKey && x > 10){
+				x--;
+			}
+			else if (upKey && y > 10){
+				y--;
+			}
+			else if (downKey && y < canvas.height - 50){
+				y+=10;
+				let frameIndex = 0
+				walkdown()
+			}
+			else{
+				frameIndex = 0
+			}
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			// main();
+            ctx.drawImage(image, frameIndex * 192/4, 0, 192/4,192/4, x, y, 192/4/2,192/4);
+			
+		}	
+		
+		
+		// function main() {
+		// 	ctx.drawImage(bg, 0, 0);
+		// 	ctx.drawImage(menu, canvas.width/3, 5.5*canvas.height/7, 300, 100);
+		// }
+		
+		image.onload = function () {
+			setInterval(render, 1000 / 5);
+			// ctx.drawImage(item, Math.random()*(canvas.width-50) , Math.random()*(canvas.height-100), 50, 50);
+			// console.log('working');
+		};
+		
+		
+		</script>
+</body>
+
+</html>
