@@ -34,7 +34,8 @@
 		}
 		
 		//sprite frame counter 		
-		let frameIndex = 0;
+		let frameCol = 0;
+		let frameRow = 0;
 		
 		let x = canvas.width / 2;
 		let y = canvas.height / 2;
@@ -85,11 +86,12 @@
 			window.addEventListener('keyup', ArrowReleased);
 			
 			
-			function walkside() {
-				frameIndex++;
-				if (frameIndex == 4)
-				frameIndex = 2;
-				ctx.drawImage(image, frameIndex * 192/4, 0, 192/4,192/4, x, y, 192/4/2,192/4);
+			function walkRight() {
+				frameRow = 3;
+				frameCol++;
+				if (frameCol == 4)
+				frameCol = 2;
+				ctx.drawImage(image, frameCol * 192/4, FrameRow * 192/4, 192/4,192/4, x, y, 192/4/2,192/4);
 			}
 			
 			function walkdown() {
@@ -103,8 +105,8 @@
 			
 			if (rightKey && x < canvas.width - 50){
 				x+=10;
-				let frameIndex = 2
-				walkside()
+				let frameCol = 2
+				walkRight()
 			}
 			else if (leftKey && x > 10){
 				x--;
