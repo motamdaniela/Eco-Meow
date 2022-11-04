@@ -8,7 +8,7 @@
 	
 	<body>
 		<div style = "text-align:center;">
-			<canvas id="myCanvas" width="1000" height="500" style="border:solid 3px purple">
+			<canvas id="myCanvas" width="1500" height="666" style="border:solid 3px purple">
 				Your browser does not support HTML5 Canvas.
 			</canvas>
 		</div>
@@ -21,17 +21,17 @@
 		var image = new Image();
 		image.src = 'images/kitty.png';
 		
-		var item = new Image();
+		// var item = new Image();
 		// item.src = 'images/diamond.png', main;
 		// var bg = loadImage('images/seedshop.png', main);
 		// var menu = loadImage('images/menu.png', main);
 		
-		function loadImage(src, onload) {
-			var img = new Image();
-			img.onload = onload;
-			img.src = src;
-			return img;
-		}
+		// function loadImage(src, onload) {
+		// 	var img = new Image();
+		// 	img.onload = onload;
+		// 	img.src = src;
+		// 	return img;
+		// }
 		
 		//sprite frame counter 		
 		let frameCol = 0;
@@ -39,16 +39,21 @@
 		
 		let x = canvas.width / 2;
 		let y = canvas.height / 2;
+		let sizex = 192/4;
+		let sizey = 192/4;
 		
 		let rightKey = false; //only for Canvas#2
 		let leftKey = false;
 		let upKey = false;
 		let downKey = false;
+		let gKey = false;
+		let pKey = false
 		
 		
 		
 		//handler for keydown
 		function ArrowPressed(e) {
+			e.preventDefault();
 			if (e.key == 'ArrowRight') {
 				rightKey = true; //Canvas#2
 			}
@@ -61,70 +66,109 @@
 			else if (e.key == 'ArrowDown'){
 				downKey = true; //Canvas#
 			}
-			
+			else if(e.keyCode==71){
+				gKey = true;
+			}
+			else if(e.keyCode==80){
+				
+				sizex = 96/2
+				sizey = 576/12
+				if (!pKey)
+					image.src = 'images/actions.png'
+				pKey = true;
+
+			}
 		}
+
 		//handler for keyup
 		function ArrowReleased(e) {
 			if (e.key == 'ArrowRight'){
-				rightKey = false; //Canvas#2
-				frameIndex = 2;
+				rightKey = false;
+				frameCol = 0;
 			}
-			else if (e.key == 'ArrowLeft')
-				leftKey = false; //Canvas#2
-				else if (e.key == 'ArrowUp'){
-					upKey = false;
-					frameIndex = 0
-				}
-				else if (e.key == 'ArrowDown'){
-					downKey = false;
-					frameIndex = 0;
-				}
+			else if (e.key == 'ArrowLeft'){
+				leftKey = false;
+				frameCol = 0;
+			}
+			else if (e.key == 'ArrowUp'){
+				upKey = false;
+				frameCol = 0;
+			}
+			else if (e.key == 'ArrowDown'){
+				downKey = false;
+				frameCol = 0;
+			}
+			else if (e.keyCode == 71){
+				gKey = false;
+				frameCol = 0;
+			}
+			else if (e.keyCode == 80){ // P
+				// pKey = false;
+				// image.src = 'images/kitty.png'
+				// frameCol = 0;
+				// sizex = 192/4
+				// sizey = 192/4
+				// frameRow -= 8
+			}
 			}
 			
 			//sets handlers for events keydown & keyup
 			window.addEventListener('keydown', ArrowPressed);
 			window.addEventListener('keyup', ArrowReleased);
 			
-			
-			function walkRight() {
-				frameRow = 3;
-				frameCol++;
-				if (frameCol == 4)
-				frameCol = 2;
-				ctx.drawImage(image, frameCol * 192/4, FrameRow * 192/4, 192/4,192/4, x, y, 192/4/2,192/4);
-			}
-			
-			function walkdown() {
-				frameIndex++;
-				if (frameIndex == 2)
-				frameIndex = 0;
-				ctx.drawImage(image, frameIndex * 192/4, 0, 192/4,192/4, x, y, 192/4/2,192/4);
-			}
-			
 			function render() {
-			
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
 			if (rightKey && x < canvas.width - 50){
 				x+=10;
-				let frameCol = 2
-				walkRight()
+				frameRow = 3;
+				frameCol++;	
+				if (frameCol == 4)
+					frameCol = 0;
 			}
 			else if (leftKey && x > 10){
-				x--;
+				x-=10;
+				frameRow = 2;
+				frameCol++;	
+				if (frameCol == 4)
+					frameCol = 0;
 			}
 			else if (upKey && y > 10){
-				y--;
+				y-=10;
+				frameRow = 1;
+				frameCol++;	
+				if (frameCol == 4)
+					frameCol = 0;
 			}
 			else if (downKey && y < canvas.height - 50){
 				y+=10;
-				let frameIndex = 0
-				walkdown()
+				frameRow = 0;
+				frameCol++;	
+				if (frameCol == 4)
+					frameCol = 0;
 			}
-			else{
-				frameIndex = 0
+			else if (gKey){
+				frameCol++;	
+				if (frameCol == 2)
+					frameCol = 0;
 			}
-			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			// main();
-            ctx.drawImage(image, frameIndex * 192/4, 0, 192/4,192/4, x, y, 192,192);
+			else if (pKey){
+				if (frameRow < 8){
+					frameRow += 8
+					frameCol = 2
+				}
+				frameCol--;	
+				if (frameCol == -1){
+					pKey = false;
+					image.src = 'images/kitty.png'
+					frameCol = 0;
+					sizex = 192/4
+					sizey = 192/4
+					frameRow -= 8
+				}
+					
+			}
+            ctx.drawImage(image, frameCol * sizex, frameRow * sizey, sizex, sizey, 
+				 x, y, 192/2,192/2);
 			
 		}	
 		
@@ -134,8 +178,8 @@
 		// 	ctx.drawImage(menu, canvas.width/3, 5.5*canvas.height/7, 300, 100);
 		// }
 		
-		image.onload = function () {
-			setInterval(render, 1000 / 5);
+		window.onload = function () {
+			setInterval(render, 1000 / 10);
 			// ctx.drawImage(item, Math.random()*(canvas.width-50) , Math.random()*(canvas.height-100), 50, 50);
 			// console.log('working');
 		};
