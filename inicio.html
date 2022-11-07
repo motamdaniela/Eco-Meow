@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="myCanvas" width="1500" height="666" style="border:solid 3px black">
+		Your browser does not support HTML5 Canvas.
+	</canvas>
+	<script>
+		const canvas = document.querySelector('#myCanvas');
+		const ctx = canvas.getContext("2d");
+
+		const W = canvas.width, H = canvas.height;
+        let rightKey=false, leftKey=false, upKey=false, downKey=false, gKey=false;
+
+		let button = new Image();
+		button.src = 'images/button2.png';
+
+        let image = new Image();
+		image.src = 'images/sprite.png';
+
+		window.onload = function () {
+			setInterval(render, 1000 / 5);
+		};
+
+        let x=W/2
+        let y=H/2
+
+        const rectangles = [
+            {
+                x: x,
+                y: y+50,
+                width: 192,
+                height: 64,
+                sx: 0,
+                sy: 64/2,
+                sWidth: 192/2,
+                sHeight: 64/2,
+                dx: x-192/2,
+                dy: y-64/2+50,
+                page:'./index.html',
+                sxClick:192/2,
+                syClick:64/2,
+                src: button
+            },
+            {
+                x: x,
+                y: y+150,
+                width: 192,
+                height: 64,
+                sx: 0,
+                sy: 0,
+                sWidth: 192/2,
+                sHeight: 64/2,
+                dx: x-192/2,
+                dy: y-64/2 + 150,
+                page:'./regras.html',
+                sxClick:192/2,
+                syClick:0,
+                src: button
+            }
+        ]
+
+        
+        function render(){
+            ctx.clearRect(0, 0, W, H);
+            rectangles.forEach(rectangle =>{
+                ctx.beginPath();
+                ctx.rect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+                ctx.drawImage(rectangle.src, rectangle.sx, rectangle.sy,rectangle.sWidth, rectangle.sHeight, rectangle.dx, rectangle.dy, rectangle.width, rectangle.height)
+            })
+        }
+        
+        function isIntersect(pos,rectangle){
+            return rectangle.x<pos.x && pos.x<rectangle.x+rectangle.width && rectangle.y<pos.y && pos.y<rectangle.y+rectangle.height
+        }
+
+        canvas.addEventListener('click', (e)=>{
+            console.log('ok');
+            const pos={
+                x: e.clientX,
+                y: e.clientY
+            };
+            
+            rectangles.forEach(rectangle=>{
+                console.log(pos)
+                console.log(rectangle.x, rectangle.y)
+                if(isIntersect(pos, rectangle)){
+                    ctx.clearRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+                    console.log('ok2')
+                    ctx.drawImage(rectangle.src, rectangle.sxClick, rectangle.syClick,rectangle.sWidth, rectangle.sHeight, rectangle.dx, rectangle.dy, rectangle.width, rectangle.height)
+                    window.setTimeout(function(){
+                    window.location.href = rectangle.page;
+                    }, 500);
+                
+                }
+            })
+        })
+
+
+	</script>
+    
+</body>
+</html>
