@@ -20,7 +20,6 @@
 
 		let loaded = false;
 		
-
 		let image = new Image();
 		image.src = 'images/kitty.png';
 
@@ -48,10 +47,10 @@
 
 		let trashes = [
 			{
-				x:500,
-				y:600,
-				width:35, //de 1 a 10 Math.floor(Math.random() * 10) + 1
-				height:35,
+				x:638,
+				y:588,
+				width:30, //de 1 a 10 Math.floor(Math.random() * 10) + 1
+				height:30,
 				src:milk,
 			}
 		]
@@ -118,8 +117,8 @@
 		function grab(x,y){
 			trashes.forEach(trash =>{
                 if(trash.x>=x && trash.x<=x+192/2 && trash.y>=y && trash.y<=y+192/2){
-					trash.x=0;
-					trash.y=0;
+					trash.x=600;
+					trash.y=550;
 				}
             })
 			
@@ -128,33 +127,39 @@
 		
 		function render() {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			ctx.drawImage(inventory,0,0,192,64,W/2-(192*1.8)/2,H-120,192*1.8,64*1.8)
+			trashes.forEach(trash =>{
+                ctx.beginPath();
+                ctx.rect(trash.x, trash.y, trash.width, trash.height);
+                ctx.drawImage(trash.src, trash.x, trash.y,trash.width, trash.height);
+            })
 			if (rightKey && x < canvas.width - 50){
-				frameRow = 3;
 				x+=10;
+				frameRow = 3;
 				frameCol++;	
 				if (frameCol == 4)
-				frameCol = 1;
+				frameCol = 0;
 			}
 			else if (leftKey && x > 10){
 				x-=10;
 				frameRow = 2;
 				frameCol++;	
 				if (frameCol == 4)
-				frameCol = 1;
+				frameCol = 0;
 			}
 			else if (upKey && y > 10){
 				y-=10;
 				frameRow = 1;
 				frameCol++;	
 				if (frameCol == 4)
-				frameCol = 1;
+				frameCol = 0;
 			}
 			else if (downKey && y < canvas.height - 50){
 				y+=10;
 				frameRow = 0;
 				frameCol++;	
 				if (frameCol == 4)
-				frameCol = 1;
+				frameCol = 0;
 			}
 			else if (gKey){
 				frameCol++;	
@@ -180,6 +185,7 @@
 				}
 				ctx.drawImage(image, frameCol * sizex, frameRow * sizey, sizex, sizey, x, y, 192/2,192/2);
 				loadImage(menu)
+				console.log(x, y)
 				
 			}			
 			
