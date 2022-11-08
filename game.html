@@ -102,32 +102,32 @@
 		function render() {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			if (rightKey && x < canvas.width - 50){
-				x+=10;
 				frameRow = 3;
+				x+=10;
 				frameCol++;	
 				if (frameCol == 4)
-				frameCol = 0;
+				frameCol = 1;
 			}
 			else if (leftKey && x > 10){
 				x-=10;
 				frameRow = 2;
 				frameCol++;	
 				if (frameCol == 4)
-				frameCol = 0;
+				frameCol = 1;
 			}
 			else if (upKey && y > 10){
 				y-=10;
 				frameRow = 1;
 				frameCol++;	
 				if (frameCol == 4)
-				frameCol = 0;
+				frameCol = 1;
 			}
 			else if (downKey && y < canvas.height - 50){
 				y+=10;
 				frameRow = 0;
 				frameCol++;	
 				if (frameCol == 4)
-				frameCol = 0;
+				frameCol = 1;
 			}
 			else if (gKey){
 				frameCol++;	
