@@ -21,8 +21,14 @@
 		let loaded = false;
 		
 
-		var image = new Image();
+		let image = new Image();
 		image.src = 'images/kitty.png';
+
+		let inventory = new Image();
+		inventory.src = 'images/inventory.png';
+
+		let milk = new Image();
+		milk.src = 'trash/milk_gallon.png';
 		
 		//sprite frame counter 		
 		let frameCol = 0;
@@ -39,6 +45,16 @@
 		let downKey = false;
 		let gKey = false;
 		let pKey = false
+
+		let trashes = [
+			{
+				x:500,
+				y:600,
+				width:35, //de 1 a 10 Math.floor(Math.random() * 10) + 1
+				height:35,
+				src:milk,
+			}
+		]
 		
 		
 		
@@ -98,6 +114,17 @@
 		//sets handlers for events keydown & keyup
 		window.addEventListener('keydown', ArrowPressed);
 		window.addEventListener('keyup', ArrowReleased);
+
+		function grab(x,y){
+			trashes.forEach(trash =>{
+                if(trash.x>=x && trash.x<=x+192/2 && trash.y>=y && trash.y<=y+192/2){
+					trash.x=0;
+					trash.y=0;
+				}
+            })
+			
+
+		}
 		
 		function render() {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -133,6 +160,7 @@
 				frameCol++;	
 				if (frameCol == 2)
 					frameCol = 0;
+				grab(x,y)
 				}
 				else if (pKey){
 					if (frameRow < 8){
