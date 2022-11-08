@@ -28,6 +28,9 @@
 
 		let milk = new Image();
 		milk.src = 'trash/milk_gallon.png';
+
+		let light = new Image();
+		light.src = 'trash/light_bulb.png'
 		
 		//sprite frame counter 		
 		let frameCol = 0;
@@ -52,7 +55,14 @@
 				width:30, //de 1 a 10 Math.floor(Math.random() * 10) + 1
 				height:30,
 				src:milk,
-			}
+			},
+			{
+				x:400,
+				y:400,
+				width:30, //de 1 a 10 Math.floor(Math.random() * 10) + 1
+				height:30,
+				src:light,
+			},
 		]
 
 		
@@ -176,8 +186,11 @@
 		function grab(x,y){
 			trashes.forEach(trash =>{
                 if(trash.x>=x && trash.x<=x+192/2 && trash.y>=y && trash.y<=y+192/2){
-					trash.x=600;
-					trash.y=550;
+					let newPos=positions.find(position => position.full==false)
+					trash.x=newPos.x
+					trash.y=newPos.y
+					let i=positions.indexOf(newPos)
+					positions[i].full=true
 				}
             })
 			
