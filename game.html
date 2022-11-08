@@ -23,6 +23,8 @@
 		let image = new Image();
 		image.src = 'images/kitty.png';
 
+		let Trashes = new Array();
+
 		let inventory = new Image();
 		inventory.src = 'images/inventory.png';
 
@@ -100,32 +102,56 @@
 		
 		// ------------------------------
 
+		let trashNames = ['candy_bar', 'glue_stick', 'paper_bag', 'rubber_duck', 'receipt', 'scissors', 'snack1', 'snack2', 'spatula', 'toilet_paper']
+
 		class Trash {
 			constructor(src, x, y) {    // CONSTRUCTOR
-				src = ''
-				this.x = Math.random() * 256;
-				this.y = Math.random() * 256;
+				this.src = src;
+				this.x = x;
+				this.y = y;
 			}
-
 			draw() {
-				ctx.beginPath();
-                ctx.rect(this.x, this.y, 30, 30);
-                ctx.drawImage(this.src, this.x, this.y, 30, 30);
+				console.log('drawing')
 			}
 		}
 
 		function init() {
-			//setup 50 balls
+			//setup trash in random places(within the specific space in the map)
 			for (let i = 0; i < 10; i++) {
+				let src = trashNames[Math.floor(Math.random()*(trashNames.length))]
+				src = `trash/${src}.png`
 				let xInit = 10 + Math.random() * (canvas.width - 2 * 10);
 				let yInit = 10 + Math.random() * (canvas.height - 2 * 10);
-
+				
 				// push new object into array
-				b.push(new Ball(src, xInit, yInit,30, 30))
+				Trashes.push(new Trash(src, xInit, yInit))
 			}
 		}
-
-		// ------------------------------
+		
+		function grab(x,y){
+			Trashes.forEach(trash =>{
+				if(trash.x>=x && trash.x<=x+192/2 && trash.y>=y && trash.y<=y+192/2){
+					let newPos=positions.find(position => position.full==false)
+					trash.x=newPos.x
+					trash.y=newPos.y
+					trash.inventory=true
+					let i=positions.indexOf(newPos)
+					positions[i].full=true
+				}
+			})
+		}
+		
+		//load inventory and trash items onto the canvas
+		function renderTrash(){
+			ctx.drawImage(inventory,0,0,192,64,W/2-(192*1.8)/2,H-120,192*1.8,64*1.8)
+			Trashes.forEach(trash =>{
+				let img = new Image();
+				img.src = trash.src
+				ctx.beginPath();
+				ctx.rect(trash.x, trash.y, trash.width, trash.height);
+				ctx.drawImage(img, trash.x, trash.y, 30, 30);
+			})
+		}
 		
 		//handler for keydown
 		function ArrowPressed(e) {
@@ -183,27 +209,9 @@
 		window.addEventListener('keydown', ArrowPressed);
 		window.addEventListener('keyup', ArrowReleased);
 		
-		function grab(x,y){
-			trashes.forEach(trash =>{
-                if(trash.x>=x && trash.x<=x+192/2 && trash.y>=y && trash.y<=y+192/2){
-					let newPos=positions.find(position => position.full==false)
-					trash.x=newPos.x
-					trash.y=newPos.y
-					trash.inventory=true
-					let i=positions.indexOf(newPos)
-					positions[i].full=true
-				}
-            })
-		}
-		
+
 		function render() {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			ctx.drawImage(inventory,0,0,192,64,W/2-(192*1.8)/2,H-120,192*1.8,64*1.8)
-			trashes.forEach(trash =>{
-                ctx.beginPath();
-                ctx.rect(trash.x, trash.y, trash.width, trash.height);
-                ctx.drawImage(trash.src, trash.x, trash.y,trash.width, trash.height);
-            })
 			if (rightKey && x < canvas.width - 50){
 				frameRow = 3;
 				x+=10;
@@ -255,30 +263,30 @@
 					
 				}
 				ctx.drawImage(image, frameCol * sizex, frameRow * sizey, sizex, sizey, x, y, 192/2,192/2);
-				loadImage(menu)
-				console.log(x, y)
+				renderTrash();
+				// ctx.drawImage(inventory,0,0,192,64,W/2-(192*1.8)/2,H-120,192*1.8,64*1.8)
+				// Trashes.forEach(trash =>{
+					// ctx.beginPath();
+					// ctx.rect(trash.x, trash.y, trash.width, trash.height);
+					// ctx.drawImage(trash.src, trash.x, trash.y,trash.width, trash.height);
+				// })
+				// console.log(x, y)
 				
 			}			
 			
 			
 			window.onload = function () {
 				loaded = true
+				init();
 				setInterval(render, 1000 / 10);
 			};
 
-			function renderTrash(){
-				
-			}
 			
 			function main() {
 				let a = Math.random()*(canvas.width-50)
 				let b = Math.random()*(canvas.height-100)
 					ctx.drawImage(menu, a, b);
 				}
-			
-				var item = new Image();
-				item.src = 'trash/rubber_duck.png'
-				var menu = loadImage('trash/mustard.png', main);
 
 				function loadImage(src, onload) {
 					var img = new Image();
