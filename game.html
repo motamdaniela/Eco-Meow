@@ -17,22 +17,12 @@
 		const ctx = canvas.getContext("2d");
 		
 		const W = canvas.width, H = canvas.height;
+
+		let loaded = false;
 		
 
 		var image = new Image();
 		image.src = 'images/kitty.png';
-		
-		// var item = new Image();
-		// item.src = 'images/diamond.png', main;
-		// var bg = loadImage('images/seedshop.png', main);
-		// var menu = loadImage('images/menu.png', main);
-		
-		// function loadImage(src, onload) {
-		// 	var img = new Image();
-		// 	img.onload = onload;
-		// 	img.src = src;
-		// 	return img;
-		// }
 		
 		//sprite frame counter 		
 		let frameCol = 0;
@@ -103,90 +93,95 @@
 				gKey = false;
 				frameCol = 0;
 			}
-			else if (e.keyCode == 80){ // P
-				// pKey = false;
-				// image.src = 'images/kitty.png'
-				// frameCol = 0;
-				// sizex = 192/4
-				// sizey = 192/4
-				// frameRow -= 8
-			}
-			}
-			
-			//sets handlers for events keydown & keyup
-			window.addEventListener('keydown', ArrowPressed);
-			window.addEventListener('keyup', ArrowReleased);
-			
-			function render() {
-				ctx.clearRect(0, 0, canvas.width, canvas.height);
+		}
+		
+		//sets handlers for events keydown & keyup
+		window.addEventListener('keydown', ArrowPressed);
+		window.addEventListener('keyup', ArrowReleased);
+		
+		function render() {
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			if (rightKey && x < canvas.width - 50){
 				x+=10;
 				frameRow = 3;
 				frameCol++;	
 				if (frameCol == 4)
-					frameCol = 0;
+				frameCol = 0;
 			}
 			else if (leftKey && x > 10){
 				x-=10;
 				frameRow = 2;
 				frameCol++;	
 				if (frameCol == 4)
-					frameCol = 0;
+				frameCol = 0;
 			}
 			else if (upKey && y > 10){
 				y-=10;
 				frameRow = 1;
 				frameCol++;	
 				if (frameCol == 4)
-					frameCol = 0;
+				frameCol = 0;
 			}
 			else if (downKey && y < canvas.height - 50){
 				y+=10;
 				frameRow = 0;
 				frameCol++;	
 				if (frameCol == 4)
-					frameCol = 0;
+				frameCol = 0;
 			}
 			else if (gKey){
 				frameCol++;	
 				if (frameCol == 2)
 					frameCol = 0;
-			}
-			else if (pKey){
-				if (frameRow < 8){
-					frameRow += 8
-					frameCol = 2
 				}
-				frameCol--;	
-				if (frameCol == -1){
-					pKey = false;
-					image.src = 'images/kitty.png'
-					frameCol = 0;
-					sizex = 192/4
-					sizey = 192/4
-					frameRow -= 8
-				}
+				else if (pKey){
+					if (frameRow < 8){
+						frameRow += 8
+						frameCol = 2
+					}
+					frameCol--;	
+					if (frameCol == -1){
+						pKey = false;
+						image.src = 'images/kitty.png'
+						frameCol = 0;
+						sizex = 192/4
+						sizey = 192/4
+						frameRow -= 8
+					}
 					
-			}
-            ctx.drawImage(image, frameCol * sizex, frameRow * sizey, sizex, sizey, 
-				 x, y, 192/2,192/2);
+				}
+				ctx.drawImage(image, frameCol * sizex, frameRow * sizey, sizex, sizey, x, y, 192/2,192/2);
+				loadImage(menu)
+				
+			}			
 			
-		}	
-		
-		
-		// function main() {
-		// 	ctx.drawImage(bg, 0, 0);
-		// 	ctx.drawImage(menu, canvas.width/3, 5.5*canvas.height/7, 300, 100);
-		// }
-		
-		window.onload = function () {
-			setInterval(render, 1000 / 10);
-			// ctx.drawImage(item, Math.random()*(canvas.width-50) , Math.random()*(canvas.height-100), 50, 50);
-			// console.log('working');
-		};
-		
-		
-		</script>
+			
+			window.onload = function () {
+				loaded = true
+				setInterval(render, 1000 / 10);
+			};
+
+			function renderTrash(){
+				
+			}
+			
+			function main() {
+				let a = Math.random()*(canvas.width-50)
+				let b = Math.random()*(canvas.height-100)
+					ctx.drawImage(menu, a, b);
+				}
+			
+				var item = new Image();
+				item.src = 'trash/rubber_duck.png'
+				var menu = loadImage('trash/mustard.png', main);
+
+				function loadImage(src, onload) {
+					var img = new Image();
+					img.onload = onload;
+					img.src = src;
+					return img;
+				}
+	</script>
 </body>
 
 </html>

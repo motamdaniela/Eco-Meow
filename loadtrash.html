@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+	
+	<head>
+		<meta charset="UTF-8">
+		<title>Sprite</title>
+	</head>
+	
+	<body>
+		<div style = "text-align:center;">
+			<canvas id="myCanvas" width="1500" height="666" style="border:solid 3px purple">
+				Your browser does not support HTML5 Canvas.
+			</canvas>
+		</div>
+	<script>
+		const canvas = document.querySelector('#myCanvas');
+		const ctx = canvas.getContext("2d");
+		
+		const W = canvas.width, H = canvas.height;
+
+		let loaded = false;
+		
+		var image = new Image();
+		image.src = 'images/kitty.png';
+		
+		//sprite frame counter 		
+		let frameCol = 0;
+		let frameRow = 0;
+		
+		let x = canvas.width / 2;
+		let y = canvas.height / 2;
+		let sizex = 192/4;
+		let sizey = 192/4;
+		
+		let rightKey = false; //only for Canvas#2
+		let leftKey = false;
+		let upKey = false;
+		let downKey = false;
+		let gKey = false;
+		let pKey = false
+		
+		
+		
+		//handler for keydown
+		function ArrowPressed(e) {
+			e.preventDefault();
+			if (e.key == 'ArrowRight') {
+				rightKey = true; //Canvas#2
+			}
+			else if (e.key == 'ArrowLeft'){
+				leftKey = true; //Canvas#
+			}
+			else if (e.key == 'ArrowUp') {
+				upKey = true; //Canvas#2
+			}
+			else if (e.key == 'ArrowDown'){
+				downKey = true; //Canvas#
+			}
+			else if(e.keyCode==71){
+				gKey = true;
+			}
+			else if(e.keyCode==80){
+				
+				sizex = 96/2
+				sizey = 576/12
+				if (!pKey)
+					image.src = 'images/actions.png'
+				pKey = true;
+
+			}
+		}
+
+		//handler for keyup
+		function ArrowReleased(e) {
+			if (e.key == 'ArrowRight'){
+				rightKey = false;
+				frameCol = 0;
+			}
+			else if (e.key == 'ArrowLeft'){
+				leftKey = false;
+				frameCol = 0;
+			}
+			else if (e.key == 'ArrowUp'){
+				upKey = false;
+				frameCol = 0;
+			}
+			else if (e.key == 'ArrowDown'){
+				downKey = false;
+				frameCol = 0;
+			}
+			else if (e.keyCode == 71){
+				gKey = false;
+				frameCol = 0;
+			}
+		}
+		
+		//sets handlers for events keydown & keyup
+		window.addEventListener('keydown', ArrowPressed);
+		window.addEventListener('keyup', ArrowReleased);
+		
+		function render() {
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			if (rightKey && x < canvas.width - 50){
+				x+=10;
+				frameRow = 3;
+				frameCol++;	
+				if (frameCol == 4)
+				frameCol = 0;
+			}
+			else if (leftKey && x > 10){
+				x-=10;
+				frameRow = 2;
+				frameCol++;	
+				if (frameCol == 4)
+				frameCol = 0;
+			}
+			else if (upKey && y > 10){
+				y-=10;
+				frameRow = 1;
+				frameCol++;	
+				if (frameCol == 4)
+				frameCol = 0;
+			}
+			else if (downKey && y < canvas.height - 50){
+				y+=10;
+				frameRow = 0;
+				frameCol++;	
+				if (frameCol == 4)
+				frameCol = 0;
+			}
+			else if (gKey){
+				frameCol++;	
+				if (frameCol == 2)
+					frameCol = 0;
+				}
+				else if (pKey){
+					if (frameRow < 8){
+						frameRow += 8
+						frameCol = 2
+					}
+					frameCol--;	
+					if (frameCol == -1){
+						pKey = false;
+						image.src = 'images/kitty.png'
+						frameCol = 0;
+						sizex = 192/4
+						sizey = 192/4
+						frameRow -= 8
+					}
+					
+				}
+				ctx.drawImage(image, frameCol * sizex, frameRow * sizey, sizex, sizey, x, y, 192/2,192/2);
+				loadImage(menu)
+				
+			}			
+			
+			
+			window.onload = function () {
+				loaded = true
+				setInterval(render, 1000 / 10);
+			};
+
+            let trashList = []
+
+			function renderTrash(){
+				
+			}
+
+    class Trash{
+    src=''
+    position
+  
+    constructor(src, position) {
+      this.src = src;
+      this.position = position;
+    }
+  }
+			
+			function main() {
+				let a = Math.random()*(canvas.width-50)
+				let b = Math.random()*(canvas.height-100)
+					ctx.drawImage(menu, a, b);
+				}
+			
+			var item = new Image();
+			item.src = 'trash/rubber_duck.png'
+			var menu = loadImage('trash/mustard.png', main);
+			function loadImage(src, onload) {
+				var img = new Image();
+				img.onload = onload;
+				img.src = src;
+				return img;
+			}
+
+	</script>
+</body>
+
+</html>
