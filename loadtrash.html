@@ -20,7 +20,7 @@
 
 		let loaded = false;
 		
-		var image = new Image();
+		let image = new Image();
 		image.src = 'images/kitty.png';
 		
 		//sprite frame counter 		
@@ -97,22 +97,17 @@
 		//sets handlers for events keydown & keyup
 		window.addEventListener('keydown', ArrowPressed);
 		window.addEventListener('keyup', ArrowReleased);
-
-
+		
+		let trashList = new Array();
+		
 		class Trash{
 			src = '';
 			x = 0;
 			y = 0;
-
+			
 			constructor(x, y) {    // CONSTRUCTOR
-                this.x = x; // initial X position
-                this.y = y; // initial Y position
-                // (constant) horizontal displacement (velocity): d is a direction angle
-                this.dX = 2 * Math.cos(d);
-                // (constant) vertical displacement (velocity): d is a direction angle
-                this.dY = 2 * Math.sin(d);
-                this.c = c; // color
-                this.R = r; // circle radius (constant)
+                this.x = Math.random()*(canvas.height-100)
+                this.y = Math.random()*(canvas.height-100)
             }
 		}
 
@@ -182,7 +177,6 @@
 				setInterval(render, 1000 / 10);
 			};
 
-            let trashList = []
 
 			function renderTrash(){
 				
