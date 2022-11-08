@@ -27,8 +27,8 @@
 		let frameCol = 0;
 		let frameRow = 0;
 		
-		let x = canvas.width / 2;
-		let y = canvas.height / 2;
+		let x = canvas.width / 2.13;
+		let y = canvas.height / 2.13;
 		let sizex = 192/4;
 		let sizey = 192/4;
 		
@@ -167,8 +167,8 @@
 			}
 
     class Trash{
-    src=''
-    position
+    src = ''
+    position = ''
   
     constructor(src, position) {
       this.src = src;
@@ -176,21 +176,21 @@
     }
   }
 			
-			function main() {
-				let a = Math.random()*(canvas.width-50)
-				let b = Math.random()*(canvas.height-100)
-					ctx.drawImage(menu, a, b);
-				}
+			// function main() {
+			// 	let a = Math.random()*(canvas.width-50)
+			// 	let b = Math.random()*(canvas.height-100)
+			// 		ctx.drawImage(menu, a, b);
+			// 	}
 			
-			var item = new Image();
-			item.src = 'trash/rubber_duck.png'
-			var menu = loadImage('trash/mustard.png', main);
-			function loadImage(src, onload) {
-				var img = new Image();
-				img.onload = onload;
-				img.src = src;
-				return img;
-			}
+			// var item = new Image();
+			// item.src = 'trash/rubber_duck.png'
+			// var menu = loadImage('trash/mustard.png', main);
+			// function loadImage(src, onload) {
+			// 	var img = new Image();
+			// 	img.onload = onload;
+			// 	img.src = src;
+			// 	return img;
+			// }
 
 	</script>
 </body>
