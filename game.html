@@ -56,6 +56,7 @@
 				height:30,
 				src:milk,
 				inventory:false,
+				trash:'yellow',
 			},
 			{
 				x:400,
@@ -64,6 +65,7 @@
 				height:30,
 				src:light,
 				inventory:false,
+				trash:'blue',
 			},
 		]
 
@@ -96,9 +98,7 @@
 			},
 		]
 		
-		
 		// ------------------------------
-
 
 		class Trash {
 			constructor(src, x, y) {    // CONSTRUCTOR
@@ -124,7 +124,6 @@
 				b.push(new Ball(src, xInit, yInit,30, 30))
 			}
 		}
-
 
 		// ------------------------------
 		
@@ -153,7 +152,6 @@
 				if (!pKey)
 				image.src = 'images/actions.png'
 				pKey = true;
-
 			}
 		}
 
@@ -196,8 +194,6 @@
 					positions[i].full=true
 				}
             })
-			
-			
 		}
 		
 		function render() {
