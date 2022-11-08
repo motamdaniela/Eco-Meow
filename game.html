@@ -55,6 +55,7 @@
 				width:30, //de 1 a 10 Math.floor(Math.random() * 10) + 1
 				height:30,
 				src:milk,
+				inventory:false,
 			},
 			{
 				x:400,
@@ -62,6 +63,7 @@
 				width:30, //de 1 a 10 Math.floor(Math.random() * 10) + 1
 				height:30,
 				src:light,
+				inventory:false,
 			},
 		]
 
@@ -189,6 +191,7 @@
 					let newPos=positions.find(position => position.full==false)
 					trash.x=newPos.x
 					trash.y=newPos.y
+					trash.inventory=true
 					let i=positions.indexOf(newPos)
 					positions[i].full=true
 				}
