@@ -25,6 +25,9 @@
         let image = new Image();
 		image.src = 'images/sprite.png';
 
+        let bg = new Image();
+		bg.src = 'images/bginicio.png';
+
 		window.onload = function () {
 			setInterval(render, 1000 / 5);
 		};
@@ -70,6 +73,7 @@
         
         function render(){
             ctx.clearRect(0, 0, W, H);
+            ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
             rectangles.forEach(rectangle =>{
                 ctx.beginPath();
                 ctx.rect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
