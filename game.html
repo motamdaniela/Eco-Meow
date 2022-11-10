@@ -50,26 +50,26 @@
 		let gKey = false;
 		let pKey = false
 
-		let trashes = [
-			{
-				x:500,
-				y:400,
-				width:30, //de 1 a 10 Math.floor(Math.random() * 10) + 1
-				height:30,
-				src:milk,
-				inventory:false,
-				trash:'yellow',
-			},
-			{
-				x:400,
-				y:400,
-				width:30, //de 1 a 10 Math.floor(Math.random() * 10) + 1
-				height:30,
-				src:light,
-				inventory:false, 
-				trash:'blue',
-			},
-		]
+		// let trashes = [
+		// 	{
+		// 		x:500,
+		// 		y:400,
+		// 		width:30, //de 1 a 10 Math.floor(Math.random() * 10) + 1
+		// 		height:30,
+		// 		src:milk,
+		// 		inventory:false,
+		// 		trash:'yellow',
+		// 	},
+		// 	{
+		// 		x:400,
+		// 		y:400,
+		// 		width:30, //de 1 a 10 Math.floor(Math.random() * 10) + 1
+		// 		height:30,
+		// 		src:light,
+		// 		inventory:false, 
+		// 		trash:'blue',
+		// 	},
+		// ]
 
 		
 		const positions = [
@@ -102,13 +102,14 @@
 		
 		// ------------------------------
 
-		let trashNames = ['candy_bar', 'glue_stick', 'paper_bag', 'rubber_duck', 'receipt', 'scissors', 'snack1', 'snack2', 'spatula', 'toilet_paper']
+		let trashNames = [['candy_bar','yellow'], 'glue_stick', 'paper_bag', 'rubber_duck', 'receipt', 'scissors', 'snack1', 'snack2', 'spatula', 'toilet_paper']
 
 		class Trash {
-			constructor(src, x, y) {    // CONSTRUCTOR
+			constructor(src, x, y, inventory) {    // CONSTRUCTOR
 				this.src = src;
 				this.x = x;
 				this.y = y;
+				this.inventory = false;
 			}
 			draw() {
 				console.log('drawing')
