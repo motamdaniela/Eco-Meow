@@ -22,6 +22,8 @@
 		
 		let image = new Image();
 		image.src = 'images/kitty.png';
+		let ecopontos = new Image();
+		ecopontos.src = 'images/ecopontos.png';
 
 		let Trashes = new Array();
 
@@ -49,56 +51,6 @@
 		let downKey = false;
 		let gKey = false;
 		let pKey = false
-
-		// let trashes = [
-		// 	{
-		// 		x:500,
-		// 		y:400,
-		// 		width:30, //de 1 a 10 Math.floor(Math.random() * 10) + 1
-		// 		height:30,
-		// 		src:milk,
-		// 		inventory:false,
-		// 		trash:'yellow',
-		// 	},
-		// 	{
-		// 		x:400,
-		// 		y:400,
-		// 		width:30, //de 1 a 10 Math.floor(Math.random() * 10) + 1
-		// 		height:30,
-		// 		src:light,
-		// 		inventory:false, 
-		// 		trash:'blue',
-		// 	},
-		// ]
-
-		
-		const positions = [
-			{
-				x:638,
-				y:589,
-				full:false,
-			},
-			{
-				x:688,
-				y:589,
-				full:false,
-			},
-			{
-				x:736,
-				y:589,
-				full:false,
-			},
-			{
-				x:785,
-				y:589,
-				full:false,
-			},
-			{
-				x:832,
-				y:589,
-				full:false,
-			},
-		]
 		
 		// ------------------------------
 
@@ -264,15 +216,11 @@
 					
 				}
 				ctx.drawImage(image, frameCol * sizex, frameRow * sizey, sizex, sizey, x, y, 192/2,192/2);
-				renderTrash();
-				// ctx.drawImage(inventory,0,0,192,64,W/2-(192*1.8)/2,H-120,192*1.8,64*1.8)
-				// Trashes.forEach(trash =>{
-					// ctx.beginPath();
-					// ctx.rect(trash.x, trash.y, trash.width, trash.height);
-					// ctx.drawImage(trash.src, trash.x, trash.y,trash.width, trash.height);
-				// })
-				// console.log(x, y)
-				
+				ctx.drawImage(ecopontos, 0, 0, 240/5, 144/3, 0, 0, 240/5, 144/3)
+				ctx.drawImage(ecopontos, 0, 144/3, 240/5, 144/3, 50, 0, 240/5, 144/3)
+				ctx.drawImage(ecopontos, 0, 2*144/3.05, 240/5, 144/3, 100, 0, 240/5, 144/3)
+
+				renderTrash();				
 			}			
 			
 			
