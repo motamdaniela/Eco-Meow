@@ -23,6 +23,8 @@
 
 		var image = new Image();
 		image.src = 'images/kitty.png';
+		var bg = new Image();
+		bg.src = 'images/background2.png';
 		
 		//sprite frame counter 		
 		let frameCol = 0;
@@ -150,7 +152,9 @@
 					}
 					
 				}
-				ctx.drawImage(image, frameCol * sizex, frameRow * sizey, sizex, sizey, x, y, 192/2,192/2);
+				ctx.drawImage(bg, 0,0, canvas.width, canvas.height);
+				ctx.drawImage(image, frameCol * sizex, frameRow * sizey, sizex, sizey, x, y, 192/3,192/3);
+
 				loadImage(menu)
 				
 			}			
