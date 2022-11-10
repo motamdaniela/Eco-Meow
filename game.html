@@ -20,18 +20,28 @@
 
 		let loaded = false;
 		
-
-		var image = new Image();
+		let image = new Image();
 		image.src = 'images/kitty.png';
-		var bg = new Image();
-		bg.src = 'images/background2.png';
+		let ecopontos = new Image();
+		ecopontos.src = 'images/ecopontos.png';
+
+		let Trashes = new Array();
+
+		let inventory = new Image();
+		inventory.src = 'images/inventory.png';
+
+		let milk = new Image();
+		milk.src = 'trash/milk_gallon.png';
+
+		let light = new Image();
+		light.src = 'trash/light_bulb.png'
 		
 		//sprite frame counter 		
 		let frameCol = 0;
 		let frameRow = 0;
 		
-		let x = canvas.width / 2;
-		let y = canvas.height / 2;
+		let x = canvas.width / 2.13;
+		let y = canvas.height / 2.13;
 		let sizex = 192/4;
 		let sizey = 192/4;
 		
@@ -42,7 +52,59 @@
 		let gKey = false;
 		let pKey = false
 		
+		// ------------------------------
+
+		let trashNames = [['candy_bar','yellow'], 'glue_stick', 'paper_bag', 'rubber_duck', 'receipt', 'scissors', 'snack1', 'snack2', 'spatula', 'toilet_paper']
+
+		class Trash {
+			constructor(src, x, y, inventory) {    // CONSTRUCTOR
+				this.src = src;
+				this.x = x;
+				this.y = y;
+				this.inventory = false;
+			}
+			draw() {
+				console.log('drawing')
+			}
+		}
+
+		function init() {
+			//setup trash in random places(within the specific space in the map)
+			for (let i = 0; i < 10; i++) {
+				let src = trashNames[Math.floor(Math.random()*(trashNames.length))]
+				src = `trash/${src}.png`
+				let xInit = 10 + Math.random() * (canvas.width - 2 * 10);
+				let yInit = 10 + Math.random() * (canvas.height - 2 * 10);
+				
+				// push new object into array
+				Trashes.push(new Trash(src, xInit, yInit))
+			}
+		}
 		
+		function grab(x,y){
+			Trashes.forEach(trash =>{
+				if(trash.x>=x && trash.x<=x+192/2 && trash.y>=y && trash.y<=y+192/2){
+					let newPos=positions.find(position => position.full==false)
+					trash.x=newPos.x
+					trash.y=newPos.y
+					trash.inventory=true
+					let i=positions.indexOf(newPos)
+					positions[i].full=true
+				}
+			})
+		}
+		
+		//load inventory and trash items onto the canvas
+		function renderTrash(){
+			ctx.drawImage(inventory,0,0,192,64,W/2-(192*1.8)/2,H-120,192*1.8,64*1.8)
+			Trashes.forEach(trash =>{
+				let img = new Image();
+				img.src = trash.src
+				ctx.beginPath();
+				ctx.rect(trash.x, trash.y, trash.width, trash.height);
+				ctx.drawImage(img, trash.x, trash.y, 30, 30);
+			})
+		}
 		
 		//handler for keydown
 		function ArrowPressed(e) {
@@ -67,9 +129,8 @@
 				sizex = 96/2
 				sizey = 576/12
 				if (!pKey)
-					image.src = 'images/actions.png'
+				image.src = 'images/actions.png'
 				pKey = true;
-
 			}
 		}
 
@@ -101,14 +162,15 @@
 		window.addEventListener('keydown', ArrowPressed);
 		window.addEventListener('keyup', ArrowReleased);
 		
+
 		function render() {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			if (rightKey && x < canvas.width - 50){
-				x+=10;
 				frameRow = 3;
+				x+=10;
 				frameCol++;	
 				if (frameCol == 4)
-				frameCol = 0;
+				frameCol = 2;
 			}
 			else if (leftKey && x > 10){
 				x-=10;
@@ -135,6 +197,7 @@
 				frameCol++;	
 				if (frameCol == 2)
 					frameCol = 0;
+				grab(x,y)
 				}
 				else if (pKey){
 					if (frameRow < 8){
@@ -152,32 +215,27 @@
 					}
 					
 				}
-				ctx.drawImage(bg, 0,0, canvas.width, canvas.height);
-				ctx.drawImage(image, frameCol * sizex, frameRow * sizey, sizex, sizey, x, y, 192/3,192/3);
+				ctx.drawImage(image, frameCol * sizex, frameRow * sizey, sizex, sizey, x, y, 192/2,192/2);
+				ctx.drawImage(ecopontos, 0, 0, 240/5, 144/3, 0, 0, 240/5, 144/3)
+				ctx.drawImage(ecopontos, 0, 144/3, 240/5, 144/3, 50, 0, 240/5, 144/3)
+				ctx.drawImage(ecopontos, 0, 2*144/3.05, 240/5, 144/3, 100, 0, 240/5, 144/3)
 
-				loadImage(menu)
-				
+				renderTrash();				
 			}			
 			
 			
 			window.onload = function () {
 				loaded = true
+				init();
 				setInterval(render, 1000 / 10);
 			};
 
-			function renderTrash(){
-				
-			}
 			
 			function main() {
 				let a = Math.random()*(canvas.width-50)
 				let b = Math.random()*(canvas.height-100)
 					ctx.drawImage(menu, a, b);
 				}
-			
-				var item = new Image();
-				item.src = 'trash/rubber_duck.png'
-				var menu = loadImage('trash/mustard.png', main);
 
 				function loadImage(src, onload) {
 					var img = new Image();

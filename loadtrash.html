@@ -20,7 +20,7 @@
 
 		let loaded = false;
 		
-		var image = new Image();
+		let image = new Image();
 		image.src = 'images/kitty.png';
 		
 		//sprite frame counter 		
@@ -98,6 +98,23 @@
 		window.addEventListener('keydown', ArrowPressed);
 		window.addEventListener('keyup', ArrowReleased);
 		
+		let trashList = new Array();
+		
+		class Trash{
+			src = '';
+			x = 0;
+			y = 0;
+			
+			constructor(x, y) {    // CONSTRUCTOR
+                this.x = Math.random()*(canvas.height-100)
+                this.y = Math.random()*(canvas.height-100)
+            }
+		}
+
+		function init(){
+
+		}
+		
 		function render() {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			if (rightKey && x < canvas.width - 50){
@@ -160,21 +177,11 @@
 				setInterval(render, 1000 / 10);
 			};
 
-            let trashList = []
 
 			function renderTrash(){
 				
 			}
 
-    class Trash{
-    src = ''
-    position = ''
-  
-    constructor(src, position) {
-      this.src = src;
-      this.position = position;
-    }
-  }
 			
 			// function main() {
 			// 	let a = Math.random()*(canvas.width-50)
@@ -191,6 +198,82 @@
 			// 	img.src = src;
 			// 	return img;
 			// }
+
+
+
+			window.onload = () => {
+            init();
+            render();  //start the animation
+        };
+
+        let b = new Array(); // balls array of objects
+
+        //CLASS
+        class Ball {
+            constructor(x, y, r, d, c) {    // CONSTRUCTOR
+                this.x = x; // initial X position
+                this.y = y; // initial Y position
+                // (constant) horizontal displacement (velocity): d is a direction angle
+                this.dX = 2 * Math.cos(d);
+                // (constant) vertical displacement (velocity): d is a direction angle
+                this.dY = 2 * Math.sin(d);
+                this.c = c; // color
+                this.R = r; // circle radius (constant)
+            }
+
+            draw() {
+                ctx.fillStyle = this.c;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.R, 0, 2 * Math.PI);
+                ctx.fill();
+            }
+            update() {
+                // check Canvas vertical collisions
+                if (this.x < this.R || this.x > W - this.R)
+                    this.dX = -this.dX;
+                // check Canvas horizontal collisions
+                if (this.y < this.R || this.y > H - this.R)
+                    this.dY = -this.dY;
+                this.x += this.dX;  // update horizontal position
+                this.y += this.dY;  // update vertical position
+            }
+        }
+
+        function init() {
+            //setup 50 balls
+            for (let i = 0; i < 50; i++) {
+                let R = Math.floor(Math.random() * 256);
+                let G = Math.floor(Math.random() * 256);
+                let B = Math.floor(Math.random() * 256);
+                let color = `rgb(${R},${G},${B})`; // random color
+
+                // random position (inside Canvas)
+                let xInit = 10 + Math.random() * (W - 2 * 10);
+                let yInit = 10 + Math.random() * (H - 2 * 10);
+
+                // random direction
+                let direction = Math.random() * 2 * Math.PI;
+
+                // push new object into array
+                b.push(new Ball(xInit, yInit, 10, direction, color))
+            }
+        }
+
+
+        function render() {
+            // fade Canvas
+            ctx.fillStyle = "rgba(255,255,255,0.25)"
+            ctx.fillRect(0, 0, W, H);
+
+            // draw & update all objects
+            b.forEach(ball => {
+                ball.draw();
+                ball.update();
+            });
+
+            //new frame
+            window.requestAnimationFrame(render);
+        }
 
 	</script>
 </body>
