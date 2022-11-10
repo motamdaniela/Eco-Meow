@@ -84,18 +84,21 @@
 		]
 		
 		// ------------------------------
+
+		const lixos=[['candy_bar','yellow'],['glue_stick','yellow'],['rubber_duck','yellow'], ['snack1','yellow'], ['snack2','yellow'], ['spatula','yellow'],['paper_bag','blue'],['receipt','blue'], ['toilet_paper','blue']]
 		
-		let yellow = ['candy_bar','glue_stick','rubber_duck', 'snack1', 'snack2', 'spatula']
+		// let yellow = ['candy_bar','glue_stick','rubber_duck', 'snack1', 'snack2', 'spatula']
 
-		let green = []
+		// let green = []
 
-		let blue = ['paper_bag','receipt', 'toilet_paper']
+		// let blue = ['paper_bag','receipt', 'toilet_paper']
 
 		class Trash {
-			constructor(src, x, y, inventory) {    // CONSTRUCTOR
+			constructor(src, x, y,trash) {    // CONSTRUCTOR
 				this.src = src;
 				this.x = x;
 				this.y = y;
+				this.trash=''
 				this.inventory = false;
 				this.start = false;
 			}
@@ -106,18 +109,19 @@
 
 		function init() {
 			//setup trash in random places(within the specific space in the map)
-			for (let i = 0; i < 10; i++) {
-				let src = yellow[Math.floor(Math.random()*(yellow.length))]
-				let src2 = green[Math.floor(Math.random()*(green.length))]
-				let src3 = blue[Math.floor(Math.random()*(blue.length))]
+			for (let i = 0; i < 9; i++) {
+				let num = Math.floor(Math.random()*(lixos.length))
+				let src = lixos[num][0]
+				let trashh=lixos[num][1]
+				
+				// let src2 = green[Math.floor(Math.random()*(green.length))]
+				// let src3 = blue[Math.floor(Math.random()*(blue.length))]
 				src = `trash/${src}.png`
 				let xInit = 50 + Math.random() * (canvas.width - 50);
 				let yInit = 50 + Math.random() * (canvas.height - 200);
 				
 				// push new object into array
-				Trashes.push(new Trash(src, xInit, yInit))
-				// Trashes.push(new Trash(src2, xInit, yInit))
-				// Trashes.push(new Trash(src3, xInit, yInit))
+				Trashes.push(new Trash(src, xInit, yInit,trashh))
 			}
 		}
 		
@@ -147,6 +151,11 @@
 		}
 
 		function dragDrop(){
+			Trashes.forEach(trash=>{
+				if(trash.inventory==true){
+					
+				}
+			})
 			canvas.addEventListener('mousedown', e => {
 				x = e.offsetX; y = e.offsetY;
 
