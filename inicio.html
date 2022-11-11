@@ -79,23 +79,24 @@
             ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
             rectangles.forEach(rectangle =>{
                 ctx.beginPath();
-                ctx.drawImage(kitty, frameCol * 192/4, frameRow * 192/4, 192/4, 192/4, canvas.width/3, canvas.height/3, 192/2,192/2);
+                ctx.drawImage(kitty, frameCol * 192/4, frameRow * 192/4, 192/4, 192/4, canvas.width/2.3, canvas.height/5, 192,192);
                 ctx.rect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
                 ctx.drawImage(rectangle.src, rectangle.sx, rectangle.sy,rectangle.sWidth, rectangle.sHeight, rectangle.dx, rectangle.dy, rectangle.width, rectangle.height)
 
-				x+=10;
-                frameRow++;
 				frameCol++;	
-				if (frameCol == 4)
-				frameCol = 0;
-                if (frameRow == 4)
-                frameRow = 0;
+				if (frameCol == 4){
+                    frameRow++;
+                    frameCol = 0;
+                    if (frameRow == 4){
+                        frameRow = 0;
+                    }
+                }
             })
         }
         
         
         function isIntersect(pos,rectangle){
-            return rectangle.x<pos.x && pos.x<rectangle.x+rectangle.width && rectangle.y<pos.y && pos.y<rectangle.y+rectangle.height
+            return rectangle.dx<pos.x && pos.x<rectangle.dx+rectangle.width && rectangle.dy<pos.y && pos.y<rectangle.dy+rectangle.height
         }
 
         canvas.addEventListener('click', (e)=>{
@@ -110,10 +111,11 @@
                 console.log(pos)
                 console.log(rectangle.x, rectangle.y)
                 if(isIntersect(pos, rectangle)){
-                    // ctx.clearRect(rectangle.x-192/2+10, rectangle.y-64/2+10, rectangle.width-20, rectangle.height-15);
                     console.log('ok2')
                     rectangle.sx=192/2
-                    // ctx.drawImage(rectangle.src, rectangle.sxClick, rectangle.syClick,rectangle.sWidth, rectangle.sHeight, rectangle.dx, rectangle.dy, rectangle.width, rectangle.height)
+                    window.setTimeout(function(){
+                        rectangle.sx=0
+                    }, 250);
                     window.setTimeout(function(){
                     window.location.href = rectangle.page;
                     }, 500);
@@ -121,6 +123,8 @@
                 }
             })
         })
+
+        
 
         canvas.addEventListener('mousemove', e => {
 				x = e.offsetX; y = e.offsetY;
