@@ -17,8 +17,6 @@
 		const ctx = canvas.getContext("2d");
 		
 		const W = canvas.width, H = canvas.height;
-
-		let loaded = false;
 		
 		let bg = new Image();
 		bg.src = 'images/background.png'
@@ -42,6 +40,8 @@
 		//sprite frame counter 		
 		let frameCol = 0;
 		let frameRow = 0;
+
+		let frameG = frameB = frameY = 0
 		
 		let x = canvas.width / 2.13;
 		let y = canvas.height / 2.13;
@@ -55,16 +55,52 @@
 		let gKey = false;
 		let pKey = false
 		
+		const positions = [
+			{
+				x:638,
+				y:589,
+				full:false,
+			},
+			{
+				x:688,
+				y:589,
+				full:false,
+			},
+			{
+				x:736,
+				y:589,
+				full:false,
+			},
+			{
+				x:785,
+				y:589,
+				full:false,
+			},
+			{
+				x:832,
+				y:589,
+				full:false,
+			},
+		]
+		
 		// ------------------------------
 
-		let trashNames = [['candy_bar','yellow'], 'glue_stick', 'paper_bag', 'rubber_duck', 'receipt', 'scissors', 'snack1', 'snack2', 'spatula', 'toilet_paper']
+		const lixos=[['candy_bar','yellow'],['glue_stick','yellow'],['rubber_duck','yellow'], ['snack1','yellow'], ['snack2','yellow'], ['spatula','yellow'],['paper_bag','blue'],['receipt','blue'], ['toilet_paper','blue']]
+		
+		// let yellow = ['candy_bar','glue_stick','rubber_duck', 'snack1', 'snack2', 'spatula']
+
+		// let green = []
+
+		// let blue = ['paper_bag','receipt', 'toilet_paper']
 
 		class Trash {
-			constructor(src, x, y, inventory) {    // CONSTRUCTOR
+			constructor(src, x, y,trash) {    // CONSTRUCTOR
 				this.src = src;
 				this.x = x;
 				this.y = y;
+				this.trash=''
 				this.inventory = false;
+				this.start = false;
 			}
 			draw() {
 				console.log('drawing')
@@ -73,14 +109,19 @@
 
 		function init() {
 			//setup trash in random places(within the specific space in the map)
-			for (let i = 0; i < 10; i++) {
-				let src = trashNames[Math.floor(Math.random()*(trashNames.length))]
+			for (let i = 0; i < 9; i++) {
+				let num = Math.floor(Math.random()*(lixos.length))
+				let src = lixos[num][0]
+				let trashh=lixos[num][1]
+				
+				// let src2 = green[Math.floor(Math.random()*(green.length))]
+				// let src3 = blue[Math.floor(Math.random()*(blue.length))]
 				src = `trash/${src}.png`
-				let xInit = 10 + Math.random() * (canvas.width - 2 * 10);
-				let yInit = 10 + Math.random() * (canvas.height - 2 * 10);
+				let xInit = 50 + Math.random() * (canvas.width - 50);
+				let yInit = 50 + Math.random() * (canvas.height - 200);
 				
 				// push new object into array
-				Trashes.push(new Trash(src, xInit, yInit))
+				Trashes.push(new Trash(src, xInit, yInit,trashh))
 			}
 		}
 		
@@ -108,6 +149,37 @@
 				ctx.drawImage(img, trash.x, trash.y, 30, 30);
 			})
 		}
+
+		function dragDrop(){
+			Trashes.forEach(trash=>{
+				if(trash.inventory==true){
+					
+				}
+			})
+			canvas.addEventListener('mousedown', e => {
+				x = e.offsetX; y = e.offsetY;
+
+				ctx.beginPath();
+				ctx.moveTo(x, y);
+				start = true;   //inform that drawing has started
+			});
+			
+			canvas.addEventListener('mousemove', e => {
+				x = e.offsetX; y = e.offsetY;
+
+				if (start) {    //only draw if user has pressed down the mouse button
+					ctx.lineTo(x, y);
+					ctx.stroke();
+				}
+			});
+
+			canvas.addEventListener('mouseup', e => {
+				start = false;
+			});
+
+		}
+
+		
 		
 		//handler for keydown
 		function ArrowPressed(e) {
@@ -165,31 +237,50 @@
 		window.addEventListener('keydown', ArrowPressed);
 		window.addEventListener('keyup', ArrowReleased);
 		
+		//--------------------------------
+
+		canvas.addEventListener("mousemove", function(e) { 
+		    var cRect = canvas.getBoundingClientRect();        // Gets CSS pos, and width/height
+		    var canvasX = Math.round(e.clientX - cRect.left);  // Subtract the 'left' of the canvas 
+		    var canvasY = Math.round(e.clientY - cRect.top);   // from the X/Y positions to make  
+		    console.log("X: "+canvasX+", Y: "+canvasY);
+		});
+
+
+		//--------------------------------
+
+		ecopontos.onload = function () {
+			canvas.addEventListener('mousemove', e =>{
+				frameG++;
+				if (frameG == 5)
+				frameG = 0;
+			})
+			};
 
 		function render() {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			if (rightKey && x < canvas.width - 50){
+			if (rightKey && x < canvas.width - 100){
 				frameRow = 3;
 				x+=10;
 				frameCol++;	
 				if (frameCol == 4)
 				frameCol = 2;
 			}
-			else if (leftKey && x > 10){
+			else if (leftKey && x > 100){
 				x-=10;
 				frameRow = 2;
 				frameCol++;	
 				if (frameCol == 4)
 				frameCol = 0;
 			}
-			else if (upKey && y > 10){
+			else if (upKey && y > 50){
 				y-=10;
 				frameRow = 1;
 				frameCol++;	
 				if (frameCol == 4)
 				frameCol = 0;
 			}
-			else if (downKey && y < canvas.height - 50){
+			else if (downKey && y < canvas.height - 170){
 				y+=10;
 				frameRow = 0;
 				frameCol++;	
@@ -220,33 +311,22 @@
 				}
 				ctx.drawImage(bg, 0,0, canvas.width, canvas.height)
 				ctx.drawImage(image, frameCol * sizex, frameRow * sizey, sizex, sizey, x, y, 192/2,192/2);
-				ctx.drawImage(ecopontos, 0, 0, 240/5, 144/3, 0, 0, 240/5, 144/3)
-				ctx.drawImage(ecopontos, 0, 144/3, 240/5, 144/3, 50, 0, 240/5, 144/3)
-				ctx.drawImage(ecopontos, 0, 2*144/3.05, 240/5, 144/3, 100, 0, 240/5, 144/3)
+				ctx.drawImage(ecopontos, frameG *240/5, 0, 240/5, 144/3, 0, 200, 2*240/5, 2*144/3)
+				ctx.drawImage(ecopontos, frameB *240/5, 144/3, 240/5, 144/3, 50, 200, 2*240/5, 2*144/3)
+				ctx.drawImage(ecopontos, frameY *240/5, 2*144/3.05, 240/5, 144/3, 100, 200, 2*240/5, 2*144/3)
 
-				renderTrash();				
+				renderTrash();	
 			}			
 			
 			
 			window.onload = function () {
-				loaded = true
 				init();
+				// actionBins();
+				// setInterval(actionBins, 1000 /10)
 				setInterval(render, 1000 / 10);
 			};
 
 			
-			function main() {
-				let a = Math.random()*(canvas.width-50)
-				let b = Math.random()*(canvas.height-100)
-					ctx.drawImage(menu, a, b);
-				}
-
-				function loadImage(src, onload) {
-					var img = new Image();
-					img.onload = onload;
-					img.src = src;
-					return img;
-				}
 	</script>
 </body>
 
