@@ -353,8 +353,16 @@
 				renderTrash();	
 			}
 			
+			
+			window.onload = function () {
+				init();
+				// actionBins();
+				// setInterval(actionBins, 1000 /10)
+				setInterval(render, 1000 / 10);
+			};
+			
 			function border(){
-				// border mapa esquerda
+			// border mapa esquerda
 				ctx.strokeStyle = "purple";
 				ctx.beginPath();
 				
@@ -374,14 +382,14 @@
 				ctx.lineTo(745, 320);
 				ctx.lineTo(745, 360);
 				ctx.lineTo(850, 360);
-				ctx.lineTo(850, 350);
-				ctx.lineTo(915, 350);
-				ctx.lineTo(915, 195);
-				ctx.lineTo(950, 195);
+				ctx.lineTo(850, 340);
+				ctx.lineTo(915, 340);
+				ctx.lineTo(915, 185);
+				ctx.lineTo(950, 185);
 				ctx.lineTo(950, 150);
 				ctx.lineTo(990, 150);
-				ctx.lineTo(990, 95);
-				ctx.lineTo(1020, 95);
+				ctx.lineTo(990, 90);
+				ctx.lineTo(1020, 90);
 				ctx.lineTo(1020, 280);
 				ctx.lineTo(1155, 280);
 				ctx.lineTo(1155, 260);
@@ -406,10 +414,10 @@
 				ctx.lineTo(1205, 260);
 				ctx.lineTo(1205, 280);
 				ctx.lineTo(1340, 280);
-				ctx.lineTo(1340, 145);
-				ctx.lineTo(1385, 145);
-				ctx.lineTo(1385, 160);
-				ctx.lineTo(1415, 160);
+				ctx.lineTo(1340, 140);
+				ctx.lineTo(1385, 140);
+				ctx.lineTo(1385, 150);
+				ctx.lineTo(1415, 150);
 				ctx.lineTo(1415, 290);
 				ctx.lineTo(1445, 290);
 				ctx.lineTo(1445, 420);
@@ -424,9 +432,19 @@
 				ctx.lineTo(1275, 565);
 				ctx.lineTo(1240, 565);
 				ctx.lineTo(1240, 605);
-
-				// a partir da ponte
-				ctx.moveTo(850, 477);
+				ctx.lineTo(1080, 605);
+				ctx.lineTo(1080, 575);
+				ctx.lineTo(1020, 575);
+				ctx.lineTo(1020, 507);
+				ctx.lineTo(990, 507);
+				ctx.lineTo(990, 545);
+				ctx.lineTo(950, 545);
+				ctx.lineTo(950, 475);
+				ctx.lineTo(900, 475);
+				ctx.lineTo(900, 545);
+				ctx.lineTo(880, 545);
+				ctx.lineTo(880, 480);
+				ctx.lineTo(850, 480);
 				ctx.lineTo(850, 410);
 				ctx.lineTo(750, 410);
 				ctx.lineTo(750, 450);
@@ -464,17 +482,16 @@
 				ctx.lineTo(230, 180);
 				ctx.lineTo(230, 170);
 
+				ctx.moveTo(1150, 485);
+				ctx.lineTo(1055, 485);
+				ctx.lineTo(1055, 380);
+				ctx.lineTo(1275, 380);
+				ctx.lineTo(1275, 485);
+				ctx.lineTo(1210, 485);
+
 				// ctx.closePath();
 				ctx.stroke();
 			}
-
-			window.onload = function () {
-				init();
-				// actionBins();
-				// setInterval(actionBins, 1000 /10)
-				setInterval(render, 1000 / 10);
-			};
-
 			
 	</script>
 </body>
