@@ -8,7 +8,7 @@
 </head>
 <body>
     <div style = "text-align:center;">
-        <canvas id="myCanvas" width="1500" height="666" style="border:solid 3px purple">
+        <canvas id="myCanvas" width="1500" height="666">
             Your browser does not support HTML5 Canvas.
         </canvas>
     </div>
@@ -16,14 +16,17 @@
 		const canvas = document.querySelector('#myCanvas');
 		const ctx = canvas.getContext("2d");
 
+        frameCol = 0;
+        frameRow = 0;
+        
 		const W = canvas.width, H = canvas.height;
         let rightKey=false, leftKey=false, upKey=false, downKey=false, gKey=false;
 
 		let button = new Image();
 		button.src = 'images/button2.png';
 
-        let image = new Image();
-		image.src = 'images/sprite.png';
+        let kitty = new Image();
+		kitty.src = 'images/kitty.png';
 
         let bg = new Image();
 		bg.src = 'images/bginicio.png';
@@ -76,10 +79,20 @@
             ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
             rectangles.forEach(rectangle =>{
                 ctx.beginPath();
+                ctx.drawImage(kitty, frameCol * 192/4, frameRow * 192/4, 192/4, 192/4, canvas.width/3, canvas.height/3, 192/2,192/2);
                 ctx.rect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
                 ctx.drawImage(rectangle.src, rectangle.sx, rectangle.sy,rectangle.sWidth, rectangle.sHeight, rectangle.dx, rectangle.dy, rectangle.width, rectangle.height)
+
+				x+=10;
+                frameRow++;
+				frameCol++;	
+				if (frameCol == 4)
+				frameCol = 0;
+                if (frameRow == 4)
+                frameRow = 0;
             })
         }
+        
         
         function isIntersect(pos,rectangle){
             return rectangle.x<pos.x && pos.x<rectangle.x+rectangle.width && rectangle.y<pos.y && pos.y<rectangle.y+rectangle.height
@@ -91,14 +104,16 @@
                 x: e.clientX,
                 y: e.clientY
             };
+
             
             rectangles.forEach(rectangle=>{
                 console.log(pos)
                 console.log(rectangle.x, rectangle.y)
                 if(isIntersect(pos, rectangle)){
-                    ctx.clearRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+                    // ctx.clearRect(rectangle.x-192/2+10, rectangle.y-64/2+10, rectangle.width-20, rectangle.height-15);
                     console.log('ok2')
-                    ctx.drawImage(rectangle.src, rectangle.sxClick, rectangle.syClick,rectangle.sWidth, rectangle.sHeight, rectangle.dx, rectangle.dy, rectangle.width, rectangle.height)
+                    rectangle.sx=192/2
+                    // ctx.drawImage(rectangle.src, rectangle.sxClick, rectangle.syClick,rectangle.sWidth, rectangle.sHeight, rectangle.dx, rectangle.dy, rectangle.width, rectangle.height)
                     window.setTimeout(function(){
                     window.location.href = rectangle.page;
                     }, 500);
@@ -106,6 +121,12 @@
                 }
             })
         })
+
+        canvas.addEventListener('mousemove', e => {
+				x = e.offsetX; y = e.offsetY;
+
+				console.log(x,y)
+			});
 
 
 	</script>
