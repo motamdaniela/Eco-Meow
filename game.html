@@ -37,6 +37,7 @@
 		let light = new Image();
 		light.src = 'trash/light_bulb.png'
 		
+
 		//sprite frame counter 		
 		let frameCol = 0;
 		let frameRow = 0;
@@ -55,7 +56,7 @@
 		let gKey = false;
 		let pKey = false
 		
-		const positions = [
+		let positions = [
 			{
 				x:638,
 				y:589,
@@ -99,6 +100,7 @@
 				this.x = x;
 				this.y = y;
 				this.trash=''
+				this.place=0
 				this.inventory = false;
 				this.start = false;
 			}
@@ -133,6 +135,7 @@
 					trash.y=newPos.y
 					trash.inventory=true
 					let i=positions.indexOf(newPos)
+					trash.place=positions[i]+1
 					positions[i].full=true
 				}
 			})
@@ -150,32 +153,61 @@
 			})
 		}
 
+		function isIntersect(pos,trash){
+            return trash.x<pos.x && pos.x<trash.x+30 && trash.y<pos.y && pos.y<trash.y+30
+        }
+
+		dragDrop()
+
 		function dragDrop(){
-			Trashes.forEach(trash=>{
-				if(trash.inventory==true){
-					
-				}
-			})
-			canvas.addEventListener('mousedown', e => {
-				x = e.offsetX; y = e.offsetY;
-
-				ctx.beginPath();
-				ctx.moveTo(x, y);
-				start = true;   //inform that drawing has started
-			});
-			
 			canvas.addEventListener('mousemove', e => {
-				x = e.offsetX; y = e.offsetY;
+				const pos={
+					x: e.clientX,
+					y: e.clientY
+				};
 
-				if (start) {    //only draw if user has pressed down the mouse button
-					ctx.lineTo(x, y);
-					ctx.stroke();
-				}
-			});
+				Trashes.forEach(trash=>{
+					console.log(1)
+					if(isIntersect(pos, trash)){
+						console.log(2)
+						if(trash.inventory==true){
+							let oldX=trash.x;
+							let oldY=trash.y;
+							console.log(3)
+							canvas.addEventListener('mousedown', e => {
+								console.log(4)
+								let x1 = e.offsetX; y1 = e.offsetY;
+								trash.x=x1;
+								trash.y=y1;
+								trash.start = true;  
+								console.log(trash.inventory)
+								console.log(trash.start)
+							});
+							
+							canvas.addEventListener('mousemove', e => {
+								let x1 = e.offsetX; y1 = e.offsetY;
+				
+								if (trash.start) {    //only draw if user has pressed down the mouse button
+									trash.x=x1;
+									trash.y=y1;
+								}
+							});
+							
+							canvas.addEventListener('mouseup', e => {
+								trash.x=oldX;
+								trash.y=oldY;
+								trash.start = false;
+								trash.inventory = false;
+								positions[trash.place-1].full=false;
+								console.log(trash.x, trash.y);
+								console.log(oldX)
+							});
+						}
+					}
+				})
+			})
+			
 
-			canvas.addEventListener('mouseup', e => {
-				start = false;
-			});
 
 		}
 
@@ -310,15 +342,134 @@
 					
 				}
 				ctx.drawImage(bg, 0,0, canvas.width, canvas.height)
+
+				border();
+
 				ctx.drawImage(image, frameCol * sizex, frameRow * sizey, sizex, sizey, x, y, 192/2,192/2);
 				ctx.drawImage(ecopontos, frameG *240/5, 0, 240/5, 144/3, 0, 200, 2*240/5, 2*144/3)
 				ctx.drawImage(ecopontos, frameB *240/5, 144/3, 240/5, 144/3, 50, 200, 2*240/5, 2*144/3)
 				ctx.drawImage(ecopontos, frameY *240/5, 2*144/3.05, 240/5, 144/3, 100, 200, 2*240/5, 2*144/3)
 
 				renderTrash();	
-			}			
+			}
 			
-			
+			function border(){
+				// border mapa esquerda
+				ctx.strokeStyle = "purple";
+				ctx.beginPath();
+				
+				ctx.moveTo(445, 170);
+				ctx.lineTo(445, 180);
+				ctx.lineTo(410, 180);
+				ctx.lineTo(410, 170);
+				ctx.lineTo(445, 170);
+				ctx.lineTo(445, 80);
+				
+				ctx.lineTo(520, 80);
+				ctx.lineTo(520, 95);
+				ctx.lineTo(615, 95);
+				ctx.lineTo(615, 180);
+				ctx.lineTo(770, 180);
+				ctx.lineTo(770, 320);
+				ctx.lineTo(745, 320);
+				ctx.lineTo(745, 360);
+				ctx.lineTo(850, 360);
+				ctx.lineTo(850, 350);
+				ctx.lineTo(915, 350);
+				ctx.lineTo(915, 195);
+				ctx.lineTo(950, 195);
+				ctx.lineTo(950, 150);
+				ctx.lineTo(990, 150);
+				ctx.lineTo(990, 95);
+				ctx.lineTo(1020, 95);
+				ctx.lineTo(1020, 280);
+				ctx.lineTo(1155, 280);
+				ctx.lineTo(1155, 260);
+				ctx.lineTo(1025, 260);
+				ctx.lineTo(1025, 95);
+				ctx.lineTo(1075, 95);
+				ctx.lineTo(1075, 215);
+				ctx.lineTo(1150, 215);
+				ctx.lineTo(1150, 190);
+				ctx.lineTo(1085, 190);
+				ctx.lineTo(1085, 120);
+				ctx.lineTo(1245, 120);
+				ctx.lineTo(1245, 190);
+				ctx.lineTo(1175, 190);
+				ctx.lineTo(1175, 215);
+				ctx.lineTo(1255, 215);
+				ctx.lineTo(1255, 95);
+				ctx.lineTo(1285, 95);
+				ctx.lineTo(1285, 150);
+				ctx.lineTo(1335, 150);
+				ctx.lineTo(1335, 260);
+				ctx.lineTo(1205, 260);
+				ctx.lineTo(1205, 280);
+				ctx.lineTo(1340, 280);
+				ctx.lineTo(1340, 145);
+				ctx.lineTo(1385, 145);
+				ctx.lineTo(1385, 160);
+				ctx.lineTo(1415, 160);
+				ctx.lineTo(1415, 290);
+				ctx.lineTo(1445, 290);
+				ctx.lineTo(1445, 420);
+				ctx.lineTo(1415, 420);
+				ctx.lineTo(1415, 510);
+				ctx.lineTo(1385, 510);
+				ctx.lineTo(1345, 510);
+				ctx.lineTo(1345, 540);
+				ctx.lineTo(1310, 540);
+				ctx.lineTo(1310, 535);
+				ctx.lineTo(1275, 535);
+				ctx.lineTo(1275, 565);
+				ctx.lineTo(1240, 565);
+				ctx.lineTo(1240, 605);
+
+				// a partir da ponte
+				ctx.moveTo(850, 477);
+				ctx.lineTo(850, 410);
+				ctx.lineTo(750, 410);
+				ctx.lineTo(750, 450);
+				ctx.lineTo(650, 450);
+				ctx.lineTo(650, 510);
+				ctx.lineTo(620, 510);
+				ctx.lineTo(620, 433);
+				ctx.lineTo(495, 433);
+				ctx.lineTo(495, 492);
+				ctx.lineTo(600, 492);
+				ctx.lineTo(600, 492);
+				ctx.lineTo(600, 540);
+				ctx.lineTo(478, 543);
+				ctx.lineTo(478, 572);
+				ctx.lineTo(360, 572);
+				ctx.lineTo(360, 600);
+				ctx.lineTo(180, 600);
+				ctx.lineTo(180, 545);
+				ctx.lineTo(160, 545);
+				ctx.lineTo(160, 480);
+				ctx.lineTo(120, 480);
+				ctx.lineTo(120, 450);
+				ctx.lineTo(88, 450);
+				ctx.lineTo(88, 158);
+				ctx.lineTo(115, 158);
+				ctx.lineTo(115, 130);
+				ctx.lineTo(177, 130);
+				ctx.lineTo(177, 55);
+				ctx.lineTo(445, 55);
+				
+				
+				ctx.moveTo(230, 55);
+				ctx.lineTo(230, 170);
+				ctx.lineTo(355, 170);
+				ctx.lineTo(355, 180);
+				ctx.lineTo(230, 180);
+				ctx.lineTo(230, 170);
+
+
+				// ctx.closePath();
+				ctx.stroke();
+			}
+
 			window.onload = function () {
 				init();
 				// actionBins();
