@@ -135,7 +135,7 @@
 					trash.y=newPos.y
 					trash.inventory=true
 					let i=positions.indexOf(newPos)
-					trash.place=positions[i]+1
+					trash.place=positions[i]
 					positions[i].full=true
 				}
 			})
@@ -165,15 +165,15 @@
 					x: e.clientX,
 					y: e.clientY
 				};
-
 				Trashes.forEach(trash=>{
-					console.log(1)
-					if(isIntersect(pos, trash)){
-						console.log(2)
-						if(trash.inventory==true){
-							let oldX=trash.x;
-							let oldY=trash.y;
-							console.log(3)
+					
+					if(isIntersect(pos, trash) && trash.inventory==true ){
+						console.log(positions[trash.place-1])
+						// if(trash.inventory==true && trash.start==false){
+						
+							// let oldX=trash.x;
+							// let oldY=trash.y;
+							
 							canvas.addEventListener('mousedown', e => {
 								console.log(4)
 								let x1 = e.offsetX; y1 = e.offsetY;
@@ -187,23 +187,29 @@
 							canvas.addEventListener('mousemove', e => {
 								let x1 = e.offsetX; y1 = e.offsetY;
 				
-								if (trash.start) {    //only draw if user has pressed down the mouse button
+								if (trash.start) {    
 									trash.x=x1;
 									trash.y=y1;
 								}
 							});
 							
 							canvas.addEventListener('mouseup', e => {
-								trash.x=oldX;
-								trash.y=oldY;
 								trash.start = false;
+								let x1 = e.offsetX; y1 = e.offsetY;
+								// console.log(trash.x, trash.y);
+								// console.log(oldX)
+								trash.x=x1;
+								trash.y=y1;
+								console.log(trash.start)
 								trash.inventory = false;
-								positions[trash.place-1].full=false;
-								console.log(trash.x, trash.y);
-								console.log(oldX)
+								// positions[trash.place].full=false;
+								// positions.forEach(pos=>{
+								// 	if(pos)
+								// })
 							});
-						}
+						// }
 					}
+
 				})
 			})
 			
@@ -275,7 +281,7 @@
 		    var cRect = canvas.getBoundingClientRect();        // Gets CSS pos, and width/height
 		    var canvasX = Math.round(e.clientX - cRect.left);  // Subtract the 'left' of the canvas 
 		    var canvasY = Math.round(e.clientY - cRect.top);   // from the X/Y positions to make  
-		    console.log("X: "+canvasX+", Y: "+canvasY);
+		    // console.log("X: "+canvasX+", Y: "+canvasY);
 		});
 
 
