@@ -3,8 +3,16 @@
 	
 	<head>
 		<meta charset="UTF-8">
-		<title>Sprite</title>
+		<title>meow</title>
 	</head>
+		<style>
+			body {
+				/* background-color: #9BD4C3; */
+				background-image: url('/images/Water.png');
+				background-size: 9%;
+				margin-top: 20px;
+			}
+			</style>
 	
 	<body>
 		<div style = "text-align:center;">
@@ -44,8 +52,8 @@
 
 		let frameG = frameB = frameY = 0
 		
-		let x = canvas.width / 2.13;
-		let y = canvas.height / 2.13;
+		let x = 1115;
+		let y = 120;
 		let sizex = 192/4;
 		let sizey = 192/4;
 		
@@ -104,14 +112,11 @@
 				this.inventory = false;
 				this.start = false;
 			}
-			draw() {
-				console.log('drawing')
-			}
 		}
 
 		function init() {
 			//setup trash in random places(within the specific space in the map)
-			for (let i = 0; i < 9; i++) {
+			for (let i = 0; i < 25; i++) {
 				let num = Math.floor(Math.random()*(lixos.length))
 				let src = lixos[num][0]
 				let trashh=lixos[num][1]
@@ -119,29 +124,21 @@
 				// let src2 = green[Math.floor(Math.random()*(green.length))]
 				// let src3 = blue[Math.floor(Math.random()*(blue.length))]
 				src = `trash/${src}.png`
-				let xInit = 50 + Math.random() * (canvas.width - 50);
-				let yInit = 50 + Math.random() * (canvas.height - 200);
-				
-				// push new object into array
-				Trashes.push(new Trash(src, xInit, yInit,trashh))
+				let xInit = 90 + Math.random() * (600);
+				let yInit = 110 + Math.random() * (390);
+
+				// checks if position is in the desired space in the map
+				if(xInit >= 410 && yInit >=400 || xInit <= 150 && yInit >=430 || xInit <= 170 && yInit <=230 || xInit >= 200 && yInit <=180 && xInit <= 440 && yInit <=180 || xInit >= 560 && yInit <=300){
+					xInit = 90 + Math.random() * (600);
+				    yInit = 100 + Math.random() * (400);
+				}else{
+					// push new object into array
+					Trashes.push(new Trash(src, xInit, yInit,trashh))
+				}
 			}
 		}
 		
-		function grab(x,y){
-			Trashes.forEach(trash =>{
-				if(trash.x>=x && trash.x<=x+192/2 && trash.y>=y && trash.y<=y+192/2){
-					let newPos=positions.find(position => position.full==false)
-					trash.x=newPos.x
-					trash.y=newPos.y
-					trash.inventory=true
-					let i=positions.indexOf(newPos)
-					trash.place=positions[i]+1
-					positions[i].full=true
-				}
-			})
-		}
-		
-		//load inventory and trash items onto the canvas
+		//loads inventory and trash items onto the canvas
 		function renderTrash(){
 			ctx.drawImage(inventory,0,0,192,64,W/2-(192*1.8)/2,H-120,192*1.8,64*1.8)
 			Trashes.forEach(trash =>{
@@ -152,6 +149,21 @@
 				ctx.drawImage(img, trash.x, trash.y, 30, 30);
 			})
 		}
+
+		function grab(x,y){
+			Trashes.forEach(trash =>{
+				if(trash.x>=x && trash.x<=x+192/2 && trash.y>=y && trash.y<=y+192/2){
+					let newPos=positions.find(position => position.full==false)
+					trash.x=newPos.x
+					trash.y=newPos.y
+					trash.inventory=true
+					let i=positions.indexOf(newPos)
+					trash.place=positions[i]
+					positions[i].full=true
+				}
+			})
+		}
+		
 
 		function isIntersect(pos,trash){
             return trash.x<pos.x && pos.x<trash.x+30 && trash.y<pos.y && pos.y<trash.y+30
@@ -165,15 +177,15 @@
 					x: e.clientX,
 					y: e.clientY
 				};
-
 				Trashes.forEach(trash=>{
-					console.log(1)
-					if(isIntersect(pos, trash)){
-						console.log(2)
-						if(trash.inventory==true){
-							let oldX=trash.x;
-							let oldY=trash.y;
-							console.log(3)
+					
+					if(isIntersect(pos, trash) && trash.inventory==true ){
+						console.log(positions[trash.place-1])
+						// if(trash.inventory==true && trash.start==false){
+						
+							// let oldX=trash.x;
+							// let oldY=trash.y;
+							
 							canvas.addEventListener('mousedown', e => {
 								console.log(4)
 								let x1 = e.offsetX; y1 = e.offsetY;
@@ -187,30 +199,32 @@
 							canvas.addEventListener('mousemove', e => {
 								let x1 = e.offsetX; y1 = e.offsetY;
 				
-								if (trash.start) {    //only draw if user has pressed down the mouse button
+								if (trash.start) {    
 									trash.x=x1;
 									trash.y=y1;
 								}
 							});
 							
 							canvas.addEventListener('mouseup', e => {
-								trash.x=oldX;
-								trash.y=oldY;
 								trash.start = false;
+								let x1 = e.offsetX; y1 = e.offsetY;
+								// console.log(trash.x, trash.y);
+								// console.log(oldX)
+								trash.x=x1;
+								trash.y=y1;
+								console.log(trash.start)
 								trash.inventory = false;
-								positions[trash.place-1].full=false;
-								console.log(trash.x, trash.y);
-								console.log(oldX)
+								// positions[trash.place].full=false;
+								// positions.forEach(pos=>{
+								// 	if(pos)
+								// })
 							});
-						}
+						// }
 					}
+
 				})
 			})
-			
-
-
 		}
-
 		
 		
 		//handler for keydown
@@ -240,7 +254,7 @@
 				pKey = true;
 			}
 		}
-
+		
 		//handler for keyup
 		function ArrowReleased(e) {
 			if (e.key == 'ArrowRight'){
@@ -270,87 +284,37 @@
 		window.addEventListener('keyup', ArrowReleased);
 		
 		//--------------------------------
-
-		canvas.addEventListener("mousemove", function(e) { 
+		
+		canvas.addEventListener("click", function(e) { 
 		    var cRect = canvas.getBoundingClientRect();        // Gets CSS pos, and width/height
 		    var canvasX = Math.round(e.clientX - cRect.left);  // Subtract the 'left' of the canvas 
 		    var canvasY = Math.round(e.clientY - cRect.top);   // from the X/Y positions to make  
-		    console.log("X: "+canvasX+", Y: "+canvasY);
+		    console.log(canvasX , canvasY );
 		});
 
 
 		//--------------------------------
-
+		
 		ecopontos.onload = function () {
 			canvas.addEventListener('mousemove', e =>{
 				frameG++;
 				if (frameG == 5)
 				frameG = 0;
 			})
-			};
-
+		};
+		
 		function render() {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			if (rightKey && x < canvas.width - 100){
-				frameRow = 3;
-				x+=10;
-				frameCol++;	
-				if (frameCol == 4)
-				frameCol = 2;
-				
-			}
-			else if (leftKey && x > 50){
-				x-=10;
-				frameRow = 2;
-				frameCol++;	
-				if (frameCol == 4)
-				frameCol = 0;
-			}
-			else if (upKey && y > 50){
-				y-=10;
-				frameRow = 1;
-				frameCol++;	
-				if (frameCol == 4)
-				frameCol = 0;
-			}
-			else if (downKey && y < canvas.height - 170){
-				y+=10;
-				frameRow = 0;
-				frameCol++;	
-				if (frameCol == 4)
-				frameCol = 0;
-			}
-			else if (gKey){
-				frameCol++;	
-				if (frameCol == 2)
-					frameCol = 0;
-				grab(x,y)
-				}
-				else if (pKey){
-					if (frameRow < 8){
-						frameRow += 8
-						frameCol = 2
-					}
-					frameCol--;	
-					if (frameCol == -1){
-						pKey = false;
-						image.src = 'images/kitty.png'
-						frameCol = 0;
-						sizex = 192/4
-						sizey = 192/4
-						frameRow -= 8
-					}
-					
-				}
 				ctx.drawImage(bg, 0,0, canvas.width, canvas.height)
-
+				
 				border();
 
-				ctx.drawImage(image, frameCol * sizex, frameRow * sizey, sizex, sizey, x, y, 192/2,192/2);
-				ctx.drawImage(ecopontos, frameG *240/5, 0, 240/5, 144/3, 0, 200, 2*240/5, 2*144/3)
-				ctx.drawImage(ecopontos, frameB *240/5, 144/3, 240/5, 144/3, 50, 200, 2*240/5, 2*144/3)
-				ctx.drawImage(ecopontos, frameY *240/5, 2*144/3.05, 240/5, 144/3, 100, 200, 2*240/5, 2*144/3)
+				ctx.drawImage(image, frameCol * sizex, frameRow * sizey, sizex, sizey, x, y, 192/2.1,192/2.1);
+				ctx.drawImage(ecopontos, frameG *240/5, 0, 240/5, 144/3, 1070, 380, 2*240/5, 2*144/3)
+				ctx.drawImage(ecopontos, frameB *240/5, 144/3, 240/5, 144/3, 1120, 380, 2*240/5, 2*144/3)
+				ctx.drawImage(ecopontos, frameY *240/5, 2*144/3.05, 240/5, 144/3, 1170, 380, 2*240/5, 2*144/3)
 
+				actions();
 				renderTrash();	
 			}
 			
@@ -361,25 +325,84 @@
 				// setInterval(actionBins, 1000 /10)
 				setInterval(render, 1000 / 10);
 			};
+
+
+			//function that doesnt allows character to walk beyond the map borders
+			function actions(){
+				if (rightKey  && x <= 1380){
+				frameRow = 3;
+				x+=10;
+				frameCol++;	
+				if (frameCol == 4)
+				frameCol = 2;
+				
+			}
+			else if (leftKey && x >= 60){
+				x-=10;
+				frameRow = 2;
+				frameCol++;	
+				if (frameCol == 4)
+				frameCol = 0;
+			}
+			else if (upKey && [ y >= 30]){
+				y-=10;
+				frameRow = 1;
+				frameCol++;	
+				if (frameCol == 4)
+				frameCol = 0;
+			}
+			else if (downKey && y <= 530){
+				y+=10;
+				frameRow = 0;
+				frameCol++;	
+				if (frameCol == 4)
+				frameCol = 0;
+			}
+			else if (gKey){
+				frameCol++;	
+				if (frameCol == 2)
+				frameCol = 0;
+				grab(x,y)
+				}
+			else if (pKey){
+				if (frameRow < 8){
+					frameRow += 8
+					frameCol = 2
+				}
+				frameCol--;	
+				if (frameCol == -1){
+					pKey = false;
+					image.src = 'images/kitty.png'
+					frameCol = 0;
+					sizex = 192/4
+					sizey = 192/4
+					frameRow -= 8
+				}	
+			}
+			}
 			
 			function border(){
-			// border mapa esquerda
+				// border mapa esquerda
 				ctx.strokeStyle = "purple";
+				ctx.fillStyle = "purple";
+				
 				ctx.beginPath();
 				
-				ctx.moveTo(445, 170);
-				ctx.lineTo(445, 180);
-				ctx.lineTo(410, 180);
-				ctx.lineTo(410, 170);
-				ctx.lineTo(445, 170);
-				ctx.lineTo(445, 80);
+				ctx.moveTo(443, 50);
 				
+				ctx.lineTo(443, 170);
+				ctx.lineTo(443, 170);
+				ctx.lineTo(410, 170);
+				ctx.lineTo(410, 180);
+				ctx.lineTo(447, 180);
+				ctx.lineTo(447, 170);
+				ctx.lineTo(447, 80);
 				ctx.lineTo(520, 80);
 				ctx.lineTo(520, 95);
 				ctx.lineTo(615, 95);
-				ctx.lineTo(615, 180);
-				ctx.lineTo(770, 180);
-				ctx.lineTo(770, 320);
+				ctx.lineTo(615, 170);
+				ctx.lineTo(775, 170);
+				ctx.lineTo(775, 320);
 				ctx.lineTo(745, 320);
 				ctx.lineTo(745, 360);
 				ctx.lineTo(850, 360);
@@ -395,22 +418,28 @@
 				ctx.lineTo(1155, 280);
 				ctx.lineTo(1155, 260);
 				ctx.lineTo(1025, 260);
-				ctx.lineTo(1025, 95);
-				ctx.lineTo(1075, 95);
-				ctx.lineTo(1075, 215);
-				ctx.lineTo(1150, 215);
-				ctx.lineTo(1150, 190);
+				ctx.lineTo(1025, 85);
+				ctx.lineTo(1075, 85);
+				ctx.lineTo(1075, 210);
+				ctx.lineTo(1145, 210);
+				ctx.lineTo(1145, 190);
 				ctx.lineTo(1085, 190);
-				ctx.lineTo(1085, 120);
-				ctx.lineTo(1245, 120);
+				ctx.lineTo(1085, 150);
+				ctx.lineTo(1115, 150);
+				ctx.lineTo(1115, 135);
+				ctx.lineTo(1140, 135);
+				ctx.lineTo(1140, 110);
+				ctx.lineTo(1215, 110);
+				ctx.lineTo(1215, 140);
+				ctx.lineTo(1245, 140);
 				ctx.lineTo(1245, 190);
-				ctx.lineTo(1175, 190);
-				ctx.lineTo(1175, 215);
-				ctx.lineTo(1255, 215);
-				ctx.lineTo(1255, 95);
-				ctx.lineTo(1285, 95);
-				ctx.lineTo(1285, 150);
-				ctx.lineTo(1335, 150);
+				ctx.lineTo(1185, 190);
+				ctx.lineTo(1185, 210);
+				ctx.lineTo(1255, 210);
+				ctx.lineTo(1255, 85);
+				ctx.lineTo(1285, 85);
+				ctx.lineTo(1285, 140);
+				ctx.lineTo(1335, 140);
 				ctx.lineTo(1335, 260);
 				ctx.lineTo(1205, 260);
 				ctx.lineTo(1205, 280);
@@ -474,23 +503,34 @@
 				ctx.lineTo(115, 130);
 				ctx.lineTo(177, 130);
 				ctx.lineTo(177, 55);
-				ctx.lineTo(445, 55);
-				ctx.lineTo(445, 80);
-				ctx.moveTo(230, 55);
-				ctx.lineTo(230, 170);
-				ctx.lineTo(355, 170);
+				ctx.lineTo(225, 55);
+				ctx.lineTo(225, 55);
+				ctx.lineTo(225, 180);
 				ctx.lineTo(355, 180);
-				ctx.lineTo(230, 180);
+				ctx.lineTo(355, 170);
 				ctx.lineTo(230, 170);
+				ctx.lineTo(230, 50);
+				ctx.lineTo(443, 50);	
 
 				ctx.moveTo(1150, 485);
-				ctx.lineTo(1055, 485);
-				ctx.lineTo(1055, 380);
-				ctx.lineTo(1275, 380);
-				ctx.lineTo(1275, 485);
+				ctx.lineTo(1060, 485);
+				ctx.lineTo(1060, 385);
+				ctx.lineTo(1270, 385);
+				ctx.lineTo(1270, 485);
 				ctx.lineTo(1210, 485);
+				ctx.lineTo(1210, 495);
+				ctx.lineTo(1275, 495);
+				ctx.lineTo(1275, 380);
+				ctx.lineTo(1055, 380);
+				ctx.lineTo(1055, 495);
+				ctx.lineTo(1150, 495);
+				ctx.lineTo(1150, 485);
 
+
+
+				ctx.closePath();
 				ctx.stroke();
+				// ctx.fill();
 			}
 			
 	</script>
