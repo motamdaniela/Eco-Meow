@@ -297,8 +297,9 @@
 				frameCol++;	
 				if (frameCol == 4)
 				frameCol = 2;
+				
 			}
-			else if (leftKey && x > 100){
+			else if (leftKey && x > 50){
 				x-=10;
 				frameRow = 2;
 				frameCol++;	
@@ -489,7 +490,6 @@
 				ctx.lineTo(1275, 485);
 				ctx.lineTo(1210, 485);
 
-				// ctx.closePath();
 				ctx.stroke();
 			}
 			
