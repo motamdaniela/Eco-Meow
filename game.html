@@ -15,12 +15,26 @@
 			</style>
 	
 	<body>
+		<audio autoplay id="myaudio" loop="true">
+			<source src="boop.mp3">
+		</audio>
+		<audio id="grabaudio">
+			<source src="grab.mp4">
+		</audio>
+
 		<div style = "text-align:center;">
 			<canvas id="myCanvas" width="1500" height="666">
 				Your browser does not support HTML5 Canvas.
 			</canvas>
 		</div>
 	<script>
+		var audio = document.getElementById("myaudio");
+        audio.volume = 0;
+		audio.playbackRate = 5;
+
+		var grabaudio = document.getElementById("grabaudio");
+        grabaudio.volume = 0.8;
+
 		const canvas = document.querySelector('#myCanvas');
 		const ctx = canvas.getContext("2d");
 		
@@ -97,9 +111,7 @@
 		const lixos=[['candy_bar','yellow'],['glue_stick','yellow'],['rubber_duck','yellow'], ['snack1','yellow'], ['snack2','yellow'], ['spatula','yellow'],['paper_bag','blue'],['receipt','blue'], ['toilet_paper','blue']]
 		
 		// let yellow = ['candy_bar','glue_stick','rubber_duck', 'snack1', 'snack2', 'spatula']
-
 		// let green = []
-
 		// let blue = ['paper_bag','receipt', 'toilet_paper']
 
 		class Trash {
@@ -160,6 +172,7 @@
 					let i=positions.indexOf(newPos)
 					trash.place=positions[i]
 					positions[i].full=true
+					grabaudio.play();
 				}
 			})
 		}
@@ -231,22 +244,29 @@
 		function ArrowPressed(e) {
 			e.preventDefault();
 			if (e.key == 'ArrowRight') {
+				audio.volume = 0.2
 				rightKey = true; //Canvas#2
 			}
 			else if (e.key == 'ArrowLeft'){
+				audio.volume = 0.2
 				leftKey = true; //Canvas#
 			}
 			else if (e.key == 'ArrowUp') {
+				audio.volume = 0.2
 				upKey = true; //Canvas#2
 			}
 			else if (e.key == 'ArrowDown'){
+				audio.volume = 0.2
 				downKey = true; //Canvas#
 			}
 			else if(e.keyCode==71){
 				gKey = true;
+				frameCol++;	
+				if (frameCol >= 2){
+					frameCol = 0;
+				}
 			}
 			else if(e.keyCode==80){
-				
 				sizex = 96/2
 				sizey = 576/12
 				if (!pKey)
@@ -258,23 +278,23 @@
 		//handler for keyup
 		function ArrowReleased(e) {
 			if (e.key == 'ArrowRight'){
+				audio.volume = 0;
 				rightKey = false;
 				frameCol = 0;
 			}
 			else if (e.key == 'ArrowLeft'){
+				audio.volume = 0;
 				leftKey = false;
 				frameCol = 0;
 			}
 			else if (e.key == 'ArrowUp'){
+				audio.volume = 0;
 				upKey = false;
 				frameCol = 0;
 			}
 			else if (e.key == 'ArrowDown'){
+				audio.volume = 0;
 				downKey = false;
-				frameCol = 0;
-			}
-			else if (e.keyCode == 71){
-				gKey = false;
 				frameCol = 0;
 			}
 		}
@@ -308,12 +328,44 @@
 				ctx.drawImage(bg, 0,0, canvas.width, canvas.height)
 				
 				border();
+					
+					// -----------
+					borders.forEach(border =>{
+					ctx.fillStyle = 'purple'
+            	    ctx.beginPath();
+            	    ctx.rect(border.x, border.y, border.width, border.height);
+					ctx.fill();
+            	})
+				// -----------
 
+				// fzr o gato c um retangulo v -_- 
+				// ctx.rect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+                // ctx.drawImage(rectangle.src, rectangle.sx, rectangle.sy,rectangle.sWidth, rectangle.sHeight, rectangle.dx, rectangle.dy, rectangle.width, rectangle.height)
 				ctx.drawImage(image, frameCol * sizex, frameRow * sizey, sizex, sizey, x, y, 192/2.1,192/2.1);
 				ctx.drawImage(ecopontos, frameG *240/5, 0, 240/5, 144/3, 1070, 380, 2*240/5, 2*144/3)
 				ctx.drawImage(ecopontos, frameB *240/5, 144/3, 240/5, 144/3, 1120, 380, 2*240/5, 2*144/3)
 				ctx.drawImage(ecopontos, frameY *240/5, 2*144/3.05, 240/5, 144/3, 1170, 380, 2*240/5, 2*144/3)
 
+				// para ver se colide c o mapa v
+				// 	borders.forEach(border =>{
+				// 		let pos={
+				// 		x: x,
+				// 		y: y,
+				// 	};
+				// 	if(!(border.x + border.width < x
+				// 		//totally to the left: no collision
+				// 		|| border.x > x
+				// 		//totally to the right: no collision
+				// 		|| border.y + border.height < y
+				// 		//totally above: no collision
+				// 		|| border.y > y)) {
+				// 		//totally below: no collision
+				// 		console.log('coliding')
+				// 	} else {
+				// 		console.log('not coliding')
+				// 		/* they collide! */
+				// 	}
+				// })
 				actions();
 				renderTrash();	
 			}
@@ -360,10 +412,12 @@
 			}
 			else if (gKey){
 				frameCol++;	
-				if (frameCol == 2)
-				frameCol = 0;
-				grab(x,y)
+				if (frameCol >= 2){
+					frameCol = 0;
 				}
+				grab(x,y)
+				gKey = false;
+			}
 			else if (pKey){
 				if (frameRow < 8){
 					frameRow += 8
@@ -379,12 +433,33 @@
 					frameRow -= 8
 				}	
 			}
-			}
+		}
+		
+		let borders = [
+			{
+				x: 1086,
+                y: 116,
+                width: 1241-1086,
+                height: 188-116,
+			},
+			{
+				x: 88,
+                y: 156,
+                width: 30,
+                height: 294,
+			},
+			{
+				x: 118,
+                y: 125,
+                width: 57,
+                height: 355,
+			},
+
+		]
 			
 			function border(){
 				// border mapa esquerda
 				ctx.strokeStyle = "purple";
-				ctx.fillStyle = "purple";
 				
 				ctx.beginPath();
 				
@@ -530,7 +605,6 @@
 
 				ctx.closePath();
 				ctx.stroke();
-				// ctx.fill();
 			}
 			
 	</script>
