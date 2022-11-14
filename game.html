@@ -347,27 +347,41 @@
 				ctx.drawImage(ecopontos, frameY *240/5, 2*144/3.05, 240/5, 144/3, 1170, 380, 2*240/5, 2*144/3)
 
 				// para ver se colide c o mapa v
-				// 	borders.forEach(border =>{
-				// 		let pos={
-				// 		x: x,
-				// 		y: y,
-				// 	};
-				// 	if(!(border.x + border.width < x
-				// 		//totally to the left: no collision
-				// 		|| border.x > x
-				// 		//totally to the right: no collision
-				// 		|| border.y + border.height < y
-				// 		//totally above: no collision
-				// 		|| border.y > y)) {
-				// 		//totally below: no collision
-				// 		console.log('coliding')
-				// 	} else {
-				// 		console.log('not coliding')
-				// 		/* they collide! */
-				// 	}
-				// })
+				
+				InsideMap()
+				// if(InsideMap(border)){
+				// 	console.log("inside")
+				// 	//  break;
+				// }else{
+				// 	console.log("outside")
+				// }
 				actions();
 				renderTrash();	
+			}
+
+			function InsideMap(){
+				let isborder = false
+				if(!isborder){
+					borders.forEach(border =>{
+						if (!(x + 192/2.1 < border.x -50
+								//totally to the left: no collision
+								|| x > border.x + border.width
+								//totally to the right: no collision
+								|| y + 192/2.1 < border.y
+								//totally above: no collision
+								|| y > border.y + border.height)) {
+								//totally below: no collision
+								console.log(border.x)
+							} else {
+								isborder = true;
+								return true
+								console.log("found it")
+							/* they collide! */
+							}
+					})
+				}else{
+					console.log("outside")
+				}
 			}
 			
 			
@@ -442,18 +456,18 @@
                 width: 1241-1086,
                 height: 188-116,
 			},
-			{
-				x: 88,
-                y: 156,
-                width: 30,
-                height: 294,
-			},
-			{
-				x: 118,
-                y: 125,
-                width: 57,
-                height: 355,
-			},
+			// {
+			// 	x: 88,
+            //     y: 156,
+            //     width: 30,
+            //     height: 294,
+			// },
+			// {
+			// 	x: 118,
+            //     y: 125,
+            //     width: 57,
+            //     height: 355,
+			// },
 
 		]
 			
