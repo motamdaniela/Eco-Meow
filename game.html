@@ -164,7 +164,7 @@
 
 		function grab(x,y){
 			Trashes.forEach(trash =>{
-				if(trash.x>=x && trash.x<=x+192/2 && trash.y>=y && trash.y<=y+192/2){
+				if(trash.x>=x && trash.x<=x+50 && trash.y>=y && trash.y<=y+50){
 					let newPos=positions.find(position => position.full==false)
 					trash.x=newPos.x
 					trash.y=newPos.y
@@ -186,58 +186,49 @@
 
 		function dragDrop(){
 			canvas.addEventListener('mousemove', e => {
-				const pos={
+				let pos={
 					x: e.clientX,
 					y: e.clientY
 				};
 				i=0
 				Trashes.forEach(trash=>{
-					
-					
 					canvas.addEventListener('mousedown', e => {
-							if(isIntersect(pos, trash) && trash.inventory){
-								console.log(trash.inventory)
-								console.log(trash.start)
-								let x1 = e.offsetX; y1 = e.offsetY;
+						if(isIntersect(pos, trash) && trash.inventory){
+							console.log(trash.inventory)
+							console.log(trash.start)
+							let x1 = e.offsetX; y1 = e.offsetY;
+							trash.x=x1;
+							trash.y=y1;
+							trash.start = true;  
+						}
+					});
+						
+					canvas.addEventListener('mousemove', e => {
+						if(isIntersect(pos, trash) && trash.inventory){
+							let x1 = e.offsetX; y1 = e.offsetY;
+			
+							if (trash.start) {    
 								trash.x=x1;
 								trash.y=y1;
-								trash.start = true;  
 							}
-							});
-							
-							canvas.addEventListener('mousemove', e => {
-								if(isIntersect(pos, trash) && trash.inventory){
-								let x1 = e.offsetX; y1 = e.offsetY;
-				
-								if (trash.start) {    
-									trash.x=x1;
-									trash.y=y1;
-								}
-							}
-							});
-							
-							canvas.addEventListener('mouseup', e => {
-								if(isIntersect(pos, trash) && trash.inventory){
-								trash.start = false;
-								trash.inventory = false;
-								console.log(trash.start)
-								console.log(trash.inventory)
-								let x1 = e.offsetX; y1 = e.offsetY;
-								// console.log(trash.x, trash.y);
-								// console.log(oldX)
-								trash.x=x1;
-								trash.y=y1;
-								let i=trash.place
-								console.log(trash.place)
-								console.log(i)
-								positions[i].full=false;
-								// positions.forEach(pos=>{
-								// 	if(pos)
-								// })
-								}
-							});
-						// }
-
+						}
+					});
+						
+					canvas.addEventListener('mouseup', e => {
+						if(isIntersect(pos, trash) && trash.inventory){
+							trash.start = false;
+							trash.inventory = false;
+							console.log(trash.start)
+							console.log(trash.inventory)
+							let x1 = e.offsetX; y1 = e.offsetY;
+							trash.x=pos.x;
+							trash.y=pos.y;
+							let i=trash.place
+							console.log(trash.place)
+							console.log(i)
+							positions[i].full=false;
+						}
+					});
 				})
 			})
 		}
