@@ -16,33 +16,30 @@
 		const canvas = document.querySelector('#myCanvas');
 		const ctx = canvas.getContext("2d");
 		
-		const W = canvas.width, H = canvas.height;
-		Crafty.init(200, 200);
-
-		const dim1 = { x: 5, y: 5, w: 50, h: 50 };
-		const dim2 = { x: 20, y: 10, w: 60, h: 40 };
-
-		const rect1 = Crafty.e("2D, Canvas, Color").attr(dim1).color("red");
-
-		const rect2 = Crafty.e("2D, Canvas, Color, Keyboard, Fourway")
-		  .fourway(2)
-		  .attr(dim2)
-		  .color("blue");
-
-		rect2.bind("EnterFrame", function () {
-		  if (
-		    rect1.x < rect2.x + rect2.w &&
-		    rect1.x + rect1.w > rect2.x &&
-		    rect1.y < rect2.y + rect2.h &&
-		    rect1.h + rect1.y > rect2.y
-		  ) {
-		    // Collision detected!
-		    this.color("green");
-		  } else {
-		    // No collision
-		    this.color("blue");
-		  }
-		});
+		function InsideMap(){
+				let isborder = false
+				borders.forEach(border =>{
+						if(!isborder){
+						if (x + 192/4.5 < border.x
+								//totally to the left: no collision
+								|| x  + 192/4.5 > border.x + border.width
+								//totally to the right: no collision
+								|| y + 192/6.3 < border.y
+								//totally above: no collision
+								|| y  + 192/3 > border.y + border.height) {
+								//totally below: no collision
+								// console.log('outside')
+							} else {
+								// console.log("inside")
+								isborder = true;
+								/* they collide! */
+							}
+						}else{
+							actions();
+							// console.log("inside")
+						}
+					})
+				}
 
 	</script>
 </body>
