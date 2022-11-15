@@ -359,21 +359,31 @@
 				let isborder = false
 				borders.forEach(border =>{
 						if(!isborder){
-						if (x + 192/4.5 <= border.x){
-							x += 10
-							isborder = true
-						}else if(x  + 192/4.5 > border.x + border.width){
-							x -= 0.1
-						}else if(y + 192/6.3 < border.y){
-							y += 0.1
-						}else if(y  + 192/3 > border.y + border.height) {
-							y -= 0.1
+						if (x + 192/4.5 <= border.x
+						|| x  + 192/4.5 > border.x + border.width
+						|| y + 192/6.3 < border.y
+						|| y  + 192/3 > border.y + border.height) {
+							console.log(border.x)
 						} else {
 							// console.log("inside")
 							isborder = true;
 							/* they collide! */
 						}
 						}else{
+							if (x + 192/4.5 <= border.x
+							|| x  + 192/4.5 > border.x + border.width
+							|| y + 192/6.3 < border.y
+							|| y  + 192/3 > border.y + border.height) {
+								if(rightKey){
+									x += 10
+								}else if(leftKey){
+									x -= 10
+								}else if(upKey){
+									y += 10
+								}else if(downKey){
+									y -= 10
+								}
+							}
 							actions();
 							// console.log("inside")
 						}
