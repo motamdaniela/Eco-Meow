@@ -20,23 +20,38 @@
 				let isborder = false
 				borders.forEach(border =>{
 						if(!isborder){
-						if (x + 192/4.5 < border.x
-								//totally to the left: no collision
-								|| x  + 192/4.5 > border.x + border.width
-								//totally to the right: no collision
-								|| y + 192/6.3 < border.y
-								//totally above: no collision
-								|| y  + 192/3 > border.y + border.height) {
-								//totally below: no collision
-								// console.log('outside')
-							} else {
-								// console.log("inside")
+						if (x + 192/4.5 < border.x){
+							if(rightKey){
+
+								x -= 10;
 								isborder = true;
-								/* they collide! */
 							}
+						}else if (x  + 192/4.5 > border.x + border.width){
+							if(leftKey){
+								x += 10;
+								isborder = true;
+
+							}
+						}else if( y + 192/6.3 < border.y){
+							if(downKey){
+
+								y -= 10;
+								isborder = true;
+							}
+						}else if( y  + 192/3 > border.y + border.height) {
+							if(upKey){
+
+								y += 10;
+								isborder = true;
+							}
+						}
+						else {
+							console.log("seek")
+							isborder = true;
+							/* they collide! */
+						}
 						}else{
 							actions();
-							// console.log("inside")
 						}
 					})
 				}

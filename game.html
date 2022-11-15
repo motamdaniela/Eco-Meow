@@ -334,7 +334,7 @@
 					
 					// -----------
 					borders.forEach(border =>{
-					ctx.fillStyle = 'purple'
+					ctx.fillStyle = 'green'
             	    ctx.beginPath();
             	    ctx.rect(border.x, border.y, border.width, border.height);
 					ctx.fill();
@@ -350,8 +350,8 @@
 				ctx.drawImage(ecopontos, frameY *240/5, 2*144/3.05, 240/5, 144/3, 1170, 380, 2*240/5, 2*144/3)
 
 				// para ver se colide c o mapa v
-				// InsideMap();
-				actions();
+				// actions();
+				InsideMap();
 				renderTrash();	
 			}
 
@@ -359,33 +359,38 @@
 				let isborder = false
 				borders.forEach(border =>{
 						if(!isborder){
-						if (x + 192/4.5 <= border.x
-						|| x  + 192/4.5 > border.x + border.width
-						|| y + 192/6.3 < border.y
-						|| y  + 192/3 > border.y + border.height) {
-							console.log(border.x)
-						} else {
-							// console.log("inside")
+						if (x + 192/4.5 < border.x){
+							if(rightKey){
+
+								x -= 10;
+								isborder = true;
+							}
+						}else if (x  + 192/4.5 > border.x + border.width){
+							if(leftKey){
+								x += 10;
+								isborder = true;
+
+							}
+						}else if( y + 192/6.3 < border.y){
+							if(downKey){
+
+								y -= 10;
+								isborder = true;
+							}
+						}else if( y  + 192/3 > border.y + border.height) {
+							if(upKey){
+
+								y += 10;
+								isborder = true;
+							}
+						}
+						else {
+							console.log("seek")
 							isborder = true;
 							/* they collide! */
 						}
 						}else{
-							if (x + 192/4.5 <= border.x
-							|| x  + 192/4.5 > border.x + border.width
-							|| y + 192/6.3 < border.y
-							|| y  + 192/3 > border.y + border.height) {
-								if(rightKey){
-									x += 10
-								}else if(leftKey){
-									x -= 10
-								}else if(upKey){
-									y += 10
-								}else if(downKey){
-									y -= 10
-								}
-							}
 							actions();
-							// console.log("inside")
 						}
 					})
 				}
@@ -459,7 +464,13 @@
 			{
 				x: 900,
                 y: 50,
-                width: 500,
+                width: 250,
+                height: 300,
+			},
+			{
+				x: 900+250,
+                y: 50,
+                width: 250,
                 height: 300,
 			},
 			{
