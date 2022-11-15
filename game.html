@@ -358,23 +358,23 @@
 							else {
 								inside = true;
 								// analiseMap(border);
-								actions();
+								// actions();
 							}
 						}
 					})
 					if(!inside) {
-						if(rightKey){
-							console.log(x);
+						actions();
+						if(rightKey && x + 192/4.5 <= border.x){
 							x -= 10;
-							inside = true
-							console.log(x);
-						}else if(leftKey){
-							x += 10;
-						}else if(upKey){
-							y += 10;
-						}else if(downKey){
-							y -= 10;
 						}
+						if(leftKey && x  + 192/4.5 >= border.x + border.width){
+							x += 20;
+						}else if(upKey && y + 192/6.3 <= border.y){
+							y += 20;
+						}else if(downKey &&  y  + 192/3 >= border.y + border.height){
+							y -= 20;
+						}
+					}else{
 						actions();
 					}
 				}
