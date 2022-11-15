@@ -170,7 +170,7 @@
 					trash.y=newPos.y
 					trash.inventory=true
 					let i=positions.indexOf(newPos)
-					trash.place=positions[i]
+					trash.place=i
 					positions[i].full=true
 					grabaudio.play();
 				}
@@ -190,50 +190,53 @@
 					x: e.clientX,
 					y: e.clientY
 				};
+				i=0
 				Trashes.forEach(trash=>{
 					
-					if(isIntersect(pos, trash) && trash.inventory==true ){
-						console.log(positions[trash.place-1])
-						// if(trash.inventory==true && trash.start==false){
-						
-							// let oldX=trash.x;
-							// let oldY=trash.y;
-							
-							canvas.addEventListener('mousedown', e => {
-								console.log(4)
+					
+					canvas.addEventListener('mousedown', e => {
+							if(isIntersect(pos, trash) && trash.inventory){
+								console.log(trash.inventory)
+								console.log(trash.start)
 								let x1 = e.offsetX; y1 = e.offsetY;
 								trash.x=x1;
 								trash.y=y1;
 								trash.start = true;  
-								console.log(trash.inventory)
-								console.log(trash.start)
+							}
 							});
 							
 							canvas.addEventListener('mousemove', e => {
+								if(isIntersect(pos, trash) && trash.inventory){
 								let x1 = e.offsetX; y1 = e.offsetY;
 				
 								if (trash.start) {    
 									trash.x=x1;
 									trash.y=y1;
 								}
+							}
 							});
 							
 							canvas.addEventListener('mouseup', e => {
+								if(isIntersect(pos, trash) && trash.inventory){
 								trash.start = false;
+								trash.inventory = false;
+								console.log(trash.start)
+								console.log(trash.inventory)
 								let x1 = e.offsetX; y1 = e.offsetY;
 								// console.log(trash.x, trash.y);
 								// console.log(oldX)
 								trash.x=x1;
 								trash.y=y1;
-								console.log(trash.start)
-								trash.inventory = false;
-								// positions[trash.place].full=false;
+								let i=trash.place
+								console.log(trash.place)
+								console.log(i)
+								positions[i].full=false;
 								// positions.forEach(pos=>{
 								// 	if(pos)
 								// })
+								}
 							});
 						// }
-					}
 
 				})
 			})
@@ -347,8 +350,8 @@
 				ctx.drawImage(ecopontos, frameY *240/5, 2*144/3.05, 240/5, 144/3, 1170, 380, 2*240/5, 2*144/3)
 
 				// para ver se colide c o mapa v
-				InsideMap();
-				// actions();
+				// InsideMap();
+				actions();
 				renderTrash();	
 			}
 
