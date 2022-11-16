@@ -346,57 +346,33 @@
 				let outside = false;
 				borders.forEach(border =>{
 						if(!outside){
-							if (x + 192/4.5 <= border.x  
-							|| x  + 192/4.5 >= border.x + border.width
-							|| y + 192/6.3 <= border.y
-							|| y  + 192/3 >= border.y + border.height) {
-								console.log('inside');
+							if (x + 192/3 <= border.x                    //right
+							|| x  + 192/6 >= border.x + border.width     //left
+							|| y + 192/2.9 <= border.y                   //down
+							|| y  + 192/7 >= border.y + border.height) { //up
+								// console.log('inside');
 							}
 							else {
-								if(x + 192/3 >= border.x ){
-									console.log('outside right');
-									x -= 10;
-									outside = false;
-								}else if(x  + 192/3 <= border.x + border.width){
-									console.log('outside left');
-									x += 10;
-									outside = false;									
-								}else if(y + 192/3 >= border.y){
-									console.log('outside down');
-									y -= 10;
-									outside = false;
-								}else if(y  + 192/3 <= border.y + border.height){
-									console.log('outside up');
-									y += 10;
-									outside = false;
+
+								if (x + 192/3-10 >= border.x){ 
+									x+=10;
+								}
+								if(x  + 192/6 <= border.x + border.width){
+									console.log(outside)
+									x-=10;
+								}
+								if(y + 192/2.9+10 >= border.y){
+									y+=10;
+								}
+								if(y + 192/7 <= border.y + border.height){
+									y-=10;
 								}
 								outside = true;
-								theBorder = {
-									x: border.x,
-									y: border.y,
-									width: border.width,
-                					height: border.height,
-								}
+
 							}
 						}
 					})
-					if(outside) {
-						// actions();
-						// if(x + 192/3 >= theBorder.x ){
-						// 	console.log('right')
-						// 	x -= 10;
-						// 	// outside= false;
-						// }else if(x  + 192/4.5 <= theBorder.x + theBorder.width){
-						// 	console.log('left')
-						// 	x += 10;
-						// }else if(y  + 192 <= theBorder.y + theBorder.height){
-						// 	console.log('up')
-						// 	y += 10;
-						// }else if(y + 192/3 >= theBorder.y){
-						// 	console.log('down')
-						// 	y -= 10;
-						// }
-					}else{
+					if(!outside) {
 						actions();
 					}
 				}
@@ -467,30 +443,30 @@
 		}
 		
 		let borders = [
-			{
-				x: 1059,
-                y: 85,
-                width: 250,
-                height: 50,
-			},
-			{
-				x: 1010,
-                y: 85,
-                width: 50,
-                height: 150,
-			},
-			{
-				x: 1010+250,
-                y: 85,
-                width: 50,
-                height: 150,
-			},
-			{
-				x: 1059,
-                y: 85+150,
-                width: 250,
-                height: 50,
-			},
+			// {
+			// 	x: 1059,
+            //     y: 85,
+            //     width: 250,
+            //     height: 50,
+			// },
+			// {
+			// 	x: 1010,
+            //     y: 85,
+            //     width: 50,
+            //     height: 150,
+			// },
+			// {
+			// 	x: 1010+250,
+            //     y: 85,
+            //     width: 50,
+            //     height: 150,
+			// },
+			// {
+			// 	x: 1059,
+            //     y: 85+150,
+            //     width: 250,
+            //     height: 50,
+			// },
 
 
 
@@ -527,7 +503,7 @@
 			},
 			{
 				x: 745,
-                y: 320,
+                y: 310,
                 width: 850-745,
                 height: 50,
 			},
