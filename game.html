@@ -182,56 +182,40 @@
             return trash.x<pos.x && pos.x<trash.x+30 && trash.y<pos.y && pos.y<trash.y+30
         }
 
-		dragDrop()
+		
 
-		function dragDrop(){
-			canvas.addEventListener('mousemove', e => {
-				let pos={
-					x: e.clientX,
-					y: e.clientY
-				};
-				i=0
-				Trashes.forEach(trash=>{
-					canvas.addEventListener('mousedown', e => {
-						if(isIntersect(pos, trash) && trash.inventory){
-							console.log(trash.inventory)
-							console.log(trash.start)
-							let x1 = e.offsetX; y1 = e.offsetY;
-							trash.x=x1;
-							trash.y=y1;
-							trash.start = true;  
-						}
-					});
-						
-					canvas.addEventListener('mousemove', e => {
-						if(isIntersect(pos, trash) && trash.inventory){
-							let x1 = e.offsetX; y1 = e.offsetY;
-			
-							if (trash.start) {    
-								trash.x=x1;
-								trash.y=y1;
-							}
-						}
-					});
-						
-					canvas.addEventListener('mouseup', e => {
-						if(isIntersect(pos, trash) && trash.inventory){
-							trash.start = false;
-							trash.inventory = false;
-							console.log(trash.start)
-							console.log(trash.inventory)
-							let x1 = e.offsetX; y1 = e.offsetY;
-							trash.x=pos.x;
-							trash.y=pos.y;
-							let i=trash.place
-							console.log(trash.place)
-							console.log(i)
-							positions[i].full=false;
-						}
-					});
-				})
+		canvas.addEventListener('mousemove', e => {
+			let pos={
+				x: e.offsetX,
+				y: e.offsetY
+			};
+			Trashes.forEach(trash=>{
+				canvas.addEventListener('mousedown', e => {
+					if(isIntersect(pos, trash) && trash.inventory){
+						trash.x=pos.x;
+						trash.y=pos.y;
+						trash.start = true;  
+					}
+				});
+					
+				canvas.addEventListener('mousemove', e => {
+					if (trash.start) {    
+						trash.x=pos.x;
+						trash.y=pos.y;
+					}
+				});
+					
+				canvas.addEventListener('mouseup', e => {
+					if(isIntersect(pos, trash) && trash.inventory){
+						trash.start = false;
+						trash.inventory = false;
+						trash.x=pos.x;
+						trash.y=pos.y;
+						positions[trash.place].full=false;
+					}
+				});
 			})
-		}
+		})
 		
 		
 		//handler for keydown
