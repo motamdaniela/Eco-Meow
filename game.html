@@ -360,7 +360,6 @@
             	})
 				// -----------
 
-				ctx.drawImage(image, frameCol * sizex, frameRow * sizey, sizex, sizey, x, y, 192/2.1,192/2.1);
 				ctx.drawImage(ecopontos, frameG *240/5, 0, 240/5, 144/3, 1070, 380, 2*240/5, 2*144/3)
 				ctx.drawImage(ecopontos, frameB *240/5, 144/3, 240/5, 144/3, 1120, 380, 2*240/5, 2*144/3)
 				ctx.drawImage(ecopontos, frameY *240/5, 2*144/3.05, 240/5, 144/3, 1170, 380, 2*240/5, 2*144/3)
@@ -368,11 +367,12 @@
 				ctx.font = "40px VT323";
 				ctx.fillStyle = "#B58861";
 				ctx.fillText("X 0", 1420, 32);
-
+				
 				// para ver se colide c o mapa v
 				// InsideMap();
-				actions();
 				renderTrash();	
+				ctx.drawImage(image, frameCol * sizex, frameRow * sizey, sizex, sizey, x, y, 192/2.1,192/2.1);
+				actions();
 			}
 			
 			let theBorder = '';
