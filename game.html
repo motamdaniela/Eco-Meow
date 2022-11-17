@@ -13,6 +13,9 @@
 				margin-top: 20px; 
 			}
 			</style>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
 	
 	<body>
 		<audio autoplay id="myaudio" loop="true">
@@ -27,6 +30,7 @@
 				Your browser does not support HTML5 Canvas.
 			</canvas>
 		</div>
+		<span id="loader" style="font-family: 'VT323', monospace;"></span>
 	<script>
 		var audio = document.getElementById("myaudio");
         audio.volume = 0;
@@ -58,6 +62,9 @@
 
 		let light = new Image();
 		light.src = 'trash/light_bulb.png'
+
+		let seed = new Image();
+		seed.src = 'images/basic_plants.png'
 		
 
 		//sprite frame counter 		
@@ -357,6 +364,10 @@
 				ctx.drawImage(ecopontos, frameG *240/5, 0, 240/5, 144/3, 1070, 380, 2*240/5, 2*144/3)
 				ctx.drawImage(ecopontos, frameB *240/5, 144/3, 240/5, 144/3, 1120, 380, 2*240/5, 2*144/3)
 				ctx.drawImage(ecopontos, frameY *240/5, 2*144/3.05, 240/5, 144/3, 1170, 380, 2*240/5, 2*144/3)
+				ctx.drawImage(seed, 0, 0, 96/6, 32/2, 1370, 0, 40, 40)
+				ctx.font = "40px VT323";
+				ctx.fillStyle = "#B58861";
+				ctx.fillText("X 0", 1420, 32);
 
 				// para ver se colide c o mapa v
 				// InsideMap();
