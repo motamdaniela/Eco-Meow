@@ -143,8 +143,9 @@
 		// let blue = ['paper_bag','receipt', 'toilet_paper']
 
 		class Trash {
-			constructor(src, x, y, trash, id) {    // CONSTRUCTOR
+			constructor(src, img, x, y, trash, id) {    // CONSTRUCTOR
 				this.src = src;
+				this.img = img;
 				this.x = x;
 				this.y = y;
 				this.trash=trash
@@ -165,6 +166,11 @@
 				// let src2 = green[Math.floor(Math.random()*(green.length))]
 				// let src3 = blue[Math.floor(Math.random()*(blue.length))]
 				src = `trash/${src}.png`
+				
+				let img = new Image();
+				img.src = src
+
+
 				let xInit = 90 + Math.random() * (600);
 				let yInit = 110 + Math.random() * (390);
 
@@ -174,7 +180,7 @@
 				    yInit = 100 + Math.random() * (400);
 				}else{
 					// push new object into array
-					Trashes.push(new Trash(src, xInit, yInit, trash,i))
+					Trashes.push(new Trash(src, img, xInit, yInit, trash,i))
 				}
 			}
 		}
@@ -183,11 +189,10 @@
 		function renderTrash(){
 			ctx.drawImage(inventory,0,0,192,64,W/2-(192*1.8)/2,H-120,192*1.8,64*1.8)
 			Trashes.forEach(trash =>{
-				let img = new Image();
-				img.src = trash.src
+				
 				ctx.beginPath();
 				ctx.rect(trash.x, trash.y, trash.width, trash.height);
-				ctx.drawImage(img, trash.x, trash.y, 30, 30);
+				ctx.drawImage(trash.img, trash.x, trash.y, 30, 30);
 			})
 		}
 
