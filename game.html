@@ -115,7 +115,7 @@
 		// let blue = ['paper_bag','receipt', 'toilet_paper']
 
 		class Trash {
-			constructor(src, x, y,trash) {    // CONSTRUCTOR
+			constructor(src, x, y, trash,place, inventory, start) {    // CONSTRUCTOR
 				this.src = src;
 				this.x = x;
 				this.y = y;
@@ -179,7 +179,7 @@
 		
 
 		function isIntersect(pos,trash){
-            return trash.x<pos.x && pos.x<trash.x+30 && trash.y<pos.y && pos.y<trash.y+30
+            return trash.x<=pos.x && pos.x<=trash.x+30 && trash.y<=pos.y && pos.y<=trash.y+30
         }
 
 		
