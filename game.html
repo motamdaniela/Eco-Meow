@@ -356,10 +356,10 @@
 			InsideMap();
 			renderTrash();	
 			ctx.drawImage(image, frameCol * sizex, frameRow * sizey, sizex, sizey, x, y, 192/2.1,192/2.1);
-			ctx.drawImage(tree, 2*144/5.6, 0*80/2.5, 144/5.6, 80/2.5, plantX, plantY, 2*144/6, 2*80/2.5);
+			ctx.drawImage(tree, framePlant*2*144/5.6, 0*80/2.5, 144/5.6, 80/2.5, plantX, plantY, 2*144/6, 2*80/2.5);
 
 		}
-				
+			let framePlant = 0;
 			let tree = new Image();
 			tree.src = '/images/biome.png'
 
@@ -388,7 +388,15 @@
 						plantX = -50;
 						plantY = -50;
 					}
+					setTimeout(growth,1500)
+					console.log(framePlant)
 
+			}
+
+			function growth(){
+				if(framePlant < 1){
+					framePlant++;
+				}
 			}
 
 			canvas.addEventListener('click', e => {
