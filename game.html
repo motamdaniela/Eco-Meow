@@ -19,10 +19,10 @@
 	
 	<body>
 		<audio autoplay id="myaudio" loop="true">
-			<source src="boop.mp3">
+			<source src="/sounds/boop.mp3">
 		</audio>
 		<audio id="grabaudio">
-			<source src="grab.mp4">
+			<source src="/sounds/grab.mp4">
 		</audio>
 
 		<div style = "text-align:center;">
@@ -56,12 +56,6 @@
 
 		let inventory = new Image();
 		inventory.src = 'images/inventory.png';
-
-		let milk = new Image();
-		milk.src = 'trash/milk_gallon.png';
-
-		let light = new Image();
-		light.src = 'trash/light_bulb.png'
 
 		let seed = new Image();
 		seed.src = 'images/basic_plants.png'
@@ -136,7 +130,7 @@
 		
 		// ------------------------------
 
-		const lixos=[['candy_bar','yellow'],['detergent','yellow'],['light_bulb','green'],['orange_juice','yellow'],['rubber_duck','yellow'],['snack1','yellow'],['potatochip_yellow','yellow'], ['spatula','yellow'],['paper_bag','blue'],['receipt','blue'], ['toilet_paper','blue'] ['wine_white2','green']]
+		const lixos=[['candy_bar','yellow'],['detergent','yellow'],['light_bulb','green'],['orange_juice','yellow'],['rubber_duck','yellow'],['snack1','yellow'],['potatochip_yellow','yellow'], ['spatula','yellow'],['paper_bag','blue'],['receipt','blue'], ['toilet_paper','blue'], ['wine_white2','green']]
 		
 		// let yellow = ['candy_bar','glue_stick','rubber_duck', 'snack1', 'snack2', 'spatula']
 		// let green = []
@@ -270,19 +264,15 @@
 		function ArrowPressed(e) {
 			e.preventDefault();
 			if (e.key == 'ArrowRight') {
-				audio.volume = 0.2
 				rightKey = true; //Canvas#2
 			}
 			else if (e.key == 'ArrowLeft'){
-				audio.volume = 0.2
 				leftKey = true; //Canvas#
 			}
 			else if (e.key == 'ArrowUp') {
-				audio.volume = 0.2
 				upKey = true; //Canvas#2
 			}
 			else if (e.key == 'ArrowDown'){
-				audio.volume = 0.2
 				downKey = true; //Canvas#
 			}
 			else if(e.keyCode==71){
@@ -327,80 +317,165 @@
 		
 		//sets handlers for events keydown & keyup
 		window.addEventListener('keydown', ArrowPressed);
-		window.addEventListener('keyup', ArrowReleased);
-		
-		//--------------------------------
-		
-		canvas.addEventListener("click", function(e) { 
-		    var cRect = canvas.getBoundingClientRect();        // Gets CSS pos, and width/height
-		    var canvasX = Math.round(e.clientX - cRect.left);  // Subtract the 'left' of the canvas 
-		    var canvasY = Math.round(e.clientY - cRect.top);   // from the X/Y positions to make  
-		    console.log(canvasX , canvasY );
-		});
-
-
-		//--------------------------------
-		
-		ecopontos.onload = function () {
-			canvas.addEventListener('mousemove', e =>{
-				frameG++;
-				if (frameG == 5)
-				frameG = 0;
-			})
-		};
-		
+		window.addEventListener('keyup', ArrowReleased);		
+			
 		function render() {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
-				ctx.drawImage(bg, 0,0, canvas.width, canvas.height)	
-							
-				borders.forEach(border =>{
-					ctx.fillStyle = 'white';
-					ctx.beginPath();
-            	    ctx.rect(border.x, border.y, border.width, border.height);
-					ctx.fill();
-
-            	})
-				
-				tinyBorders.forEach(border =>{
-					ctx.fillStyle = 'white';
-            	    ctx.beginPath();
-            	    ctx.rect(border.x, border.y, border.width, border.height);
-					ctx.fill();
-            	})
-
-				ctx.drawImage(ecopontos, frameG *240/5, 0, 240/5, 144/3, 1070, 380, 2*240/5, 2*144/3)
-				ctx.drawImage(ecopontos, frameB *240/5, 144/3, 240/5, 144/3, 1120, 380, 2*240/5, 2*144/3)
-				ctx.drawImage(ecopontos, frameY *240/5, 2*144/3.05, 240/5, 144/3, 1170, 380, 2*240/5, 2*144/3)
-				ctx.drawImage(seed, 0, 0, 96/6, 32/2, 1370, 0, 40, 40)
-				ctx.font = "40px VT323";
-				ctx.fillStyle = "#B58861";
-				ctx.fillText("X 0", 1420, 32);
-				
-				// para ver se colide c o mapa v
-				InsideMap();
-				renderTrash();	
-				ctx.drawImage(image, frameCol * sizex, frameRow * sizey, sizex, sizey, x, y, 192/2.1,192/2.1);
+			ctx.drawImage(bg, 0,0, canvas.width, canvas.height)	
+			
+			borders.forEach(border =>{
+				ctx.beginPath();
+				ctx.rect(border.x, border.y, border.width, border.height);
+			})
+			
+			tinyBorders.forEach(border =>{
+				ctx.beginPath();
+				ctx.rect(border.x, border.y, border.width, border.height);
+			})
+			
+			ctx.drawImage(ecopontos, frameG *240/5, 0, 240/5, 144/3, 1070, 380, 2*240/5, 2*144/3)
+			ctx.drawImage(ecopontos, frameB *240/5, 144/3, 240/5, 144/3, 1120, 380, 2*240/5, 2*144/3)
+			ctx.drawImage(ecopontos, frameY *240/5, 2*144/3.05, 240/5, 144/3, 1170, 380, 2*240/5, 2*144/3)
+			ctx.drawImage(seed, 0, 0, 96/6, 32/2, 1370, 0, 40, 40)
+			ctx.font = "40px VT323";
+			ctx.fillStyle = "#B58861";
+			ctx.fillText("X 0", 1420, 32);
+			
+			
+			EcoActions();
+			InsideMap();
+			renderTrash();	
+			ctx.drawImage(image, frameCol * sizex, frameRow * sizey, sizex, sizey, x, y, 192/2.1,192/2.1);
 			}
 			
-			function InsideMap(){
-				let outside = false;
-				// verifica borders mapa
-				borders.forEach(border =>{
-						if(!outside){
-							if (x + 192/3 <= border.x                    //right
-							|| x  + 192/6 >= border.x + border.width     //left
-							|| y + 192/2.9 <= border.y                   //down
-							|| y  + 192/7 >= border.y + border.height) { //up
-								// console.log('inside');
+			
+			// 	x: 1155,
+            //     y: 420,
+            //     width: 30,
+            //     height: 10,
+			// },
+			// {
+				// 	x: 1205,
+				//     y: 420,
+				//     width: 30,
+				//     height: 10,
+				
+				let EcoActive = false;
+				function EcoActions(){
+					canvas.addEventListener('mousemove', e => {
+						if(e.offsetX >= 1095 && e.offsetY >= 415 &&  e.offsetX <= 1135 && e.offsetY <= 455){
+							frameB = frameY = 0;
+							frameG++;
+							if (frameG == 5){
+									frameG--;
+								}
+						}
+						else if(e.offsetX >= 1150 && e.offsetY >= 415 &&  e.offsetX <= 1190 && e.offsetY <= 455){
+							frameG = frameY = 0;
+							frameB++;
+							if (frameB == 5){
+								frameB --;
 							}
-							else {
-								outside = true;
-								if (x + 192/3-10 >= (border.x) ){ 
-									x+=10;
-								}
-								if(x  + 192/6 <= (border.x + border.width)){
-									x-=10;
-								}
+						}
+						else if(e.offsetX >= 1200 && e.offsetY >= 415 &&  e.offsetX <= 1240 && e.offsetY <= 455){
+							frameB = frameG = 0;
+							frameY++;
+							if (frameY == 5){
+								frameY--;
+							}
+						}else{
+							frameG = 0;
+							frameB = 0;
+							frameY = 0;
+						}
+					})
+				}
+
+				
+				window.onload = function () {
+					init();
+					setInterval(render, 1000 / 10);
+				};
+
+			function actions(){
+				if (rightKey){
+					audio.volume = 0.2;
+					frameRow = 3;
+					x+=10;
+					frameCol++;	
+					if (frameCol == 4)
+					frameCol = 2;
+					
+				}
+				else if (leftKey){
+				audio.volume = 0.2;
+				x-=10;
+				frameRow = 2;
+				frameCol++;	
+				if (frameCol == 4)
+				frameCol = 0;
+			}
+			else if (upKey){
+				audio.volume = 0.2;
+				y-=10;
+				frameRow = 1;
+				frameCol++;	
+				if (frameCol == 4)
+				frameCol = 0;
+			}
+			else if (downKey){
+				audio.volume = 0.2;
+				y+=10;
+				frameRow = 0;
+				frameCol++;	
+				if (frameCol == 4)
+				frameCol = 0;
+			}
+			else if (gKey){
+				frameCol++;	
+				if (frameCol >= 2){
+					frameCol = 0;
+				}
+				grab(x,y)
+				gKey = false;
+			}
+			else if (pKey){
+				if (frameRow < 8){
+					frameRow += 8
+					frameCol = 2
+				}
+				frameCol--;	
+				if (frameCol == -1){
+					pKey = false;
+					image.src = 'images/kitty.png'
+					frameCol = 0;
+					sizex = 192/4
+					sizey = 192/4
+					frameRow -= 8
+				}	
+			}
+		}
+		
+		//function that doesnt allows character to walk beyond the map borders
+		function InsideMap(){
+			let outside = false;
+			// verifica borders mapa
+			borders.forEach(border =>{
+				if(!outside){
+						if (x + 192/3 <= border.x                    //right
+						|| x  + 192/6 >= border.x + border.width     //left
+						|| y + 192/2.9 <= border.y                   //down
+						|| y  + 192/7 >= border.y + border.height) { //up
+							// console.log('inside');
+						}
+						else {
+							outside = true;
+							if (x + 192/3-10 >= (border.x) ){ 
+								x+=10;
+							}
+							if(x  + 192/6 <= (border.x + border.width)){
+								x-=10;
+							}
 								if(y + 192/2.9 >= (border.y)){
 									y+=10;
 								}
@@ -463,71 +538,6 @@
 						actions();
 					}
 				}
-			
-			
-			window.onload = function () {
-				init();
-				// actionBins();
-				// setInterval(actionBins, 1000 /10)
-				setInterval(render, 1000 / 10);
-			};
-
-
-			//function that doesnt allows character to walk beyond the map borders
-			function actions(){
-				if (rightKey  && x <= 1380){
-				frameRow = 3;
-				x+=10;
-				frameCol++;	
-				if (frameCol == 4)
-				frameCol = 2;
-				
-			}
-			else if (leftKey && x >= 60){
-				x-=10;
-				frameRow = 2;
-				frameCol++;	
-				if (frameCol == 4)
-				frameCol = 0;
-			}
-			else if (upKey && [ y >= 30]){
-				y-=10;
-				frameRow = 1;
-				frameCol++;	
-				if (frameCol == 4)
-				frameCol = 0;
-			}
-			else if (downKey && y <= 530){
-				y+=10;
-				frameRow = 0;
-				frameCol++;	
-				if (frameCol == 4)
-				frameCol = 0;
-			}
-			else if (gKey){
-				frameCol++;	
-				if (frameCol >= 2){
-					frameCol = 0;
-				}
-				grab(x,y)
-				gKey = false;
-			}
-			else if (pKey){
-				if (frameRow < 8){
-					frameRow += 8
-					frameCol = 2
-				}
-				frameCol--;	
-				if (frameCol == -1){
-					pKey = false;
-					image.src = 'images/kitty.png'
-					frameCol = 0;
-					sizex = 192/4
-					sizey = 192/4
-					frameRow -= 8
-				}	
-			}
-		}
 		
 		let borders = [
 			{
@@ -864,10 +874,22 @@
                 height: 210-147,
 			},
 			{
-				x: 1074,
-                y: 147,
+				x: 1244,
+                y: 140,
                 width: 10,
-                height: 210-147,
+                height: 210-140,
+			},
+			{
+				x: 1084,
+                y: 190,
+                width: 1145-1084,
+                height: 210-190,
+			},
+			{
+				x: 1182,
+                y: 190,
+                width: 1244-1182,
+                height: 210-190,
 			},
 
 			// ecopontos
@@ -875,19 +897,19 @@
 				x: 1103,
                 y: 420,
                 width: 30,
-                height: 20,
+                height: 10,
 			},
 			{
 				x: 1155,
                 y: 420,
                 width: 30,
-                height: 20,
+                height: 10,
 			},
 			{
 				x: 1205,
                 y: 420,
                 width: 30,
-                height: 20,
+                height: 10,
 			},
 
 		]
