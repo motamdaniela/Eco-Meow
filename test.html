@@ -327,10 +327,10 @@
             	})
 
 				tinyBorders.forEach(border =>{
-					ctx.fillStyle = 'white'
+					// ctx.fillStyle = 'white'
             	    ctx.beginPath();
             	    ctx.rect(border.x, border.y, border.width, border.height);
-					ctx.fill();
+					// ctx.fill();
             	})
 				// -----------
 
@@ -438,7 +438,7 @@
 
 			//function that doesnt allows character to walk beyond the map borders
 			function actions(){
-				if (rightKey  && x <= 1380){
+			if (rightKey  && x <= 1380){
 				frameRow = 3;
 				x+=10;
 				frameCol++;	
