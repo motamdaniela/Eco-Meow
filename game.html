@@ -136,7 +136,7 @@
 		// let blue = ['paper_bag','receipt', 'toilet_paper']
 
 		class Trash {
-			constructor(src, x, y, trash,id) {    // CONSTRUCTOR
+			constructor(src, x, y, trash, id) {    // CONSTRUCTOR
 				this.src = src;
 				this.x = x;
 				this.y = y;
@@ -236,11 +236,7 @@
 		function recycle(trash, pos){
 			posEco.forEach(eco=>{
 				if(trash.trash==eco.name && eco.x<=pos.x && pos.x<=eco.x+2*240/5 && eco.y<=pos.y && pos.y<=eco.y+2*144/3){
-					trash.x=0
-					trash.y=0
 					eco.count+=1
-					trash.start = false;
-					trash.inventory = false;
 					positions[trash.place].full=false;
 					destroyTrash(trash.id)
 					console.log(eco.count)
