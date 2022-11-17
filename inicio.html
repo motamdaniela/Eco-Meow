@@ -7,17 +7,23 @@
     <title>Document</title>
     <style type="text/css">
         body {
-            background-color: #9BD4C3
+            background-color: #9BD4C3;
         }
     </style>
 </head>
 <body>
+    <audio autoplay id="myaudio" loop="true">
+        <source src="song.mp3">
+    </audio>
     <div style = "text-align:center;">
         <canvas id="myCanvas" width="1500" height="666">
             Your browser does not support HTML5 Canvas.
         </canvas>
     </div>
 	<script>
+        var audio = document.getElementById("myaudio");
+        audio.volume = 0.01
+
 		const canvas = document.querySelector('#myCanvas');
 		const ctx = canvas.getContext("2d");
 
@@ -39,7 +45,7 @@
 		bg.src = 'images/bginicio.png';
 
 		window.onload = function () {
-			setInterval(render, 1000 / 4);
+			setInterval(render, 1000 / 6);
 		};
 
         let x=W/2
@@ -79,19 +85,25 @@
                 src: button
             }
         ]
-
         
         function render(){
-            ctx.clearRect(0, 0, W, H);
+            // console.log(audio.volume)
+            if(audio.volume <= 0.4){
+                audio.volume += 0.01;
+            }
 
+            ctx.clearRect(0, 0, W, H);
+            
             // o bg poderia ser um elemento do canvas para animar mais tarde
-            ctx.drawImage(bg, xbg, 2, 752, 336, 0, 0, canvas.width*1.5,canvas.height*1.5);
+            ctx.drawImage(bg, xbg, 2, 752, 336, 0, 0, canvas.width*1.1,canvas.height*1.1);
             
             // animation for background
             console.log(xbg)
-            xbg ++;
-            if(xbg == 250){
-                xbg = 0;
+            if(xbg < 55){
+                xbg ++;
+            }
+            if(xbg >= 50){
+                xbg --;
             }
 
             rectangles.forEach(rectangle =>{
@@ -100,15 +112,15 @@
                 ctx.rect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
                 ctx.drawImage(rectangle.src, rectangle.sx, rectangle.sy,rectangle.sWidth, rectangle.sHeight, rectangle.dx, rectangle.dy, rectangle.width, rectangle.height)
 
-				frameCol++;	
-				if (frameCol == 4){
-                    frameRow++;
-                    frameCol = 0;
-                    if (frameRow == 4){
-                        frameRow = 0;
-                    }
-                }
             })
+            frameCol++;	
+            if (frameCol == 4){
+                frameRow++;
+                frameCol = 0;
+                if (frameRow == 4){
+                    frameRow = 0;
+                }
+            }
         }
         
         
@@ -146,7 +158,7 @@
         canvas.addEventListener('mousemove', e => {
 				x = e.offsetX; y = e.offsetY;
 
-				console.log(x,y)
+				// console.log(x,y)
 			});
 
 
