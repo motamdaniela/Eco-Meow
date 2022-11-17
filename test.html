@@ -360,16 +360,16 @@
 							}
 							else {
 								outside = true;
-								if (x + 192/3-10 >= border.x ){ 
+								if (x + 192/3-10 >= (border.x) ){ 
 									x+=10;
 								}
-								if(x  + 192/6 <= border.x + border.width){
+								if(x  + 192/6 <= (border.x + border.width)){
 									x-=10;
 								}
-								if(y + 192/2.9 >= border.y){
+								if(y + 192/2.9 >= (border.y)){
 									y+=10;
 								}
-								if(y + 193/7 <= border.y + border.height){
+								if(y + 193/7 <= (border.y) + (border.height)){
 									y-=10;
 								}
 								if(downKey){
@@ -377,12 +377,12 @@
 								}
 
 								// algumas borders especificas q n funcionam
-								if(x <= 615 && y>=90  && y<=169){
-									// console.log('going')
+								if(x <= 617 && y>=90  && y<=169){
+									console.log('going')
 									x-=10;
 								}
-								if(x >= 564 && y>=181 && y<=348){
-									x+=20;		
+								if(x <= 916 && y>=150 && y<=348){
+									x+=10;		
 								}
 								
 								// borders da casa
