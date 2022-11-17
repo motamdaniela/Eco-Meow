@@ -179,7 +179,7 @@
 				}
 			}
 		}
-		
+		console.log(Trashes)
 		//loads inventory and trash items onto the canvas
 		function renderTrash(){
 			ctx.drawImage(inventory,0,0,192,64,W/2-(192*1.8)/2,H-120,192*1.8,64*1.8)
@@ -246,11 +246,9 @@
 					eco.count+=1
 					positions[trash.place].full=false;
 					destroyTrash(trash.id)
-					console.log(eco.name,eco.count)
+					console.log(eco.name, eco.count)
 				}else{
 					trash.start = false;
-					trash.inventory = true;
-					positions[trash.place].full=true;
 					trash.x=positions[trash.place].x;
 					trash.y=positions[trash.place].y;
 					console.log('nao')
@@ -262,6 +260,7 @@
 		
 		function destroyTrash(id) {
 			const IndexOfTrashToDestroy = Trashes.findIndex(trash => trash.id == id)
+			console.log(IndexOfTrashToDestroy)
 			Trashes.splice(IndexOfTrashToDestroy,1)
 		}
 		
