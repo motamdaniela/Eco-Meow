@@ -136,7 +136,7 @@
 		// let blue = ['paper_bag','receipt', 'toilet_paper']
 
 		class Trash {
-			constructor(src, x, y, trash, place, inventory, start) {    // CONSTRUCTOR
+			constructor(src, x, y, trash,id) {    // CONSTRUCTOR
 				this.src = src;
 				this.x = x;
 				this.y = y;
@@ -144,6 +144,7 @@
 				this.place=0
 				this.inventory = false;
 				this.start = false;
+				this.id = id;
 			}
 		}
 
@@ -166,7 +167,7 @@
 				    yInit = 100 + Math.random() * (400);
 				}else{
 					// push new object into array
-					Trashes.push(new Trash(src, xInit, yInit, trash))
+					Trashes.push(new Trash(src, xInit, yInit, trash,i))
 				}
 			}
 		}
@@ -225,45 +226,41 @@
 				});
 					
 				canvas.addEventListener('mouseup', e => {
-					let pos2={
-						x: e.offsetX,
-						y: e.offsetY
-					};
 					if(isIntersect(pos, trash) && trash.inventory){
-						recycle(trash,pos2)
-						console.log(pos2)
+						recycle(trash,pos);
 					}
 				});
 			})
 		})
-// eco.x<=trash.x && trash.x<=eco.x+2*240/5 && eco.y<=trash.y && trash.y<=eco.y+2*144/3
 
-// eco.x<=pos2.x && pos2.x<=eco.x+2*240/5 && eco.y<=pos2.y && pos2.y<=eco.y+2*144/3
-		function recycle(trash,pos2){
+		function recycle(trash, pos){
 			posEco.forEach(eco=>{
-				if(trash.trash==eco.name && eco.x<=pos2.x && pos2.x<=eco.x+2*240/5 && eco.y<=pos2.y && pos2.y<=eco.y+2*144/3){
-					trash.x=0,
+				if(trash.trash==eco.name && eco.x<=pos.x && pos.x<=eco.x+2*240/5 && eco.y<=pos.y && pos.y<=eco.y+2*144/3){
+					trash.x=0
 					trash.y=0
 					eco.count+=1
 					trash.start = false;
 					trash.inventory = false;
 					positions[trash.place].full=false;
+					destroyTrash(trash.id)
 					console.log(eco.count)
 				}else{
-					trash.x=100;
-					trash.y=100;
+					trash.start = false;
+					trash.inventory = true;
+					positions[trash.place].full=true;
+					trash.x=positions[trash.place].x;
+					trash.y=positions[trash.place].y;
 					console.log('nao')
 					console.log(trash.trash)
 					console.log(eco.name)
-					trash.start = false;
-					trash.inventory = false;
-					positions[trash.place].full=false;
 				}
-
 			})
-			
 		}
 		
+		function destroyTrash(id) {
+			const IndexOfTrashToDestroy = Trashes.findIndex(trash => trash.id == id)
+			Trashes.splice(IndexOfTrashToDestroy,1)
+		}
 		
 		//handler for keydown
 		function ArrowPressed(e) {
