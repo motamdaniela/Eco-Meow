@@ -68,8 +68,10 @@
 
 		let frameG = frameB = frameY = 0
 		
-		let x = 1115;
-		let y = 120;
+		let x = 500;
+		let y = 250;
+		// let x = 1115;
+		// let y = 120;
 		let sizex = 192/4;
 		let sizey = 192/4;
 		
@@ -356,31 +358,63 @@
 			InsideMap();
 			renderTrash();	
 			ctx.drawImage(image, frameCol * sizex, frameRow * sizey, sizex, sizey, x, y, 192/2.1,192/2.1);
-			}
+			ctx.drawImage(tree, 2*144/5.6, 0*80/2.5, 144/5.6, 80/2.5, plantX, plantY, 2*144/6, 2*80/2.5);
+
+		}
 				
+			let tree = new Image();
+			tree.src = '/images/biome.png'
+
+			let plantX = -50;
+			let plantY = -50;
 			function Plant(){
-				canvas.add
+				if (frameRow == 0){
+					plantX = x+20;
+					plantY = y+60;
+				}else if(frameRow == 1){
+						plantX = x+20;
+						plantY = y-30;
+					}else if(frameRow == 2){
+						plantX = x-10;
+						plantY = y;
+					}else if(frameRow == 3){
+						plantX = x+50;
+						plantY = y;
+					}
+					// checks if its in one of the right spaces to plant
+					if(!(plantX + 10 >=119 && plantY + 50 >=182 && plantX -10 <=168 && plantY + 40 <=230
+						|| plantX + 10 >=246 && plantY + 50 >=86 && plantX -10 <=423 && plantY + 40 <=135
+						|| plantX + 10 >=594 && plantY + 50 >=211 && plantX -10 <=744 && plantY + 40 <=294
+						|| plantX + 10 >=212 && plantY + 50 >=530 && plantX -10 <=329 && plantY + 40 <=578
+						|| plantX + 10 >=437 && plantY + 50 >=467 && plantX -10 <=488 && plantY + 40 <=516)){
+						plantX = -50;
+						plantY = -50;
+					}
+
 			}
 
 			canvas.addEventListener('click', e => {
 
-				console.log(x,y)
+				console.log(e.offsetX, e.offsetY)
 			});
 
-			let treeSpots = [
+			let collection = [
+			// ctx.drawImage(image, frameCol * sizex, frameRow * sizey, sizex, sizey, x, y, 192/2.1,192/2.1);
+
 				{
-					x: 246,
-					y: 87,
-					Xmax: 425,
-					Ymax: 137,
+					src: '/images/biome.png',
+					frameCol: 0,
+					frameRow: 0,
+					squarex: 0,
+					squarey: 0,
+					x: 0,
+					y:0,
+					sizeX: 0,
+					sizeY: 0,
+
 				},
-				{
-					x: 246,
-					y: 87,
-					Xmax: 425,
-					Ymax: 137,
-				}
 			]
+
 			function EcoActions(){
 					canvas.addEventListener('mousemove', e => {
 						if(e.offsetX >= 1095 && e.offsetY >= 415 &&  e.offsetX <= 1135 && e.offsetY <= 455){
@@ -418,6 +452,7 @@
 
 			function actions(){
 				if (rightKey){
+					image.src = 'images/kitty.png'
 					audio.volume = 0.2;
 					frameRow = 3;
 					x+=10;
@@ -427,6 +462,7 @@
 					
 				}
 				else if (leftKey){
+					image.src = 'images/kitty.png'
 				audio.volume = 0.2;
 				x-=10;
 				frameRow = 2;
@@ -435,6 +471,7 @@
 				frameCol = 0;
 			}
 			else if (upKey){
+				image.src = 'images/kitty.png'
 				audio.volume = 0.2;
 				y-=10;
 				frameRow = 1;
@@ -443,6 +480,7 @@
 				frameCol = 0;
 			}
 			else if (downKey){
+				image.src = 'images/kitty.png'
 				audio.volume = 0.2;
 				y+=10;
 				frameRow = 0;
@@ -465,13 +503,14 @@
 				}
 				frameCol--;	
 				if (frameCol == -1){
-					pKey = false;
 					image.src = 'images/kitty.png'
+					pKey = false;
 					frameCol = 0;
 					sizex = 192/4
 					sizey = 192/4
 					frameRow -= 8
-				}	
+				}
+				Plant();	
 			}
 		}
 		
