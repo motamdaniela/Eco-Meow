@@ -42,6 +42,8 @@
 		
 		let bg = new Image();
 		bg.src = 'images/background.png'
+		let mapa = new Image();
+		mapa.src = 'images/sauna.png'
 
 		let image = new Image();
 		image.src = 'images/kitty.png';
@@ -52,13 +54,14 @@
 
 		let inventory = new Image();
 		inventory.src = 'images/inventory.png';
-
+		
 		let milk = new Image();
 		milk.src = 'trash/milk_gallon.png';
-
+		
 		let light = new Image();
 		light.src = 'trash/light_bulb.png'
 		
+		let pixel = ''
 
 		//sprite frame counter 		
 		let frameCol = 0;
@@ -237,20 +240,22 @@
 		//handler for keydown
 		function ArrowPressed(e) {
 			e.preventDefault();
-			if (e.key == 'ArrowRight') {
-				audio.volume = 0.2
+			ctx.drawImage(mapa, 0,0, canvas.width, canvas.height)				
+
+			//PIXEL COLOR CHECK
+			pixel = ctx.getImageData(x +2, y,10, 10) 
+			if (e.key == 'ArrowRight' && pixel.data[0] == 255 && pixel.data[1] == 255 && pixel.data[2] == 255) {
+            	    actions();
+
 				rightKey = true; //Canvas#2
 			}
 			else if (e.key == 'ArrowLeft'){
-				audio.volume = 0.2
 				leftKey = true; //Canvas#
 			}
 			else if (e.key == 'ArrowUp') {
-				audio.volume = 0.2
 				upKey = true; //Canvas#2
 			}
 			else if (e.key == 'ArrowDown'){
-				audio.volume = 0.2
 				downKey = true; //Canvas#
 			}
 			else if(e.keyCode==71){
@@ -320,19 +325,6 @@
 		function render() {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			ctx.drawImage(bg, 0,0, canvas.width, canvas.height)				
-				// -----------
-				borders.forEach(border =>{
-            	    ctx.beginPath();
-            	    ctx.rect(border.x, border.y, border.width, border.height);
-            	})
-
-				tinyBorders.forEach(border =>{
-					ctx.fillStyle = 'white'
-            	    ctx.beginPath();
-            	    ctx.rect(border.x, border.y, border.width, border.height);
-					ctx.fill();
-            	})
-				// -----------
 
 				ctx.drawImage(image, frameCol * sizex, frameRow * sizey, sizex, sizey, x, y, 192/2.1,192/2.1);
 				ctx.drawImage(ecopontos, frameG *240/5, 0, 240/5, 144/3, 1070, 380, 2*240/5, 2*144/3)
@@ -340,105 +332,35 @@
 				ctx.drawImage(ecopontos, frameY *240/5, 2*144/3.05, 240/5, 144/3, 1170, 380, 2*240/5, 2*144/3)
 
 				// para ver se colide c o mapa v
-				InsideMap();
+				// InsideMap();
+				actions();
 				renderTrash();	
+				requestAnimationFrame(render);
 			}
 			
-			function InsideMap(){
-				let outside = false;
-				// verifica borders mapa
-				borders.forEach(border =>{
-						if(!outside){
-							if (x + 192/3 <= border.x                    //right
-							|| x  + 192/6 >= border.x + border.width     //left
-							|| y + 192/2.9 <= border.y                   //down
-							|| y  + 192/7 >= border.y + border.height) { //up
-								// console.log('inside');
-							}
-							else {
-								outside = true;
-								if (x + 192/3-10 >= (border.x) ){ 
-									x+=10;
-								}
-								if(x  + 192/6 <= (border.x + border.width)){
-									x-=10;
-								}
-								if(y + 192/2.9 >= (border.y)){
-									y+=10;
-								}
-								if(y + 193/7 <= (border.y) + (border.height)){
-									y-=10;
-								}
-								if(downKey){
-									y-=10;
-								}
-
-								// algumas borders especificas q n funcionam
-								if(x <= 617 && y>=90  && y<=169){
-									console.log('going')
-									x-=10;
-								}
-								if(x <= 916 && y>=150 && y<=348){
-									x+=10;		
-								}
-							}
-						}
-					})
-					tinyBorders.forEach(border =>{
-						if(!outside){
-							if (x + 192/3 <= border.x                    //right
-							|| x  + 192/6 >= border.x + border.width     //left
-							|| y + 192/2.9 <= border.y                   //down
-							|| y  + 192/7 >= border.y + border.height) { //up
-								// console.log('inside');
-							}
-							else {
-								outside = true;
-								if (x + 192/3-10 >= (border.x) ){ 
-									x+=10;
-								}
-								if(x  + 192/6 <= (border.x + border.width)){
-									x-=10;
-								}
-								if(y + 192/2.9 >= (border.y)){
-									y+=10;
-								}
-								if(y + 193/7 <= (border.y) + (border.height)){
-									y-=10;
-								}
-								if(downKey){
-									y-=10;
-								}
-
-								// algumas borders especificas q n funcionam
-								if(x <= 617 && y>=90  && y<=169){
-									console.log('going')
-									x-=10;
-								}
-								if(x <= 916 && y>=150 && y<=348){
-									x+=10;		
-								}
-							}
-						}
-					})
-					if(!outside) {
-						actions();
-					}
-				}
+			// function InsideMap(){
+			// 	ctx.drawImage(mapa, 0,0, canvas.width, canvas.height)				
+				
+            // 	//PIXEL COLOR CHECK
+            // 	pixel = ctx.getImageData(x +192/3, y,10, 10) 
+            // 	console.log(pixel.data[0])
+            // 	console.log(pixel.data[1])
+            // 	console.log(pixel.data[2]) 
+				
+            // 	//PIXEL COLOR CHECK
+            // 	if(pixel.data[0] == 255 && pixel.data[1] == 255 && pixel.data[2] == 255){
+			// 		actions();
+            // 	}
+			// }
+			
+			window.onload = render();
 			
 			
-			window.onload = function () {
-				init();
-				// actionBins();
-				// setInterval(actionBins, 1000 /10)
-				setInterval(render, 1000 / 10);
-			};
-
-		
-
+			
 			//function that doesnt allows character to walk beyond the map borders
 			function actions(){
-				if (rightKey  && x <= 1380){
+				if (rightKey){
+				audio.volume = 0.2;
 				frameRow = 3;
 				x+=10;
 				frameCol++;	
@@ -446,21 +368,24 @@
 				frameCol = 2;
 				
 			}
-			else if (leftKey && x >= 60){
+			else if (leftKey){
+				audio.volume = 0.2;
 				x-=10;
 				frameRow = 2;
 				frameCol++;	
 				if (frameCol == 4)
 				frameCol = 0;
 			}
-			else if (upKey && [ y >= 30]){
+			else if (upKey){
+				audio.volume = 0.2;
 				y-=10;
 				frameRow = 1;
 				frameCol++;	
 				if (frameCol == 4)
 				frameCol = 0;
 			}
-			else if (downKey && y <= 530){
+			else if (downKey){
+				audio.volume = 0.2;
 				y+=10;
 				frameRow = 0;
 				frameCol++;	
@@ -493,6 +418,34 @@
 		}
 		
 		let borders = [
+			// {
+			// 	x: 1059,
+            //     y: 85,
+            //     width: 250,
+            //     height: 50,
+			// },
+			// {
+			// 	x: 1010,
+            //     y: 85,
+            //     width: 50,
+            //     height: 150,
+			// },
+			// {
+			// 	x: 1010+250,
+            //     y: 85,
+            //     width: 50,
+            //     height: 150,
+			// },
+			// {
+			// 	x: 1059,
+            //     y: 85+150,
+            //     width: 250,
+            //     height: 50,
+			// },
+
+
+
+
 			{
 				x: 176,
                 y: 55-50,
@@ -821,28 +774,156 @@
                 height: 140-84,
 			},
 
-			{
-				x: 1103,
-                y: 420,
-                width: 30,
-                height: 30,
-			},
-			{
-				x: 1155,
-                y: 420,
-                width: 30,
-                height: 30,
-			},
-			{
-				x: 1205,
-                y: 420,
-                width: 30,
-                height: 30,
-			},
-
 		]
 
-		
+		function border(){
+				// border mapa esquerda
+				ctx.strokeStyle = "purple";
+				
+				ctx.beginPath();				
+				ctx.moveTo(443, 50);				
+				ctx.lineTo(443, 170);
+				ctx.lineTo(443, 170);
+				ctx.lineTo(410, 170);
+				ctx.lineTo(410, 180);
+				ctx.lineTo(447, 180);
+				ctx.lineTo(447, 170);
+				ctx.lineTo(447, 80);
+				ctx.lineTo(520, 80);
+				ctx.lineTo(520, 95);
+				ctx.lineTo(615, 95);
+				ctx.lineTo(615, 170);
+				ctx.lineTo(775, 170);
+				ctx.lineTo(775, 320);
+				ctx.lineTo(745, 320);
+				ctx.lineTo(745, 360);
+				ctx.lineTo(850, 360);
+				ctx.lineTo(850, 340);
+				ctx.lineTo(915, 340);
+				ctx.lineTo(915, 185);
+				ctx.lineTo(950, 185);
+				ctx.lineTo(950, 150);
+				ctx.lineTo(990, 150);
+				ctx.lineTo(990, 90);
+				ctx.lineTo(1020, 90);
+				ctx.lineTo(1020, 280);
+				ctx.lineTo(1155, 280);
+				ctx.lineTo(1155, 260);
+				ctx.lineTo(1025, 260);
+				ctx.lineTo(1025, 85);
+				ctx.lineTo(1075, 85);
+				ctx.lineTo(1075, 210);
+				ctx.lineTo(1145, 210);
+				ctx.lineTo(1145, 190);
+				ctx.lineTo(1085, 190);
+				ctx.lineTo(1085, 150);
+				ctx.lineTo(1115, 150);
+				ctx.lineTo(1115, 135);
+				ctx.lineTo(1140, 135);
+				ctx.lineTo(1140, 110);
+				ctx.lineTo(1215, 110);
+				ctx.lineTo(1215, 140);
+				ctx.lineTo(1245, 140);
+				ctx.lineTo(1245, 190);
+				ctx.lineTo(1185, 190);
+				ctx.lineTo(1185, 210);
+				ctx.lineTo(1255, 210);
+				ctx.lineTo(1255, 85);
+				ctx.lineTo(1285, 85);
+				ctx.lineTo(1285, 140);
+				ctx.lineTo(1335, 140);
+				ctx.lineTo(1335, 260);
+				ctx.lineTo(1205, 260);
+				ctx.lineTo(1205, 280);
+				ctx.lineTo(1340, 280);
+				ctx.lineTo(1340, 140);
+				ctx.lineTo(1385, 140);
+				ctx.lineTo(1385, 150);
+				ctx.lineTo(1415, 150);
+				ctx.lineTo(1415, 290);
+				ctx.lineTo(1445, 290);
+				ctx.lineTo(1445, 420);
+				ctx.lineTo(1415, 420);
+				ctx.lineTo(1415, 510);
+				ctx.lineTo(1385, 510);
+				ctx.lineTo(1345, 510);
+				ctx.lineTo(1345, 540);
+				ctx.lineTo(1310, 540);
+				ctx.lineTo(1310, 535);
+				ctx.lineTo(1275, 535);
+				ctx.lineTo(1275, 565);
+				ctx.lineTo(1240, 565);
+				ctx.lineTo(1240, 605);
+				ctx.lineTo(1080, 605);
+				ctx.lineTo(1080, 575);
+				ctx.lineTo(1020, 575);
+				ctx.lineTo(1020, 507);
+				ctx.lineTo(990, 507);
+				ctx.lineTo(990, 545);
+				ctx.lineTo(950, 545);
+				ctx.lineTo(950, 475);
+				ctx.lineTo(900, 475);
+				ctx.lineTo(900, 545);
+				ctx.lineTo(880, 545);
+				ctx.lineTo(880, 480);
+				ctx.lineTo(850, 480);
+				ctx.lineTo(850, 410);
+				ctx.lineTo(750, 410);
+				ctx.lineTo(750, 450);
+				ctx.lineTo(650, 450);
+				ctx.lineTo(650, 510);
+				ctx.lineTo(620, 510);
+				ctx.lineTo(620, 433);
+				ctx.lineTo(495, 433);
+				ctx.lineTo(495, 492);
+				ctx.lineTo(600, 492);
+				ctx.lineTo(600, 492);
+				ctx.lineTo(600, 540);
+				ctx.lineTo(478, 543);
+				ctx.lineTo(478, 572);
+				ctx.lineTo(360, 572);
+				ctx.lineTo(360, 600);
+				ctx.lineTo(180, 600);
+				ctx.lineTo(180, 545);
+				ctx.lineTo(160, 545);
+				ctx.lineTo(160, 480);
+				ctx.lineTo(120, 480);
+				ctx.lineTo(120, 450);
+				ctx.lineTo(88, 450);
+				ctx.lineTo(88, 158);
+				ctx.lineTo(115, 158);
+				ctx.lineTo(115, 130);
+				ctx.lineTo(177, 130);
+				ctx.lineTo(177, 55);
+				ctx.lineTo(225, 55);
+				ctx.lineTo(225, 55);
+				ctx.lineTo(225, 180);
+				ctx.lineTo(355, 180);
+				ctx.lineTo(355, 170);
+				ctx.lineTo(230, 170);
+				ctx.lineTo(230, 50);
+				ctx.lineTo(443, 50);	
+
+				ctx.moveTo(1150, 485);
+				ctx.lineTo(1060, 485);
+				ctx.lineTo(1060, 385);
+				ctx.lineTo(1270, 385);
+				ctx.lineTo(1270, 485);
+				ctx.lineTo(1210, 485);
+				ctx.lineTo(1210, 495);
+				ctx.lineTo(1275, 495);
+				ctx.lineTo(1275, 380);
+				ctx.lineTo(1055, 380);
+				ctx.lineTo(1055, 495);
+				ctx.lineTo(1150, 495);
+				ctx.lineTo(1150, 485);
+
+
+
+				ctx.closePath();
+				ctx.stroke();
+			}
+			
 	</script>
 </body>
 
