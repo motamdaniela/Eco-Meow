@@ -105,6 +105,27 @@
 				full:false,
 			},
 		]
+
+		let posEco = [
+			{
+				x:1070,
+				y:380,
+				count:0,
+				name:'green',
+			},
+			{
+				x:1120,
+				y:380,
+				count:0,
+				name:'blue',
+			},
+			{
+				x:1170,
+				y:380,
+				count:0,
+				name:'yellow',
+			},
+		]
 		
 		// ------------------------------
 
@@ -115,11 +136,11 @@
 		// let blue = ['paper_bag','receipt', 'toilet_paper']
 
 		class Trash {
-			constructor(src, x, y,trash) {    // CONSTRUCTOR
+			constructor(src, x, y, trash, place, inventory, start) {    // CONSTRUCTOR
 				this.src = src;
 				this.x = x;
 				this.y = y;
-				this.trash=''
+				this.trash=trash
 				this.place=0
 				this.inventory = false;
 				this.start = false;
@@ -131,7 +152,7 @@
 			for (let i = 0; i < 25; i++) {
 				let num = Math.floor(Math.random()*(lixos.length))
 				let src = lixos[num][0]
-				let trashh=lixos[num][1]
+				let trash=lixos[num][1]
 				
 				// let src2 = green[Math.floor(Math.random()*(green.length))]
 				// let src3 = blue[Math.floor(Math.random()*(blue.length))]
@@ -145,7 +166,7 @@
 				    yInit = 100 + Math.random() * (400);
 				}else{
 					// push new object into array
-					Trashes.push(new Trash(src, xInit, yInit,trashh))
+					Trashes.push(new Trash(src, xInit, yInit, trash))
 				}
 			}
 		}
@@ -179,10 +200,8 @@
 		
 
 		function isIntersect(pos,trash){
-            return trash.x<pos.x && pos.x<trash.x+30 && trash.y<pos.y && pos.y<trash.y+30
+            return trash.x<=pos.x && pos.x<=trash.x+30 && trash.y<=pos.y && pos.y<=trash.y+30
         }
-
-		
 
 		canvas.addEventListener('mousemove', e => {
 			let pos={
@@ -206,16 +225,44 @@
 				});
 					
 				canvas.addEventListener('mouseup', e => {
+					let pos2={
+						x: e.offsetX,
+						y: e.offsetY
+					};
 					if(isIntersect(pos, trash) && trash.inventory){
-						trash.start = false;
-						trash.inventory = false;
-						trash.x=pos.x;
-						trash.y=pos.y;
-						positions[trash.place].full=false;
+						recycle(trash,pos2)
+						console.log(pos2)
 					}
 				});
 			})
 		})
+// eco.x<=trash.x && trash.x<=eco.x+2*240/5 && eco.y<=trash.y && trash.y<=eco.y+2*144/3
+
+// eco.x<=pos2.x && pos2.x<=eco.x+2*240/5 && eco.y<=pos2.y && pos2.y<=eco.y+2*144/3
+		function recycle(trash,pos2){
+			posEco.forEach(eco=>{
+				if(trash.trash==eco.name && eco.x<=pos2.x && pos2.x<=eco.x+2*240/5 && eco.y<=pos2.y && pos2.y<=eco.y+2*144/3){
+					trash.x=0,
+					trash.y=0
+					eco.count+=1
+					trash.start = false;
+					trash.inventory = false;
+					positions[trash.place].full=false;
+					console.log(eco.count)
+				}else{
+					trash.x=100;
+					trash.y=100;
+					console.log('nao')
+					console.log(trash.trash)
+					console.log(eco.name)
+					trash.start = false;
+					trash.inventory = false;
+					positions[trash.place].full=false;
+				}
+
+			})
+			
+		}
 		
 		
 		//handler for keydown
