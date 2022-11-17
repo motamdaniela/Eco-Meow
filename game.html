@@ -13,6 +13,9 @@
 				margin-top: 20px; 
 			}
 			</style>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
 	
 	<body>
 		<audio autoplay id="myaudio" loop="true">
@@ -27,6 +30,7 @@
 				Your browser does not support HTML5 Canvas.
 			</canvas>
 		</div>
+		<span id="loader" style="font-family: 'VT323', monospace;"></span>
 	<script>
 		var audio = document.getElementById("myaudio");
         audio.volume = 0;
@@ -58,6 +62,9 @@
 
 		let light = new Image();
 		light.src = 'trash/light_bulb.png'
+
+		let seed = new Image();
+		seed.src = 'images/basic_plants.png'
 		
 
 		//sprite frame counter 		
@@ -136,7 +143,7 @@
 		// let blue = ['paper_bag','receipt', 'toilet_paper']
 
 		class Trash {
-			constructor(src, x, y, trash, place, inventory, start) {    // CONSTRUCTOR
+			constructor(src, x, y, trash, id) {    // CONSTRUCTOR
 				this.src = src;
 				this.x = x;
 				this.y = y;
@@ -144,6 +151,7 @@
 				this.place=0
 				this.inventory = false;
 				this.start = false;
+				this.id = id;
 			}
 		}
 
@@ -166,7 +174,7 @@
 				    yInit = 100 + Math.random() * (400);
 				}else{
 					// push new object into array
-					Trashes.push(new Trash(src, xInit, yInit, trash))
+					Trashes.push(new Trash(src, xInit, yInit, trash,i))
 				}
 			}
 		}
@@ -225,45 +233,37 @@
 				});
 					
 				canvas.addEventListener('mouseup', e => {
-					let pos2={
-						x: e.offsetX,
-						y: e.offsetY
-					};
 					if(isIntersect(pos, trash) && trash.inventory){
-						recycle(trash,pos2)
-						console.log(pos2)
+						recycle(trash,pos);
 					}
 				});
 			})
 		})
-// eco.x<=trash.x && trash.x<=eco.x+2*240/5 && eco.y<=trash.y && trash.y<=eco.y+2*144/3
 
-// eco.x<=pos2.x && pos2.x<=eco.x+2*240/5 && eco.y<=pos2.y && pos2.y<=eco.y+2*144/3
-		function recycle(trash,pos2){
+		function recycle(trash, pos){
 			posEco.forEach(eco=>{
-				if(trash.trash==eco.name && eco.x<=pos2.x && pos2.x<=eco.x+2*240/5 && eco.y<=pos2.y && pos2.y<=eco.y+2*144/3){
-					trash.x=0,
-					trash.y=0
+				if(trash.trash==eco.name && eco.x<=pos.x && pos.x<=eco.x+2*240/5 && eco.y<=pos.y && pos.y<=eco.y+2*144/3){
 					eco.count+=1
-					trash.start = false;
-					trash.inventory = false;
 					positions[trash.place].full=false;
+					destroyTrash(trash.id)
 					console.log(eco.count)
 				}else{
-					trash.x=100;
-					trash.y=100;
+					trash.start = false;
+					trash.inventory = true;
+					positions[trash.place].full=true;
+					trash.x=positions[trash.place].x;
+					trash.y=positions[trash.place].y;
 					console.log('nao')
 					console.log(trash.trash)
 					console.log(eco.name)
-					trash.start = false;
-					trash.inventory = false;
-					positions[trash.place].full=false;
 				}
-
 			})
-			
 		}
 		
+		function destroyTrash(id) {
+			const IndexOfTrashToDestroy = Trashes.findIndex(trash => trash.id == id)
+			Trashes.splice(IndexOfTrashToDestroy,1)
+		}
 		
 		//handler for keydown
 		function ArrowPressed(e) {
@@ -360,15 +360,19 @@
             	})
 				// -----------
 
-				ctx.drawImage(image, frameCol * sizex, frameRow * sizey, sizex, sizey, x, y, 192/2.1,192/2.1);
 				ctx.drawImage(ecopontos, frameG *240/5, 0, 240/5, 144/3, 1070, 380, 2*240/5, 2*144/3)
 				ctx.drawImage(ecopontos, frameB *240/5, 144/3, 240/5, 144/3, 1120, 380, 2*240/5, 2*144/3)
 				ctx.drawImage(ecopontos, frameY *240/5, 2*144/3.05, 240/5, 144/3, 1170, 380, 2*240/5, 2*144/3)
-
+				ctx.drawImage(seed, 0, 0, 96/6, 32/2, 1370, 0, 40, 40)
+				ctx.font = "40px VT323";
+				ctx.fillStyle = "#B58861";
+				ctx.fillText("X 0", 1420, 32);
+				
 				// para ver se colide c o mapa v
 				// InsideMap();
-				actions();
 				renderTrash();	
+				ctx.drawImage(image, frameCol * sizex, frameRow * sizey, sizex, sizey, x, y, 192/2.1,192/2.1);
+				actions();
 			}
 			
 			let theBorder = '';
