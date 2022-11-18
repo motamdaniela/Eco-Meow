@@ -282,6 +282,7 @@
 					trash.start = false;
 					trash.x=positions[trash.place].x;
 					trash.y=positions[trash.place].y;
+					emoteAnimation('errado')
 				}
 			})
 		}
@@ -290,6 +291,19 @@
 			const IndexOfTrashToDestroy = Trashes.findIndex(trash => trash.id == id)
 			Trashes.splice(IndexOfTrashToDestroy,1)
 			ecoCounter += 1;
+		}
+
+		function emoteAnimation(idk){
+			let xImg=160/5
+			let yImg=480/15
+			ctx.drawImage(emote, 0, 0, xImg, yImg, 17, 17, 38, 38)
+			
+			if(idk=='errado'){
+				window.setTimeout( function(){ 
+					xImg=160/5+10
+					// ctx.drawImage(emote, 0, 0, xImg+10, yImg, 17, 17, 38, 38)
+				},1000)
+			}
 		}
 
 		
@@ -371,7 +385,7 @@
 			ctx.drawImage(ecopontos, frameY *240/5, 2*144/3.05, 240/5, 144/3, 1170, 380, 2*240/5, 2*144/3)
 			ctx.drawImage(seed, 0, 0, 96/6, 32/2, 1370, 0, 40, 40)
 			ctx.drawImage(box, 0, 0, 70, 70)
-			ctx.drawImage(emote, 0, 0, 160/5, 480/15, 17, 17, 38, 38)
+			emoteAnimation('inicio')
 			ctx.font = "40px VT323";
 			ctx.fillStyle = "#B58861";
 			ctx.fillText(`X ${Math.floor(ecoCounter/5)}`, 1420, 32);
