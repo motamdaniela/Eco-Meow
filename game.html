@@ -24,6 +24,9 @@
 		<audio id="grabaudio">
 			<source src="/sounds/grab.mp4">
 		</audio>
+		<audio id="tingaudio">
+			<source src="/sounds/ting.mp3">
+		</audio>
 
 		<div style = "text-align:center;">
 			<canvas id="myCanvas" width="1500" height="666">
@@ -37,10 +40,19 @@
 		audio.playbackRate = 5;
 
 		var grabaudio = document.getElementById("grabaudio");
-        grabaudio.volume = 0.8;
+        grabaudio.volume = 0.7;
+		var tingaudio = document.getElementById("tingaudio");
+        tingaudio.volume = 0.5;
 
 		const canvas = document.querySelector('#myCanvas');
 		const ctx = canvas.getContext("2d");
+
+		// --------------------
+		canvas.addEventListener('click', e => {
+		console.log(e.offsetX, e.offsetY)
+		});
+		// --------------------
+
 		
 		const W = canvas.width, H = canvas.height;
 		
@@ -175,15 +187,21 @@
 
 				let xInit = 90 + Math.random() * (600);
 				let yInit = 110 + Math.random() * (390);
-
 				// checks if position is in the desired space in the map
-				if(xInit >= 410 && yInit >=400 || xInit <= 150 && yInit >=430 || xInit <= 170 && yInit <=230 || xInit >= 200 && yInit <=180 && xInit <= 440 && yInit <=180 || xInit >= 560 && yInit <=300){
+				while(xInit >= 410 && yInit >=400 || xInit <= 150 && yInit >=430 || xInit <= 170 && yInit <=230 || xInit >= 200 && yInit <=180 && xInit <= 440 && yInit <=180 || xInit >= 560 && yInit <=300){
 					xInit = 90 + Math.random() * (600);
-				    yInit = 100 + Math.random() * (400);
-				}else{
-					// push new object into array
-					Trashes.push(new Trash(src, img, xInit, yInit, trash,i))
+				    yInit = 110 + Math.random() * (400);
 				}
+				// if(Trashes.length){
+				// 	Trashes.forEach(trash, () =>{
+				// 		while(xInit == trash.x && trash.y == yInit){
+				// 			xInit = 90 + Math.random() * (600);
+				// 			yInit = 110 + Math.random() * (400);
+				// 		}
+				// 	})
+				// }
+
+				Trashes.push(new Trash(src, img, xInit, yInit, trash,i))
 			}
 		}
 		console.log(Trashes)
@@ -265,10 +283,25 @@
 		function recycle(trash, pos){
 			posEco.forEach(eco=>{
 				if(trash.trash==eco.name && eco.x<=pos.x && pos.x<=eco.x+2*240/5 && eco.y<=pos.y && pos.y<=eco.y+2*144/3){
-					eco.count+=1
 					positions[trash.place].full=false;
 					console.log(trash.src, trash.trash)
 					destroyTrash(trash.id)
+					tingaudio.play();
+					if(ecoCounter % 5 == 0){
+						setTimeout( function(){ 
+							seedX += 1000;
+							setTimeout( function(){ 
+								seedX = 1420;
+								setTimeout( function(){ 
+									seedX += 1000;
+									setTimeout( function(){ 
+											eco.count+=1
+											seedX = 1420;
+										},300)
+									},300)
+								},300)
+							},300)
+					}
 				}else{
 					trash.start = false;
 					trash.x=positions[trash.place].x;
@@ -342,7 +375,8 @@
 		//sets handlers for events keydown & keyup
 		window.addEventListener('keydown', ArrowPressed);
 		window.addEventListener('keyup', ArrowReleased);		
-			
+
+		let seedX = 1420;
 		function render() {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			ctx.drawImage(bg, 0,0, canvas.width, canvas.height)	
@@ -360,12 +394,12 @@
 			ctx.drawImage(ecopontos, frameG *240/5, 0, 240/5, 144/3, 1070, 380, 2*240/5, 2*144/3)
 			ctx.drawImage(ecopontos, frameB *240/5, 144/3, 240/5, 144/3, 1120, 380, 2*240/5, 2*144/3)
 			ctx.drawImage(ecopontos, frameY *240/5, 2*144/3.05, 240/5, 144/3, 1170, 380, 2*240/5, 2*144/3)
-			ctx.drawImage(seed, 0, 0, 96/6, 32/2, 1370, 0, 40, 40)
+			ctx.drawImage(seed, 0, 0, 96/6, 32/2, 1370, -5, 40, 40)
 			ctx.font = "40px VT323";
 			ctx.fillStyle = "#B58861";
-			ctx.fillText(`X ${Math.floor(ecoCounter/5)}`, 1420, 32);
-			// plz deixa estar isto ↓
-			ctx.fillText(`recycled: ${ecoCounter}`, 1293, 70);
+			ctx.fillText(`X ${Math.floor(ecoCounter/5)}`, seedX, 25);
+			ctx.drawImage(seed, 0, 0, 96/6, 32/2, 1370, 35, 40, 40)
+			ctx.fillText(`X ${ecoCounter}`, 1420, 70);
 			
 			
 			EcoActions();
@@ -471,11 +505,6 @@
 
 				}
 
-			canvas.addEventListener('click', e => {
-
-				console.log(e.offsetX, e.offsetY)
-			});
-
 			let collection = [
 
 				{
@@ -530,7 +559,7 @@
 			function actions(){
 				if (rightKey){
 					image.src = 'images/kitty.png'
-					audio.volume = 0.2;
+					audio.volume = 0.3;
 					frameRow = 3;
 					x+=10;
 					frameCol++;	
@@ -540,7 +569,7 @@
 				}
 				else if (leftKey){
 					image.src = 'images/kitty.png'
-				audio.volume = 0.2;
+				audio.volume = 0.3;
 				x-=10;
 				frameRow = 2;
 				frameCol++;	
@@ -549,7 +578,7 @@
 			}
 			else if (upKey){
 				image.src = 'images/kitty.png'
-				audio.volume = 0.2;
+				audio.volume = 0.3;
 				y-=10;
 				frameRow = 1;
 				frameCol++;	
@@ -558,7 +587,7 @@
 			}
 			else if (downKey){
 				image.src = 'images/kitty.png'
-				audio.volume = 0.2;
+				audio.volume = 0.3;
 				y+=10;
 				frameRow = 0;
 				frameCol++;	
