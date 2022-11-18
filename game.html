@@ -201,14 +201,19 @@
 		function grab(x,y){
 			Trashes.forEach(trash =>{
 				if(trash.x>=x && trash.x<=x+50 && trash.y>=y && trash.y<=y+50){
-					let newPos=positions.find(position => position.full==false)
-					trash.x=newPos.x
-					trash.y=newPos.y
-					trash.inventory=true
-					let i=positions.indexOf(newPos)
-					trash.place=i
-					positions[i].full=true
-					grabaudio.play();
+					if(positions.find(position => position.full==false)){
+						let newPos=positions.find(position => position.full==false)
+						trash.x=newPos.x
+						trash.y=newPos.y
+						trash.inventory=true
+						let i=positions.indexOf(newPos)
+						trash.place=i
+						positions[i].full=true
+						grabaudio.play();
+					}else{
+						console.log('nao')
+					}
+					
 				}
 			})
 		}
@@ -218,7 +223,6 @@
             return trash.x<=pos.x && pos.x<=trash.x+30 && trash.y<=pos.y && pos.y<=trash.y+30
         }
 
-		
 		canvas.addEventListener('mousedown', e => {
 			let pos={
 				x: e.offsetX,
