@@ -393,10 +393,11 @@
 
 			}
 
-			function growth(){
-				if(framePlant < 1){
-					framePlant++;
-				}
+			function growth(framePlant){
+				setTimeout( function(){ 
+					if(framePlant < 1){
+						framePlant++;
+					}
 			}
 
 			canvas.addEventListener('click', e => {
@@ -405,7 +406,6 @@
 			});
 
 			let collection = [
-			// ctx.drawImage(image, frameCol * sizex, frameRow * sizey, sizex, sizey, x, y, 192/2.1,192/2.1);
 
 				{
 					src: '/images/biome.png',
