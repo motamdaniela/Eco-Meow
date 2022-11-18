@@ -201,14 +201,19 @@
 		function grab(x,y){
 			Trashes.forEach(trash =>{
 				if(trash.x>=x && trash.x<=x+50 && trash.y>=y && trash.y<=y+50){
-					let newPos=positions.find(position => position.full==false)
-					trash.x=newPos.x
-					trash.y=newPos.y
-					trash.inventory=true
-					let i=positions.indexOf(newPos)
-					trash.place=i
-					positions[i].full=true
-					grabaudio.play();
+					if(positions.find(position => position.full==false)){
+						let newPos=positions.find(position => position.full==false)
+						trash.x=newPos.x
+						trash.y=newPos.y
+						trash.inventory=true
+						let i=positions.indexOf(newPos)
+						trash.place=i
+						positions[i].full=true
+						grabaudio.play();
+					}else{
+						console.log('nao')
+					}
+					
 				}
 			})
 		}
@@ -218,49 +223,56 @@
             return trash.x<=pos.x && pos.x<=trash.x+30 && trash.y<=pos.y && pos.y<=trash.y+30
         }
 
+		canvas.addEventListener('mousedown', e => {
+			let pos={
+				x: e.offsetX,
+				y: e.offsetY
+			};
+			Trashes.forEach(trash=>{
+				if(isIntersect(pos, trash) && trash.inventory){
+					trash.x=pos.x;
+					trash.y=pos.y;
+					trash.start = true;  
+				}
+			});
+		});
+			
 		canvas.addEventListener('mousemove', e => {
 			let pos={
 				x: e.offsetX,
 				y: e.offsetY
 			};
 			Trashes.forEach(trash=>{
-				canvas.addEventListener('mousedown', e => {
-					if(isIntersect(pos, trash) && trash.inventory){
-						trash.x=pos.x;
-						trash.y=pos.y;
-						trash.start = true;  
-					}
-				});
-					
-				canvas.addEventListener('mousemove', e => {
-					if (trash.start) {    
-						trash.x=pos.x;
-						trash.y=pos.y;
-					}
-				});
-					
-				canvas.addEventListener('mouseup', e => {
-					if(isIntersect(pos, trash) && trash.inventory){
-						recycle(trash,pos);
-					}
-				});
-			})
-		})
+				if (trash.start) {    
+					trash.x=pos.x;
+					trash.y=pos.y;
+				}
+			});
+		});
+				
+		canvas.addEventListener('mouseup', e => {
+			let pos={
+				x: e.offsetX,
+				y: e.offsetY
+			};
+			Trashes.forEach(trash=>{
+				if(isIntersect(pos, trash) && trash.inventory){
+					recycle(trash,pos);
+				}
+			});
+		});
 
 		function recycle(trash, pos){
 			posEco.forEach(eco=>{
 				if(trash.trash==eco.name && eco.x<=pos.x && pos.x<=eco.x+2*240/5 && eco.y<=pos.y && pos.y<=eco.y+2*144/3){
 					eco.count+=1
 					positions[trash.place].full=false;
+					console.log(trash.src, trash.trash)
 					destroyTrash(trash.id)
-					console.log(eco.name, eco.count)
 				}else{
 					trash.start = false;
 					trash.x=positions[trash.place].x;
 					trash.y=positions[trash.place].y;
-					console.log('nao')
-					console.log(trash.trash)
-					console.log(eco.name)
 				}
 			})
 		}
