@@ -65,7 +65,7 @@
 		//sprite frame counter 		
 		let frameCol = 0;
 		let frameRow = 0;
-
+		
 		let frameG = frameB = frameY = 0
 		
 		let x = 500;
@@ -81,6 +81,10 @@
 		let downKey = false;
 		let gKey = false;
 		let pKey = false
+		
+		let plantX1 = plantX2 = plantX3 = plantX4 = plantX5 = -50;
+		let plantY1  = plantY2 = plantY3 = plantY4 = plantY5 = -50;
+		let framePlant1  = framePlant2 = framePlant3 = framePlant4 = framePlant5 = 0;
 		
 		let positions = [
 			{
@@ -356,29 +360,39 @@
 			InsideMap();
 			renderTrash();	
 			ctx.drawImage(image, frameCol * sizex, frameRow * sizey, sizex, sizey, x, y, 192/2.1,192/2.1);
-			ctx.drawImage(tree, framePlant*2*144/5.6, 0*80/2.5, 144/5.6, 80/2.5, plantX, plantY, 2*144/6, 2*80/2.5);
+			ctx.drawImage(tree, framePlant1*2*144/5.6, 0*80/2.5, 144/5.6, 80/2.5, plantX1, plantY1, 2*144/6, 2*80/2.5);
+			ctx.drawImage(tree, framePlant2*2*144/5.6, 0*80/2.5, 144/5.6, 80/2.5, plantX2, plantY2, 2*144/6, 2*80/2.5);
+			ctx.drawImage(tree, framePlant3*2*144/5.6, 0*80/2.5, 144/5.6, 80/2.5, plantX3, plantY3, 2*144/6, 2*80/2.5);
+			ctx.drawImage(tree, framePlant4*2*144/5.6, 0*80/2.5, 144/5.6, 80/2.5, plantX4, plantY4, 2*144/6, 2*80/2.5);
+			ctx.drawImage(tree, framePlant5*2*144/5.6, 0*80/2.5, 144/5.6, 80/2.5, plantX5, plantY5, 2*144/6, 2*80/2.5);
 
 		}
-			let framePlant = 0;
-			let tree = new Image();
-			tree.src = '/images/biome.png'
-
+		let treeCount = 0;
+		let tree = new Image();
+		tree.src = '/images/biome.png'
+			
+		function Plant(){
 			let plantX = -50;
 			let plantY = -50;
-			function Plant(){
+			let framePlant = 0;
+
 				if (frameRow == 0){
 					plantX = x+20;
 					plantY = y+60;
+					treeCount += 1
 				}else if(frameRow == 1){
-						plantX = x+20;
-						plantY = y-30;
-					}else if(frameRow == 2){
-						plantX = x-10;
-						plantY = y;
-					}else if(frameRow == 3){
-						plantX = x+50;
-						plantY = y;
-					}
+					plantX = x+20;
+					plantY = y-30;
+					treeCount += 1
+				}else if(frameRow == 2){
+					plantX = x-10;
+					plantY = y;
+					treeCount += 1
+				}else if(frameRow == 3){
+					plantX = x+50;
+					plantY = y;
+					treeCount += 1
+				}
 					// checks if its in one of the right spaces to plant
 					if(!(plantX + 10 >=119 && plantY + 50 >=182 && plantX -10 <=168 && plantY + 40 <=230
 						|| plantX + 10 >=246 && plantY + 50 >=86 && plantX -10 <=423 && plantY + 40 <=135
@@ -388,17 +402,50 @@
 						plantX = -50;
 						plantY = -50;
 					}
-					setTimeout(growth,1500)
-					console.log(framePlant)
 
-			}
-
-			function growth(framePlant){
-				setTimeout( function(){ 
-					if(framePlant < 1){
-						framePlant++;
+					// checks how many trees were planted
+					if (treeCount == 0){
+						console.log(treeCount)
+						plantX1 = plantX
+						plantY1 = plantY
+						framePlant1 = framePlant
+						setTimeout( function(){ 
+						if(framePlant1 < 1){
+							framePlant1++;
+						}
+						},1000)
+					}else if (treeCount == 1){
+						plantX2 = plantX
+						plantY2 = plantY
+						framePlant2 = framePlant
+						growth(framePlant2)
+					}else if (treeCount == 2){
+						plantX3 = plantX
+						plantY3 = plantY
+						framePlant3 = framePlant
+						growth(framePlant3)
+					}else if (treeCount == 3){
+						plantX4 = plantX
+						plantY4 = plantY
+						framePlant4 = framePlant
+						growth(framePlant4)
+					}else if (treeCount == 4){
+						plantX5 = plantX
+						plantY5 = plantY
+						framePlant5 = framePlant
+						growth(framePlant5)
 					}
-			}
+
+				}
+				
+				function growth(framePlant){
+					setTimeout( function(){ 
+						console.log(framePlant);	
+						if(framePlant < 1){
+							framePlant++;
+						}
+					},1000)
+				}
 
 			canvas.addEventListener('click', e => {
 
@@ -516,7 +563,7 @@
 					sizey = 192/4
 					frameRow -= 8
 				}
-				Plant();	
+				Plant();
 			}
 		}
 		
