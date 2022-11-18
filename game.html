@@ -360,16 +360,16 @@
 			InsideMap();
 			renderTrash();	
 			ctx.drawImage(image, frameCol * sizex, frameRow * sizey, sizex, sizey, x, y, 192/2.1,192/2.1);
-			ctx.drawImage(tree, framePlant1*2*144/5.6, 0*80/2.5, 144/5.6, 80/2.5, plantX1, plantY1, 2*144/6, 2*80/2.5);
-			ctx.drawImage(tree, framePlant2*2*144/5.6, 0*80/2.5, 144/5.6, 80/2.5, plantX2, plantY2, 2*144/6, 2*80/2.5);
-			ctx.drawImage(tree, framePlant3*2*144/5.6, 0*80/2.5, 144/5.6, 80/2.5, plantX3, plantY3, 2*144/6, 2*80/2.5);
-			ctx.drawImage(tree, framePlant4*2*144/5.6, 0*80/2.5, 144/5.6, 80/2.5, plantX4, plantY4, 2*144/6, 2*80/2.5);
-			ctx.drawImage(tree, framePlant5*2*144/5.6, 0*80/2.5, 144/5.6, 80/2.5, plantX5, plantY5, 2*144/6, 2*80/2.5);
+			ctx.drawImage(tree, framePlant1*96/4, 0, 96/4, 32, plantX1, plantY1, 2*96/4, 2* 32);
+			ctx.drawImage(tree, framePlant2*96/4, 0, 96/4, 32, plantX2, plantY2, 2*96/4, 2* 32);
+			ctx.drawImage(tree, framePlant3*96/4, 0, 96/4, 32, plantX3, plantY3, 2*96/4, 2* 32);
+			ctx.drawImage(tree, framePlant4*96/4, 0, 96/4, 32, plantX4, plantY4, 2*96/4, 2* 32);
+			ctx.drawImage(tree, framePlant5*96/4, 0, 96/4, 32, plantX5, plantY5, 2*96/4, 2* 32);
 
 		}
 		let treeCount = 0;
 		let tree = new Image();
-		tree.src = '/images/biome.png'
+		tree.src = '/images/tree.png'
 			
 		function Plant(){
 			let plantX = -50;
@@ -404,47 +404,60 @@
 					}
 
 					// checks how many trees were planted
-					if (treeCount == 0){
+					if (treeCount == 1){
 						console.log(treeCount)
 						plantX1 = plantX
 						plantY1 = plantY
 						framePlant1 = framePlant
 						setTimeout( function(){ 
-						if(framePlant1 < 1){
-							framePlant1++;
-						}
+							framePlant1 = 0.8
+							setTimeout( function(){ 
+								framePlant1 = 1.99
+							},1000)
 						},1000)
-					}else if (treeCount == 1){
+					}else if (treeCount == 2){
 						plantX2 = plantX
 						plantY2 = plantY
 						framePlant2 = framePlant
-						growth(framePlant2)
-					}else if (treeCount == 2){
+						setTimeout( function(){ 
+							framePlant2 = 0.8
+							setTimeout( function(){ 
+								framePlant2 = 1.99
+							},1000)
+						},1000)
+					}else if (treeCount == 3){
 						plantX3 = plantX
 						plantY3 = plantY
 						framePlant3 = framePlant
-						growth(framePlant3)
-					}else if (treeCount == 3){
+						setTimeout( function(){ 
+							framePlant3 = 0.8
+							setTimeout( function(){ 
+								framePlant3 = 1.99
+							},1000)
+						},1000)
+					}else if (treeCount == 4){
 						plantX4 = plantX
 						plantY4 = plantY
 						framePlant4 = framePlant
-						growth(framePlant4)
-					}else if (treeCount == 4){
+						setTimeout( function(){ 
+							framePlant4 = 0.8
+							setTimeout( function(){ 
+								framePlant4 = 1.99
+							},1000)
+						},1000)
+					}else if (treeCount == 5){
 						plantX5 = plantX
 						plantY5 = plantY
 						framePlant5 = framePlant
-						growth(framePlant5)
+						setTimeout( function(){ 
+							framePlant5 = 0.8
+							setTimeout( function(){ 
+								framePlant5 = 1.99
+							},1000)
+						},1000)
 					}
 
-				}
-				
-				function growth(framePlant){
-					setTimeout( function(){ 
-						console.log(framePlant);	
-						if(framePlant < 1){
-							framePlant++;
-						}
-					},1000)
+					console.log(treeCount);	
 				}
 
 			canvas.addEventListener('click', e => {
