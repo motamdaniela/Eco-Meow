@@ -59,6 +59,9 @@
 
 		let seed = new Image();
 		seed.src = 'images/basic_plants.png'
+
+		let box = new Image();
+		box.src = 'images/caixa.png'
 		
 		let ecoCounter = 0;
 
@@ -361,6 +364,7 @@
 			ctx.drawImage(ecopontos, frameB *240/5, 144/3, 240/5, 144/3, 1120, 380, 2*240/5, 2*144/3)
 			ctx.drawImage(ecopontos, frameY *240/5, 2*144/3.05, 240/5, 144/3, 1170, 380, 2*240/5, 2*144/3)
 			ctx.drawImage(seed, 0, 0, 96/6, 32/2, 1370, 0, 40, 40)
+			ctx.drawImage(box, 0, 0, 70, 70)
 			ctx.font = "40px VT323";
 			ctx.fillStyle = "#B58861";
 			ctx.fillText(`X ${Math.floor(ecoCounter/5)}`, 1420, 32);
