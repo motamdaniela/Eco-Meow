@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>meow</title>
+</head>
+
+<style>
+    body {
+        /* background-color: #9BD4C3; */
+        background-image: url('images/Water.png');
+        background-size: 9%;
+        margin-top: 20px; 
+    }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<body>
+    <div style = "text-align:center;">
+        <canvas id="myCanvas" width="1500" height="666">
+            Your browser does not support HTML5 Canvas.
+        </canvas>
+    </div>
+
+    <span id="loader" style="font-family: 'VT323', monospace;"></span>
+    
+    <script>
+        const canvas = document.querySelector('#myCanvas');
+		const ctx = canvas.getContext("2d");
+
+        let bg = new Image();
+        bg.src='images/bg_regras.png';
+
+        let regras = new Image();
+        regras.src='images/regras.png';
+
+        let box = new Image();
+        box.src='images/box.png'; 
+
+        window.onload = function () {
+			setInterval(render, 1000 / 6);
+		};
+
+        function render() {
+            
+            ctx.drawImage(bg, 50,0, canvas.width-100, canvas.height);
+            ctx.drawImage(regras, canvas.width/2-100, 10, 98*2,34*2);
+            ctx.drawImage(box, 100,70, 51*5, 45*5);
+            ctx.drawImage(box, 100,300, 51*5, 45*5);
+        }
+        
+    </script>
+</body>
+
+</html>
