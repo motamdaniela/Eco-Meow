@@ -6,6 +6,9 @@
 		<title>meow</title>
 	</head>
 		<style>
+			*{ cursor : url('images/mouseicon.png'), auto}
+			*:active{ cursor : url('images/mouseicongrab.png'), auto}
+			
 			body {
 				/* background-color: #9BD4C3; */
 				background-image: url('images/Water.png');
@@ -24,6 +27,9 @@
 		<audio id="grabaudio">
 			<source src="/sounds/grab.mp4">
 		</audio>
+		<audio id="tingaudio">
+			<source src="/sounds/ting.mp3">
+		</audio>
 
 		<div style = "text-align:center;">
 			<canvas id="myCanvas" width="1500" height="666">
@@ -37,10 +43,19 @@
 		audio.playbackRate = 5;
 
 		var grabaudio = document.getElementById("grabaudio");
-        grabaudio.volume = 0.8;
+        grabaudio.volume = 0.7;
+		var tingaudio = document.getElementById("tingaudio");
+        tingaudio.volume = 0.5;
 
 		const canvas = document.querySelector('#myCanvas');
 		const ctx = canvas.getContext("2d");
+
+		// --------------------
+		canvas.addEventListener('click', e => {
+		console.log(e.offsetX, e.offsetY)
+		});
+		// --------------------
+
 		
 		const W = canvas.width, H = canvas.height;
 		
@@ -59,6 +74,12 @@
 
 		let seed = new Image();
 		seed.src = 'images/basic_plants.png'
+
+		let box = new Image();
+		box.src = 'images/caixa.png'
+
+		let emote = new Image();
+		emote.src = 'images/emoteanimations.png'
 		
 		let ecoCounter = 0;
 
@@ -69,7 +90,7 @@
 		let frameG = frameB = frameY = 0
 		
 		let x = 500;
-		let y = 250;
+		let y = 120;
 		// let x = 1115;
 		// let y = 120;
 		let sizex = 192/4;
@@ -175,15 +196,21 @@
 
 				let xInit = 90 + Math.random() * (600);
 				let yInit = 110 + Math.random() * (390);
-
 				// checks if position is in the desired space in the map
-				if(xInit >= 410 && yInit >=400 || xInit <= 150 && yInit >=430 || xInit <= 170 && yInit <=230 || xInit >= 200 && yInit <=180 && xInit <= 440 && yInit <=180 || xInit >= 560 && yInit <=300){
+				while(xInit >= 410 && yInit >=400 || xInit <= 150 && yInit >=430 || xInit <= 170 && yInit <=230 || xInit >= 200 && yInit <=180 && xInit <= 440 && yInit <=180 || xInit >= 560 && yInit <=300){
 					xInit = 90 + Math.random() * (600);
-				    yInit = 100 + Math.random() * (400);
-				}else{
-					// push new object into array
-					Trashes.push(new Trash(src, img, xInit, yInit, trash,i))
+				    yInit = 110 + Math.random() * (400);
 				}
+				// if(Trashes.length){
+				// 	Trashes.forEach(trash, () =>{
+				// 		while(xInit == trash.x && trash.y == yInit){
+				// 			xInit = 90 + Math.random() * (600);
+				// 			yInit = 110 + Math.random() * (400);
+				// 		}
+				// 	})
+				// }
+
+				Trashes.push(new Trash(src, img, xInit, yInit, trash,i))
 			}
 		}
 		console.log(Trashes)
@@ -201,14 +228,19 @@
 		function grab(x,y){
 			Trashes.forEach(trash =>{
 				if(trash.x>=x && trash.x<=x+50 && trash.y>=y && trash.y<=y+50){
-					let newPos=positions.find(position => position.full==false)
-					trash.x=newPos.x
-					trash.y=newPos.y
-					trash.inventory=true
-					let i=positions.indexOf(newPos)
-					trash.place=i
-					positions[i].full=true
-					grabaudio.play();
+					if(positions.find(position => position.full==false)){
+						let newPos=positions.find(position => position.full==false)
+						trash.x=newPos.x
+						trash.y=newPos.y
+						trash.inventory=true
+						let i=positions.indexOf(newPos)
+						trash.place=i
+						positions[i].full=true
+						grabaudio.play();
+					}else{
+						console.log('nao')
+					}
+					
 				}
 			})
 		}
@@ -218,49 +250,72 @@
             return trash.x<=pos.x && pos.x<=trash.x+30 && trash.y<=pos.y && pos.y<=trash.y+30
         }
 
+		canvas.addEventListener('mousedown', e => {
+			let pos={
+				x: e.offsetX,
+				y: e.offsetY
+			};
+			Trashes.forEach(trash=>{
+				if(isIntersect(pos, trash) && trash.inventory){
+					trash.x=pos.x;
+					trash.y=pos.y;
+					trash.start = true;  
+				}
+			});
+		});
+			
 		canvas.addEventListener('mousemove', e => {
 			let pos={
 				x: e.offsetX,
 				y: e.offsetY
 			};
 			Trashes.forEach(trash=>{
-				canvas.addEventListener('mousedown', e => {
-					if(isIntersect(pos, trash) && trash.inventory){
-						trash.x=pos.x;
-						trash.y=pos.y;
-						trash.start = true;  
-					}
-				});
-					
-				canvas.addEventListener('mousemove', e => {
-					if (trash.start) {    
-						trash.x=pos.x;
-						trash.y=pos.y;
-					}
-				});
-					
-				canvas.addEventListener('mouseup', e => {
-					if(isIntersect(pos, trash) && trash.inventory){
-						recycle(trash,pos);
-					}
-				});
-			})
-		})
+				if (trash.start) {    
+					trash.x=pos.x;
+					trash.y=pos.y;
+				}
+			});
+		});
+				
+		canvas.addEventListener('mouseup', e => {
+			let pos={
+				x: e.offsetX,
+				y: e.offsetY
+			};
+			Trashes.forEach(trash=>{
+				if(isIntersect(pos, trash) && trash.inventory){
+					recycle(trash,pos);
+				}
+			});
+		});
 
 		function recycle(trash, pos){
 			posEco.forEach(eco=>{
 				if(trash.trash==eco.name && eco.x<=pos.x && pos.x<=eco.x+2*240/5 && eco.y<=pos.y && pos.y<=eco.y+2*144/3){
-					eco.count+=1
 					positions[trash.place].full=false;
+					console.log(trash.src, trash.trash)
 					destroyTrash(trash.id)
-					console.log(eco.name, eco.count)
+					tingaudio.play();
+					if(ecoCounter % 5 == 0){
+						setTimeout( function(){ 
+							seedX += 1000;
+							setTimeout( function(){ 
+								seedX = 1420;
+								setTimeout( function(){ 
+									seedX += 1000;
+									setTimeout( function(){ 
+											eco.count+=1
+											seedX = 1420;
+										},300)
+									},300)
+								},300)
+							},300)
+					}
 				}else{
 					trash.start = false;
 					trash.x=positions[trash.place].x;
 					trash.y=positions[trash.place].y;
-					console.log('nao')
-					console.log(trash.trash)
-					console.log(eco.name)
+					emoteAnimation('errado')
 				}
 			})
 		}
@@ -269,6 +324,19 @@
 			const IndexOfTrashToDestroy = Trashes.findIndex(trash => trash.id == id)
 			Trashes.splice(IndexOfTrashToDestroy,1)
 			ecoCounter += 1;
+		}
+
+		function emoteAnimation(idk){
+			let xImg=160/5
+			let yImg=480/15
+			ctx.drawImage(emote, 0, 0, xImg, yImg, 17, 17, 38, 38)
+			
+			if(idk=='errado'){
+				window.setTimeout( function(){ 
+					xImg=160/5+10
+					// ctx.drawImage(emote, 0, 0, xImg+10, yImg, 17, 17, 38, 38)
+				},1000)
+			}
 		}
 
 		
@@ -330,7 +398,8 @@
 		//sets handlers for events keydown & keyup
 		window.addEventListener('keydown', ArrowPressed);
 		window.addEventListener('keyup', ArrowReleased);		
-			
+
+		let seedX = 1420;
 		function render() {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			ctx.drawImage(bg, 0,0, canvas.width, canvas.height)	
@@ -349,29 +418,32 @@
 			ctx.drawImage(ecopontos, frameB *240/5, 144/3, 240/5, 144/3, 1120, 380, 2*240/5, 2*144/3)
 			ctx.drawImage(ecopontos, frameY *240/5, 2*144/3.05, 240/5, 144/3, 1170, 380, 2*240/5, 2*144/3)
 			ctx.drawImage(seed, 0, 0, 96/6, 32/2, 1370, 0, 40, 40)
+			ctx.drawImage(box, 0, 0, 70, 70)
+			emoteAnimation('inicio')
 			ctx.font = "40px VT323";
 			ctx.fillStyle = "#B58861";
-			ctx.fillText(`X ${Math.floor(ecoCounter/5)}`, 1420, 32);
-			// plz deixa estar isto ↓
-			ctx.fillText(`recycled: ${ecoCounter}`, 1293, 70);
+			ctx.fillText(`X ${Math.floor(ecoCounter/5)}`, seedX, 25);
+			ctx.drawImage(seed, 0, 0, 96/6, 32/2, 1370, 35, 40, 40)
+			ctx.fillText(`X ${ecoCounter}`, 1420, 70);
 			
 			
 			EcoActions();
 			InsideMap();
 			renderTrash();	
 			ctx.drawImage(image, frameCol * sizex, frameRow * sizey, sizex, sizey, x, y, 192/2.1,192/2.1);
-			ctx.drawImage(tree, framePlant1*2*144/5.6, 0*80/2.5, 144/5.6, 80/2.5, plantX1, plantY1, 2*144/6, 2*80/2.5);
-			ctx.drawImage(tree, framePlant2*2*144/5.6, 0*80/2.5, 144/5.6, 80/2.5, plantX2, plantY2, 2*144/6, 2*80/2.5);
-			ctx.drawImage(tree, framePlant3*2*144/5.6, 0*80/2.5, 144/5.6, 80/2.5, plantX3, plantY3, 2*144/6, 2*80/2.5);
-			ctx.drawImage(tree, framePlant4*2*144/5.6, 0*80/2.5, 144/5.6, 80/2.5, plantX4, plantY4, 2*144/6, 2*80/2.5);
-			ctx.drawImage(tree, framePlant5*2*144/5.6, 0*80/2.5, 144/5.6, 80/2.5, plantX5, plantY5, 2*144/6, 2*80/2.5);
+			ctx.drawImage(tree, framePlant1*96/4, 0, 96/4, 32, plantX1, plantY1, 2*96/4, 2* 32);
+			ctx.drawImage(tree, framePlant2*96/4, 0, 96/4, 32, plantX2, plantY2, 2*96/4, 2* 32);
+			ctx.drawImage(tree, framePlant3*96/4, 0, 96/4, 32, plantX3, plantY3, 2*96/4, 2* 32);
+			ctx.drawImage(tree, framePlant4*96/4, 0, 96/4, 32, plantX4, plantY4, 2*96/4, 2* 32);
+			ctx.drawImage(tree, framePlant5*96/4, 0, 96/4, 32, plantX5, plantY5, 2*96/4, 2* 32);
 
 		}
 		let treeCount = 0;
 		let tree = new Image();
-		tree.src = '/images/biome.png'
+		tree.src = '/images/tree.png'
 			
 		function Plant(){
+			// console.log("START PLANT")
 			let plantX = -50;
 			let plantY = -50;
 			let framePlant = 0;
@@ -379,19 +451,15 @@
 				if (frameRow == 0){
 					plantX = x+20;
 					plantY = y+60;
-					treeCount += 1
 				}else if(frameRow == 1){
 					plantX = x+20;
 					plantY = y-30;
-					treeCount += 1
 				}else if(frameRow == 2){
 					plantX = x-10;
 					plantY = y;
-					treeCount += 1
 				}else if(frameRow == 3){
 					plantX = x+50;
 					plantY = y;
-					treeCount += 1
 				}
 					// checks if its in one of the right spaces to plant
 					if(!(plantX + 10 >=119 && plantY + 50 >=182 && plantX -10 <=168 && plantY + 40 <=230
@@ -401,56 +469,66 @@
 						|| plantX + 10 >=437 && plantY + 50 >=467 && plantX -10 <=488 && plantY + 40 <=516)){
 						plantX = -50;
 						plantY = -50;
+						// console.log("FORA")
+					}else{
+						treeCount += 1;
+						ecoCounter -= 5;
+						if (treeCount == 1){
+							plantX1 = plantX
+							plantY1 = plantY
+							setTimeout( function(){ 
+								framePlant1 = 0.8
+								setTimeout( function(){ 
+									framePlant1 = 1.99
+								},1000)
+							},1000)
+						}else if (treeCount == 2){
+							plantX2 = plantX
+							plantY2 = plantY
+							framePlant2 = framePlant
+							setTimeout( function(){ 
+								framePlant2 = 0.8
+								setTimeout( function(){ 
+									framePlant2 = 1.99
+								},1000)
+							},1000)
+						}else if (treeCount == 3){
+							plantX3 = plantX
+							plantY3 = plantY
+							framePlant3 = framePlant
+							setTimeout( function(){ 
+								framePlant3 = 0.8
+								setTimeout( function(){ 
+									framePlant3 = 1.99
+								},1000)
+							},1000)
+						}else if (treeCount == 4){
+							plantX4 = plantX
+							plantY4 = plantY
+							framePlant4 = framePlant
+							setTimeout( function(){ 
+								framePlant4 = 0.8
+								setTimeout( function(){ 
+									framePlant4 = 1.99
+								},1000)
+							},1000)
+						}else if (treeCount == 5){
+							plantX5 = plantX
+							plantY5 = plantY
+							framePlant5 = framePlant
+							setTimeout( function(){ 
+								framePlant5 = 0.8
+								setTimeout( function(){ 
+									framePlant5 = 1.99
+								},1000)
+							},1000)
+						}
 					}
 
+					// console.log(treeCount);	
 					// checks how many trees were planted
-					if (treeCount == 0){
-						console.log(treeCount)
-						plantX1 = plantX
-						plantY1 = plantY
-						framePlant1 = framePlant
-						setTimeout( function(){ 
-						if(framePlant1 < 1){
-							framePlant1++;
-						}
-						},1000)
-					}else if (treeCount == 1){
-						plantX2 = plantX
-						plantY2 = plantY
-						framePlant2 = framePlant
-						growth(framePlant2)
-					}else if (treeCount == 2){
-						plantX3 = plantX
-						plantY3 = plantY
-						framePlant3 = framePlant
-						growth(framePlant3)
-					}else if (treeCount == 3){
-						plantX4 = plantX
-						plantY4 = plantY
-						framePlant4 = framePlant
-						growth(framePlant4)
-					}else if (treeCount == 4){
-						plantX5 = plantX
-						plantY5 = plantY
-						framePlant5 = framePlant
-						growth(framePlant5)
-					}
 
 				}
-				
-				function growth(framePlant){
-					setTimeout( function(){ 
-						console.log(framePlant);	
-						if(framePlant < 1){
-							framePlant++;
-						}
-					},1000)
-				}
-
-			canvas.addEventListener('click', e => {
-
-				console.log(e.offsetX, e.offsetY)
-			});
 
 			let collection = [
 
@@ -469,7 +547,7 @@
 			]
 
 			function EcoActions(){
-					canvas.addEventListener('mousemove', e => {
+				canvas.addEventListener('mousemove', e => {
 						if(e.offsetX >= 1095 && e.offsetY >= 415 &&  e.offsetX <= 1135 && e.offsetY <= 455){
 							frameB = frameY = 0;
 							frameG++;
@@ -506,7 +584,7 @@
 			function actions(){
 				if (rightKey){
 					image.src = 'images/kitty.png'
-					audio.volume = 0.2;
+					audio.volume = 0.3;
 					frameRow = 3;
 					x+=10;
 					frameCol++;	
@@ -516,7 +594,7 @@
 				}
 				else if (leftKey){
 					image.src = 'images/kitty.png'
-				audio.volume = 0.2;
+				audio.volume = 0.3;
 				x-=10;
 				frameRow = 2;
 				frameCol++;	
@@ -525,7 +603,7 @@
 			}
 			else if (upKey){
 				image.src = 'images/kitty.png'
-				audio.volume = 0.2;
+				audio.volume = 0.3;
 				y-=10;
 				frameRow = 1;
 				frameCol++;	
@@ -534,7 +612,7 @@
 			}
 			else if (downKey){
 				image.src = 'images/kitty.png'
-				audio.volume = 0.2;
+				audio.volume = 0.3;
 				y+=10;
 				frameRow = 0;
 				frameCol++;	
@@ -563,7 +641,10 @@
 					sizey = 192/4
 					frameRow -= 8
 				}
-				Plant();
+				if(Math.floor(ecoCounter)/5 > 0){
+					Plant();
+					console.log('hello')
+				}
 			}
 		}
 		
@@ -581,16 +662,16 @@
 						}
 						else {
 							outside = true;
-							if (x + 192/3-10 >= (border.x) ){ 
+							if (x + 192/3-10 > (border.x) ){ 
 								x+=10;
 							}
-							if(x  + 192/6 <= (border.x + border.width)){
+							if(x  + 192/6 < (border.x + border.width)){
 								x-=10;
 							}
-								if(y + 192/2.9 >= (border.y)){
+								if(y + 192/2.9 > (border.y)){
 									y+=10;
 								}
-								if(y + 193/7 <= (border.y) + (border.height)){
+								if(y + 193/7 < (border.y) + (border.height)){
 									y-=10;
 								}
 								if(downKey){
@@ -618,16 +699,16 @@
 							}
 							else {
 								outside = true;
-								if (x + 192/3-10 >= (border.x) ){ 
+								if (x + 192/3-10 > (border.x) ){ 
 									x+=10;
 								}
-								if(x  + 192/6 <= (border.x + border.width)){
+								if(x  + 192/6 < (border.x + border.width)){
 									x-=10;
 								}
-								if(y + 192/2.9 >= (border.y)){
+								if(y + 192/2.9 > (border.y)){
 									y+=10;
 								}
-								if(y + 193/7 <= (border.y) + (border.height)){
+								if(y + 193/7 < (border.y) + (border.height)){
 									y-=10;
 								}
 								if(downKey){
@@ -635,12 +716,13 @@
 								}
 
 								// algumas borders especificas q n funcionam
-								if(x <= 617 && y>=90  && y<=169){
+								if(x <= 444 && y>=73  && y<=187){
+									console.log('going')
+									x+=10;
+								}
+								if(x <= 440 && y>=73  && y<=187){
 									console.log('going')
 									x-=10;
-								}
-								if(x <= 916 && y>=150 && y<=348){
-									x+=10;		
 								}
 							}
 						}
