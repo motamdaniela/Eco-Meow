@@ -267,6 +267,7 @@
 				if(trash.trash==eco.name && eco.x<=pos.x && pos.x<=eco.x+2*240/5 && eco.y<=pos.y && pos.y<=eco.y+2*144/3){
 					eco.count+=1
 					positions[trash.place].full=false;
+					console.log(trash.src, trash.trash)
 					destroyTrash(trash.id)
 				}else{
 					trash.start = false;
