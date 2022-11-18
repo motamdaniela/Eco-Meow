@@ -218,34 +218,45 @@
             return trash.x<=pos.x && pos.x<=trash.x+30 && trash.y<=pos.y && pos.y<=trash.y+30
         }
 
+		
+		canvas.addEventListener('mousedown', e => {
+			let pos={
+				x: e.offsetX,
+				y: e.offsetY
+			};
+			Trashes.forEach(trash=>{
+				if(isIntersect(pos, trash) && trash.inventory){
+					trash.x=pos.x;
+					trash.y=pos.y;
+					trash.start = true;  
+				}
+			});
+		});
+			
 		canvas.addEventListener('mousemove', e => {
 			let pos={
 				x: e.offsetX,
 				y: e.offsetY
 			};
 			Trashes.forEach(trash=>{
-				canvas.addEventListener('mousedown', e => {
-					if(isIntersect(pos, trash) && trash.inventory){
-						trash.x=pos.x;
-						trash.y=pos.y;
-						trash.start = true;  
-					}
-				});
-					
-				canvas.addEventListener('mousemove', e => {
-					if (trash.start) {    
-						trash.x=pos.x;
-						trash.y=pos.y;
-					}
-				});
-					
-				canvas.addEventListener('mouseup', e => {
-					if(isIntersect(pos, trash) && trash.inventory){
-						recycle(trash,pos);
-					}
-				});
-			})
-		})
+				if (trash.start) {    
+					trash.x=pos.x;
+					trash.y=pos.y;
+				}
+			});
+		});
+				
+		canvas.addEventListener('mouseup', e => {
+			let pos={
+				x: e.offsetX,
+				y: e.offsetY
+			};
+			Trashes.forEach(trash=>{
+				if(isIntersect(pos, trash) && trash.inventory){
+					recycle(trash,pos);
+				}
+			});
+		});
 
 		function recycle(trash, pos){
 			posEco.forEach(eco=>{
@@ -253,14 +264,10 @@
 					eco.count+=1
 					positions[trash.place].full=false;
 					destroyTrash(trash.id)
-					console.log(eco.name, eco.count)
 				}else{
 					trash.start = false;
 					trash.x=positions[trash.place].x;
 					trash.y=positions[trash.place].y;
-					console.log('nao')
-					console.log(trash.trash)
-					console.log(eco.name)
 				}
 			})
 		}
