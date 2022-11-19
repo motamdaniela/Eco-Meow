@@ -99,8 +99,9 @@
 
 		let plantie = new Image();
 		plantie.src = 'images/biome.png'
+
 		let boxie = new Image();
-		boxie.src = 'images/dialog box big.png'
+		boxie.src = 'images/dialog_box_big.png'
 		
 		// variables to count
 		let ecoCounter = 0;
@@ -142,6 +143,9 @@
 		let emoteX = 0;
 		let up = -1000;
 		let plantieY = -1000;
+
+		let help=''
+		let msg=''
 		
 		// lists for inventory and bins
 		let positions = [
@@ -251,9 +255,8 @@
 
 				Trashes.push(new Trash(src, img, xInit, yInit, trash,i))
 			}
-			ctx.drawImage(emote, frameIndexX*160/5, frameIndexY*480/15, 160/5, 480/15, 17, 17, 38, 38)
+			help='inicio'
 			
-			emoteAnimation('inicio')
 		}
 
 		//loads inventory and trash items onto the canvas
@@ -359,6 +362,7 @@
 								},300)
 							},300)
 					}
+					help='certo'
 				// wrong bin
 				}else{
 					rejectaudio.play();
@@ -367,7 +371,7 @@
 					rejectaudio.currentTime = 0.7
 					trash.x=positions[trash.place].x;
 					trash.y=positions[trash.place].y;
-					emoteAnimation('errado')
+					help='errado'
 				}
 			})
 		}
@@ -378,26 +382,39 @@
 			Trashes.splice(IndexOfTrashToDestroy,1)
 			ecoCounter += 1;
 		}
-		
+
+		setInterval(emoteAnimation,5000)
 		// character expressions (doesn't work :) )
-		function emoteAnimation(idk){
+		function emoteAnimation(){
 			ctx.drawImage(emote, frameIndexX*160/5, frameIndexY*480/15, 160/5, 480/15, 17, 17, 38, 38)
-			if(idk=='errado'){
+			ctx.drawImage(boxie, 70, 10, 176*1.1, 48*1.1)
+			
+			
+			if(help=='errado'){
 				if(frameIndexX>=2){
 					frameIndexX = 0
 				}
-				console.log(frameIndexX)
-				frameIndexY=10
+				frameIndexY=9
 				frameIndexX++
 				if(frameIndexX == 2){
 					frameIndexX = 0
 				}
-		
-				
-			}else{
+			}else if(help=='inicio'){
+				msg='Bem vindo ao Eco-Meow'
 				frameIndexY=2
 				frameIndexX++
 				if(frameIndexX == 5){
+					frameIndexX = 0
+				}
+				
+				
+			}else if(help=='certo'){
+				if(frameIndexX>=2){
+					frameIndexX = 0
+				}
+				frameIndexY=6
+				frameIndexX++
+				if(frameIndexX == 2){
 					frameIndexX = 0
 				}
 			}
@@ -549,7 +566,6 @@ function Water(){
 			ctx.drawImage(ecopontos, frameY *240/5, 2*144/3.05, 240/5, 144/3, 1170, 380, 2*240/5, 2*144/3)
 			ctx.drawImage(seed, 0, 0, 96/6, 32/2, 1370, 0, 40, 40)
 			ctx.drawImage(box, 0 + emoteX, 0+ emoteY, 70, 70)
-			emoteAnimation('inicio')
 			ctx.font = "40px VT323";
 			ctx.fillStyle = "#B58861";
 			ctx.fillText(`X ${Math.floor(ecoCounter/5)}`, seedX, 25);
@@ -561,7 +577,7 @@ function Water(){
 			// frameIndexY=2
 			// frameIndexX++
 			// if(frameIndexX == 5){
-			// 	frameIndexX = 0
+				// 	frameIndexX = 0
 			// }
 			
 			InsideMap();
@@ -578,6 +594,10 @@ function Water(){
 
 			ctx.drawImage(boxie, canvas.width/3.1 -30, canvas.height/2.6 +plantieY +up, 3.4*176, 2.9*48);
 			ctx.fillText(`Thanks for playing with me! =^w^=`, canvas.width/3,  canvas.height/2 + plantieY +up, canvas.width/3,canvas.height/2);
+			emoteAnimation()
+			msg='bemvindo'
+			ctx.font = "20px VT323";
+			ctx.fillText(msg, 90, 40);
 		}
 		
 		// function to plants trees
