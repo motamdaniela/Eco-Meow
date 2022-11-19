@@ -251,6 +251,9 @@
 
 				Trashes.push(new Trash(src, img, xInit, yInit, trash,i))
 			}
+			ctx.drawImage(emote, frameIndexX*160/5, frameIndexY*480/15, 160/5, 480/15, 17, 17, 38, 38)
+			
+			emoteAnimation('inicio')
 		}
 
 		//loads inventory and trash items onto the canvas
@@ -282,11 +285,12 @@
 			})
 		}
 		
-
+		// intersection with trash and mouse position
 		function isIntersect(pos,trash){
             return trash.x<=pos.x && pos.x<=trash.x+30 && trash.y<=pos.y && pos.y<=trash.y+30
         }
 
+		// drag and drop of trash in inventory
 		canvas.addEventListener('mousedown', e => {
 			let pos={
 				x: e.offsetX,
@@ -330,8 +334,10 @@
 			});
 		});
 
+		// checks is trash is in the right bin
 		function recycle(trash, pos){
 			posEco.forEach(eco=>{
+				// right bin
 				if(trash.trash==eco.name && eco.x<=pos.x && pos.x<=eco.x+2*240/5 && eco.y<=pos.y && pos.y<=eco.y+2*144/3){
 					tingaudio.play();
 					rejectaudio.volume = 0;
@@ -353,6 +359,7 @@
 								},300)
 							},300)
 					}
+				// wrong bin
 				}else{
 					rejectaudio.play();
 					trash.start = false;
@@ -365,29 +372,34 @@
 			})
 		}
 		
+		// removes trash from array
 		function destroyTrash(id) {
 			const IndexOfTrashToDestroy = Trashes.findIndex(trash => trash.id == id)
 			Trashes.splice(IndexOfTrashToDestroy,1)
 			ecoCounter += 1;
 		}
-
+		
+		// character expressions (doesn't work :) )
 		function emoteAnimation(idk){
 			ctx.drawImage(emote, frameIndexX*160/5, frameIndexY*480/15, 160/5, 480/15, 17, 17, 38, 38)
 			if(idk=='errado'){
-				frameIndexY=2
+				if(frameIndexX>=2){
+					frameIndexX = 0
+				}
+				console.log(frameIndexX)
+				frameIndexY=10
 				frameIndexX++
 				if(frameIndexX == 2){
 					frameIndexX = 0
 				}
+		
 				
-				// for(j=0;j<3;j++){
-				// 	posEmote.sy=160/5*10
-				// 	for(let frameIndex=0; frameIndex<2; frameIndex++){
-				// 		setTimeout(function(){
-				// 		posEmote.sx=0+frameIndex*160/5
-				// 	}, 1000)
-				// 	}
-				// }
+			}else{
+				frameIndexY=2
+				frameIndexX++
+				if(frameIndexX == 5){
+					frameIndexX = 0
+				}
 			}
 		}
 
@@ -543,14 +555,14 @@ function Water(){
 			ctx.fillText(`X ${Math.floor(ecoCounter/5)}`, seedX, 25);
 			ctx.drawImage(ecoIcon, 0, 0, 275, 275, 1375, 40, 35, 35)
 			ctx.fillText(`X ${ecoCounter}`, 1420, 70);
-			ctx.drawImage(emote, frameIndexX*160/5, frameIndexY*480/15, 160/5, 480/15, 17 + emoteX, 17 + emoteY, 38, 38)
+			// ctx.drawImage(emote, frameIndexX*160/5, frameIndexY*480/15, 160/5, 480/15, 17, 17, 38, 38)
 			
-			frameIndexY=2
-			frameIndexX++
-			if(frameIndexX == 5){
-				frameIndexX = 0
-			}
 			// emoteAnimation('inicio')
+			// frameIndexY=2
+			// frameIndexX++
+			// if(frameIndexX == 5){
+			// 	frameIndexX = 0
+			// }
 			
 			InsideMap();
 			renderTrash();	
