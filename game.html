@@ -257,6 +257,7 @@
 			}
 			help='inicio'
 			
+			
 		}
 
 		//loads inventory and trash items onto the canvas
@@ -371,6 +372,7 @@
 					rejectaudio.currentTime = 0.7
 					trash.x=positions[trash.place].x;
 					trash.y=positions[trash.place].y;
+					
 					help='errado'
 				}
 			})
@@ -387,10 +389,11 @@
 		// character expressions (doesn't work :) )
 		function emoteAnimation(){
 			ctx.drawImage(emote, frameIndexX*160/5, frameIndexY*480/15, 160/5, 480/15, 17, 17, 38, 38)
-			ctx.drawImage(boxie, 70, 10, 176*1.1, 48*1.1)
+			ctx.drawImage(boxie, 70, 10, 176*1.5, 48)
 			
 			
 			if(help=='errado'){
+				msg='Coloca o lixo no ecoponto certo!'
 				if(frameIndexX>=2){
 					frameIndexX = 0
 				}
@@ -400,7 +403,7 @@
 					frameIndexX = 0
 				}
 			}else if(help=='inicio'){
-				msg='Bem vindo ao Eco-Meow'
+				msg='Bem Vindo ao Eco-Meow!'
 				frameIndexY=2
 				frameIndexX++
 				if(frameIndexX == 5){
@@ -595,7 +598,7 @@ function Water(){
 			ctx.drawImage(boxie, canvas.width/3.1 -30, canvas.height/2.6 +plantieY +up, 3.4*176, 2.9*48);
 			ctx.fillText(`Thanks for playing with me! =^w^=`, canvas.width/3,  canvas.height/2 + plantieY +up, canvas.width/3,canvas.height/2);
 			emoteAnimation()
-			msg='bemvindo'
+			
 			ctx.font = "20px VT323";
 			ctx.fillText(msg, 90, 40);
 		}
