@@ -30,6 +30,19 @@
 		<audio id="tingaudio">
 			<source src="/sounds/ting.mp3">
 		</audio>
+		<audio id="rejectaudio">
+			<source src="/sounds/reject.mp4">
+		</audio>
+		<audio id="seedaudio">
+			<source src="/sounds/seed.mp4">
+		</audio>
+		<audio id="growaudio">
+			<source src="/sounds/grow.mp4">
+		</audio>
+		<audio id="grow1audio">
+			<source src="/sounds/grow2.mp4">
+		</audio>
+	
 
 		<div style = "text-align:center;">
 			<canvas id="myCanvas" width="1500" height="666">
@@ -46,16 +59,17 @@
         grabaudio.volume = 0.7;
 		var tingaudio = document.getElementById("tingaudio");
         tingaudio.volume = 0.5;
+		var rejectaudio = document.getElementById("rejectaudio");
+        rejectaudio.volume = 0.5;
+		var seedaudio = document.getElementById("seedaudio");
+        seedaudio.volume = 0.5;
+		var growaudio = document.getElementById("growaudio");
+        growaudio.volume = 0.5;
+		var grow1audio = document.getElementById("grow1audio");
+        grow1audio.volume = 0.5;
 
 		const canvas = document.querySelector('#myCanvas');
 		const ctx = canvas.getContext("2d");
-
-		// --------------------
-		canvas.addEventListener('click', e => {
-		console.log(e.offsetX, e.offsetY)
-		});
-		// --------------------
-
 		
 		const W = canvas.width, H = canvas.height;
 		
@@ -141,18 +155,21 @@
 				y:380,
 				count:0,
 				name:'green',
+				frame: frameG,
 			},
 			{
 				x:1120,
 				y:380,
 				count:0,
 				name:'blue',
+				frame: frameB,
 			},
 			{
 				x:1170,
 				y:380,
 				count:0,
 				name:'yellow',
+				frame: frameY,
 			},
 		]
 		
@@ -262,6 +279,8 @@
 					trash.start = true;  
 				}
 			});
+			canvas.removeEventListener('mousemove', EcoActions)
+
 		});
 			
 		canvas.addEventListener('mousemove', e => {
@@ -270,10 +289,12 @@
 				y: e.offsetY
 			};
 			Trashes.forEach(trash=>{
-				if (trash.start) {    
+				if (trash.start) { 
+					
 					trash.x=pos.x;
 					trash.y=pos.y;
 				}
+					EcoActions();  
 			});
 		});
 				
@@ -292,11 +313,13 @@
 		function recycle(trash, pos){
 			posEco.forEach(eco=>{
 				if(trash.trash==eco.name && eco.x<=pos.x && pos.x<=eco.x+2*240/5 && eco.y<=pos.y && pos.y<=eco.y+2*144/3){
+					tingaudio.play();
+					rejectaudio.volume = 0;
 					positions[trash.place].full=false;
 					console.log(trash.src, trash.trash)
 					destroyTrash(trash.id)
-					tingaudio.play();
 					if(ecoCounter % 5 == 0){
+						seedaudio.play();
 						setTimeout( function(){ 
 							seedX += 1000;
 							setTimeout( function(){ 
@@ -312,7 +335,10 @@
 							},300)
 					}
 				}else{
+					rejectaudio.play();
 					trash.start = false;
+					rejectaudio.volume = 0.5;
+					rejectaudio.currentTime = 0.7
 					trash.x=positions[trash.place].x;
 					trash.y=positions[trash.place].y;
 					emoteAnimation('errado')
@@ -369,16 +395,13 @@
 			}
 			else if(e.keyCode==71){
 				gKey = true;
-				frameCol++;	
-				if (frameCol >= 2){
-					frameCol = 0;
-				}
 			}
 			else if(e.keyCode==80){
 				sizex = 96/2
 				sizey = 576/12
-				if (!pKey)
-				image.src = 'images/actions.png'
+				if (!pKey){
+					image.src = 'images/actions.png'
+				}
 				pKey = true;
 			}
 		}
@@ -439,8 +462,6 @@
 			ctx.fillText(`X ${ecoCounter}`, 1420, 70);
 			ctx.drawImage(emote, posEmote.sx, posEmote.sy, posEmote.sWidth, posEmote.sHeight, posEmote.dx, posEmote.dy, posEmote.width, posEmote.height)
 			
-			
-			EcoActions();
 			InsideMap();
 			renderTrash();	
 			ctx.drawImage(image, frameCol * sizex, frameRow * sizey, sizex, sizey, x, y, 192/2.1,192/2.1);
@@ -491,9 +512,12 @@
 							plantY1 = plantY
 							setTimeout( function(){ 
 								framePlant1 = 0.8
+								growaudio.play();
 								setTimeout( function(){ 
 									framePlant1 = 1.99
-								},1000)
+									growaudio.currentTime = 0;
+									growaudio.play();
+								},1500)
 							},1000)
 						}else if (treeCount == 2){
 							plantX2 = plantX
@@ -537,27 +561,7 @@
 							},1000)
 						}
 					}
-
-					// console.log(treeCount);	
-					// checks how many trees were planted
-
 				}
-
-			let collection = [
-
-				{
-					src: '/images/biome.png',
-					frameCol: 0,
-					frameRow: 0,
-					squarex: 0,
-					squarey: 0,
-					x: 0,
-					y:0,
-					sizeX: 0,
-					sizeY: 0,
-
-				},
-			]
 
 			function EcoActions(){
 				canvas.addEventListener('mousemove', e => {
@@ -620,7 +624,7 @@
 				y-=10;
 				frameRow = 1;
 				frameCol++;	
-				if (frameCol == 4)
+				if (frameCol == 3)
 				frameCol = 0;
 			}
 			else if (downKey){
@@ -634,11 +638,11 @@
 			}
 			else if (gKey){
 				frameCol++;	
-				if (frameCol >= 2){
+				if (frameCol == 2){
 					frameCol = 0;
+					gKey = false;
 				}
 				grab(x,y)
-				gKey = false;
 			}
 			else if (pKey){
 				if (frameRow < 8){
