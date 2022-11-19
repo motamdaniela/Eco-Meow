@@ -68,70 +68,82 @@
 		
 		const W = canvas.width, H = canvas.height;
 		
+		// imagens
 		let bg = new Image();
 		bg.src = 'images/background.png'
-
+		let water = new Image();
+		water.src = 'images/Water.png'
+		
 		let image = new Image();
 		image.src = 'images/kitty.png';
 		let ecopontos = new Image();
 		ecopontos.src = 'images/ecopontos.png';
-
-		let Trashes = new Array();
-
+		
+		
 		let inventory = new Image();
 		inventory.src = 'images/inventory.png';
-
+		
 		let seed = new Image();
 		seed.src = 'images/basic_plants.png'
-
+		let ecoIcon = new Image();
+		ecoIcon.src = 'images/recycle.png'
 		
 		let box = new Image();
 		box.src = 'images/caixa.png'
 		
 		let emote = new Image();
 		emote.src = 'images/emoteanimations.png'
+		
+		let tree = new Image();
+		tree.src = '/images/tree.png'
 
 		let plantie = new Image();
 		plantie.src = 'images/biome.png'
-		let plantieY = -1000;
 		let boxie = new Image();
 		boxie.src = 'images/dialog box big.png'
 		
+		// variables to count
 		let ecoCounter = 0;
-
-		//sprite frame counter 		
+		let treeCount = 0;
+		
+		// variables for sprite frames
 		let frameCol = 0;
 		let frameRow = 0;
-
+		
 		let frameIndexX=0;
 		let frameIndexY=0;
 		
 		let frameG = frameB = frameY = 0
 		
-		let x = 500;
-		let y = 120;
-		// let x = 1115;
-		// let y = 120;
-		let sizex = 192/4;
-		let sizey = 192/4;
+		let framePlant1  = framePlant2 = framePlant3 = framePlant4 = framePlant5 = 0;
+
+		let waterFrame = 0;
+		let waterFrameU = 3;
 		
-		let rightKey = false; //only for Canvas#2
+		let rightKey = false;
 		let leftKey = false;
 		let upKey = false;
 		let downKey = false;
 		let gKey = false;
 		let pKey = false
-
 		
-		let treeCount = 0;
+		// variablesfor positions
+		let x = 1115;
+		let y = 120;
+		let sizex = 192/4;
+		let sizey = 192/4;		
+		
 		let seedX = 1420;
-		let tree = new Image();
-		tree.src = '/images/tree.png'
 		
 		let plantX1 = plantX2 = plantX3 = plantX4 = plantX5 = -50;
 		let plantY1  = plantY2 = plantY3 = plantY4 = plantY5 = -50;
-		let framePlant1  = framePlant2 = framePlant3 = framePlant4 = framePlant5 = 0;
 		
+		let emoteY = 0;
+		let emoteX = 0;
+		let up = -1000;
+		let plantieY = -1000;
+		
+		// lists for inventory and bins
 		let positions = [
 			{
 				x:638,
@@ -184,14 +196,13 @@
 			},
 		]
 		
-		// ------------------------------
-
+		let Trashes = new Array();
 		const lixos=[['candy_bar','yellow'],['detergent','yellow'],['light_bulb','green'],['orange_juice','yellow'],['rubber_duck','yellow'],['snack1','yellow'],['potatochip_yellow','yellow'], ['spatula','yellow'],['paper_bag','blue'],['receipt','blue'], ['toilet_paper','blue'], ['wine_white2','green']]
 		
 		// let yellow = ['candy_bar','glue_stick','rubber_duck', 'snack1', 'snack2', 'spatula']
 		// let green = []
 		// let blue = ['paper_bag','receipt', 'toilet_paper']
-
+		
 		class Trash {
 			constructor(src, img, x, y, trash, id) {    // CONSTRUCTOR
 				this.src = src;
@@ -206,29 +217,29 @@
 			}
 		}
 
+		// create a list of 25 random trashes
 		function init() {
-			//setup trash in random places(within the specific space in the map)
 			for (let i = 0; i < 25; i++) {
 				
 				let num = Math.floor(Math.random()*(lixos.length))
 				let src = lixos[num][0]
 				let trash=lixos[num][1]
 				
-				// let src2 = green[Math.floor(Math.random()*(green.length))]
-				// let src3 = blue[Math.floor(Math.random()*(blue.length))]
 				src = `trash/${src}.png`
 				
 				let img = new Image();
 				img.src = src
-
-
+				
+				
+				//setup trash in random places(within the specific space in the map)
 				let xInit = 90 + Math.random() * (600);
 				let yInit = 110 + Math.random() * (390);
-				// checks if position is in the desired space in the map
+				// checks if position is in the especific space in the map
 				while(xInit >= 410 && yInit >=400 || xInit <= 150 && yInit >=430 || xInit <= 170 && yInit <=230 || xInit >= 200 && yInit <=180 && xInit <= 440 && yInit <=180 || xInit >= 560 && yInit <=300){
 					xInit = 90 + Math.random() * (600);
 				    yInit = 110 + Math.random() * (400);
 				}
+				// checks if a trash has already been placed in that spot
 				// if(Trashes.length){
 				// 	Trashes.forEach(trash, () =>{
 				// 		while(xInit == trash.x && trash.y == yInit){
@@ -241,6 +252,7 @@
 				Trashes.push(new Trash(src, img, xInit, yInit, trash,i))
 			}
 		}
+
 		//loads inventory and trash items onto the canvas
 		function renderTrash(){
 			ctx.drawImage(inventory,0,0,192,64,W/2-(192*1.8)/2,H-120,192*1.8,64*1.8)
@@ -359,10 +371,6 @@
 			ecoCounter += 1;
 		}
 
-	
-
-		
-
 		function emoteAnimation(idk){
 			ctx.drawImage(emote, frameIndexX*160/5, frameIndexY*480/15, 160/5, 480/15, 17, 17, 38, 38)
 			if(idk=='errado'){
@@ -440,12 +448,79 @@
 		window.addEventListener('keydown', ArrowPressed);
 		window.addEventListener('keyup', ArrowReleased);		
 
-		let emoteY = 0;
-		let emoteX = 0;
-		let up = -1000;
+
+//-----------------------
+		canvas.addEventListener('click', e => {
+				console.log(e.offsetX, e.offsetY);
+			});
+//-----------------------
+
+// draws and animates the water
+function Water(){
+	ctx.drawImage(water, waterFrame *64/4, 0, 64/4, 16, 762, 350, 1.8*64/4, 1.8*16)
+	ctx.drawImage(water, waterFrame *64/4, 0, 64/4, 16, 126, 68, 1.8*64/4, 1.8*16)
+	ctx.drawImage(water, waterFrameU *64/4, 0, 64/4, 16, 92, 96, 1.8*64/4, 1.8*16)
+	ctx.drawImage(water, waterFrame *64/4, 0, 64/4, 16, 1370, 98, 1.8*64/4, 1.8*16)
+	ctx.drawImage(water, waterFrame *64/4, 0, 64/4, 16, 1469, 445, 1.8*64/4, 1.8*16)
+	ctx.drawImage(water, waterFrameU *64/4, 0, 64/4, 16, 1432, 479, 1.8*64/4, 1.8*16)
+	ctx.drawImage(water, waterFrame *64/4, 0, 64/4, 16, 1373, 575, 1.8*64/4, 1.8*16)
+	ctx.drawImage(water, waterFrame *64/4, 0, 64/4, 16, 882, 575, 1.8*64/4, 1.8*16)
+	ctx.drawImage(water, waterFrame *64/4, 0, 64/4, 16, 924, 602, 1.8*64/4, 1.8*16)
+	ctx.drawImage(water, waterFrame *64/4, 0, 64/4, 16, 33, 576, 1.8*64/4, 1.8*16)
+
+	for(let i = 0; i < 150; i+= 2.8*16){
+		ctx.drawImage(water, waterFrameU *64/4.1, 0, 64/4, 16, 825, 163 + i, 1.8*64/4, 1.8*16)
+	}
+	for(let i = 0; i < 150; i+= 2.8*16){
+		ctx.drawImage(water, waterFrame *64/4.1, 0, 64/4, 16, 864, 140 + i, 1.8*64/4, 1.8*16)
+	}
+	for(let i = 0; i < 150; i+= 2.8*16){
+		ctx.drawImage(water, waterFrameU *64/4.1, 0, 64/4, 16, 798, 414 + i, 1.8*64/4, 1.8*16)
+	}
+	for(let i = 0; i < 150; i+= 2.8*16){
+		ctx.drawImage(water, waterFrame *64/4.1, 0, 64/4, 16, 760, 440 + i, 1.8*64/4, 1.8*16)
+	}
+	for(let i = 0; i < 150; i+= 2.8*16){
+		ctx.drawImage(water, waterFrameU *64/4.1, 0, 64/4, 16, 517 + i, 30, 1.8*64/4, 1.8*16)
+	}
+	for(let i = 0; i < 150; i+= 2.8*16){
+		ctx.drawImage(water, waterFrame *64/4.1, 0, 64/4, 16, 540 + i, 74, 1.8*64/4, 1.8*16)
+	}
+	for(let i = 0; i < 360; i+= 2.8*16){
+		ctx.drawImage(water, waterFrameU *64/4.1, 0, 64/4, 16, 968 + i, 10, 1.8*64/4, 1.8*16)
+	}
+	for(let i = 0; i < 360; i+= 2.8*16){
+		ctx.drawImage(water, waterFrame *64/4.1, 0, 64/4, 16, 946 + i, 30, 1.8*64/4, 1.8*16)
+	}
+	for(let i = 0; i < 150; i+= 2.8*16){
+		ctx.drawImage(water, waterFrameU *64/4.1, 0, 64/4, 16, 1438, 100 + i, 1.8*64/4, 1.8*16)
+	}
+	for(let i = 0; i < 120; i+= 2.8*16){
+		ctx.drawImage(water, waterFrame *64/4.1, 0, 64/4, 16, 22, 134 +i, 1.8*64/4, 1.8*16)
+	}
+	for(let i = 0; i < 120; i+= 2.8*16){
+		ctx.drawImage(water, waterFrameU *64/4.1, 0, 64/4, 16, 14, 400 +i, 1.8*64/4, 1.8*16)
+	}
+	for(let i = 0; i < 180; i+= 2.8*16){
+		ctx.drawImage(water, waterFrame *64/4.1, 0, 64/4, 16, 386 +i, 606, 1.8*64/4, 1.8*16)
+	}
+	
+	waterFrame++;
+	if(waterFrame == 4){
+		waterFrame = 0;
+	}
+	waterFrameU--;
+	if(waterFrameU == -1){
+		waterFrameU = 3;
+	}
+
+}
+
 		function render() {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			ctx.drawImage(bg, 0,0, canvas.width, canvas.height)	
+			ctx.drawImage(bg, 0,0, canvas.width, canvas.height);
+	
+			Water();
 			
 			borders.forEach(border =>{
 				ctx.beginPath();
@@ -466,7 +541,7 @@
 			ctx.font = "40px VT323";
 			ctx.fillStyle = "#B58861";
 			ctx.fillText(`X ${Math.floor(ecoCounter/5)}`, seedX, 25);
-			ctx.drawImage(seed, 0, 0, 96/6, 32/2, 1370, 35, 40, 40)
+			ctx.drawImage(ecoIcon, 0, 0, 275, 275, 1375, 40, 35, 35)
 			ctx.fillText(`X ${ecoCounter}`, 1420, 70);
 			ctx.drawImage(emote, frameIndexX*160/5, frameIndexY*480/15, 160/5, 480/15, 17 + emoteX, 17 + emoteY, 38, 38)
 			
@@ -492,12 +567,14 @@
 			ctx.drawImage(boxie, canvas.width/3.1 -30, canvas.height/2.6 +plantieY +up, 3.4*176, 2.9*48);
 			ctx.fillText(`Thanks for playing with me! =^w^=`, canvas.width/3,  canvas.height/2 + plantieY +up, canvas.width/3,canvas.height/2);
 		}
-			
+		
+		// function to plants trees
 		function Plant(){
 			let plantX = -50;
 			let plantY = -50;
 			let framePlant = 0;
 
+				// checks side character is turned to and positions tree accordingly
 				if (frameRow == 0){
 					plantX = x+20;
 					plantY = y+40;
@@ -522,16 +599,19 @@
 					}else{
 						treeCount += 1;
 						ecoCounter -= 5;
+						// checks which tree im planting and changes position(1-5)
 						if (treeCount == 1){
 							plantX1 = plantX
 							plantY1 = plantY
 							framePlant1 = framePlant
+							// creates border for new tree
 							tinyBorders.push({
 												x: plantX,
             								    y: plantY,
             								    width: 2*96/4,
             								    height: 2* 32-30,
 											},)
+							// animation for tree growing
 							setTimeout( function(){ 
 								framePlant1 = 0.8
 								growaudio.play();
@@ -622,6 +702,7 @@
 					}
 				}
 
+			// opens or closes recycling bins
 			function EcoActions(){
 				canvas.addEventListener('mousemove', e => {
 						if(e.offsetX >= 1095 && e.offsetY >= 415 &&  e.offsetX <= 1135 && e.offsetY <= 455){
@@ -803,6 +884,7 @@
 				}
 
 				// setInterval(EndGame, 1000 / 3);
+		// function for end of game
 		function EndGame(){
 			const animate = true;
 				setTimeout( function(){
