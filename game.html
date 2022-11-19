@@ -39,9 +39,6 @@
 		<audio id="growaudio">
 			<source src="/sounds/grow.mp4">
 		</audio>
-		<audio id="grow1audio">
-			<source src="/sounds/grow2.mp4">
-		</audio>
 	
 
 		<div style = "text-align:center;">
@@ -65,8 +62,6 @@
         seedaudio.volume = 0.5;
 		var growaudio = document.getElementById("growaudio");
         growaudio.volume = 0.5;
-		var grow1audio = document.getElementById("grow1audio");
-        grow1audio.volume = 0.5;
 
 		const canvas = document.querySelector('#myCanvas');
 		const ctx = canvas.getContext("2d");
@@ -89,11 +84,18 @@
 		let seed = new Image();
 		seed.src = 'images/basic_plants.png'
 
+		
 		let box = new Image();
 		box.src = 'images/caixa.png'
-
+		
 		let emote = new Image();
 		emote.src = 'images/emoteanimations.png'
+
+		let plantie = new Image();
+		plantie.src = 'images/biome.png'
+		let plantieY = -1000;
+		let boxie = new Image();
+		boxie.src = 'images/dialog box big.png'
 		
 		let ecoCounter = 0;
 
@@ -119,6 +121,12 @@
 		let downKey = false;
 		let gKey = false;
 		let pKey = false
+
+		
+		let treeCount = 0;
+		let seedX = 1420;
+		let tree = new Image();
+		tree.src = '/images/tree.png'
 		
 		let plantX1 = plantX2 = plantX3 = plantX4 = plantX5 = -50;
 		let plantY1  = plantY2 = plantY3 = plantY4 = plantY5 = -50;
@@ -233,7 +241,6 @@
 				Trashes.push(new Trash(src, img, xInit, yInit, trash,i))
 			}
 		}
-		console.log(Trashes)
 		//loads inventory and trash items onto the canvas
 		function renderTrash(){
 			ctx.drawImage(inventory,0,0,192,64,W/2-(192*1.8)/2,H-120,192*1.8,64*1.8)
@@ -257,8 +264,6 @@
 						trash.place=i
 						positions[i].full=true
 						grabaudio.play();
-					}else{
-						console.log('nao')
 					}
 					
 				}
@@ -319,7 +324,6 @@
 					tingaudio.play();
 					rejectaudio.volume = 0;
 					positions[trash.place].full=false;
-					console.log(trash.src, trash.trash)
 					destroyTrash(trash.id)
 					if(ecoCounter % 5 == 0){
 						seedaudio.play();
@@ -436,7 +440,9 @@
 		window.addEventListener('keydown', ArrowPressed);
 		window.addEventListener('keyup', ArrowReleased);		
 
-		let seedX = 1420;
+		let emoteY = 0;
+		let emoteX = 0;
+		let up = -1000;
 		function render() {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			ctx.drawImage(bg, 0,0, canvas.width, canvas.height)	
@@ -455,14 +461,14 @@
 			ctx.drawImage(ecopontos, frameB *240/5, 144/3, 240/5, 144/3, 1120, 380, 2*240/5, 2*144/3)
 			ctx.drawImage(ecopontos, frameY *240/5, 2*144/3.05, 240/5, 144/3, 1170, 380, 2*240/5, 2*144/3)
 			ctx.drawImage(seed, 0, 0, 96/6, 32/2, 1370, 0, 40, 40)
-			ctx.drawImage(box, 0, 0, 70, 70)
+			ctx.drawImage(box, 0 + emoteX, 0+ emoteY, 70, 70)
 			emoteAnimation('inicio')
 			ctx.font = "40px VT323";
 			ctx.fillStyle = "#B58861";
 			ctx.fillText(`X ${Math.floor(ecoCounter/5)}`, seedX, 25);
 			ctx.drawImage(seed, 0, 0, 96/6, 32/2, 1370, 35, 40, 40)
 			ctx.fillText(`X ${ecoCounter}`, 1420, 70);
-			ctx.drawImage(emote, frameIndexX*160/5, frameIndexY*480/15, 160/5, 480/15, 17, 17, 38, 38)
+			ctx.drawImage(emote, frameIndexX*160/5, frameIndexY*480/15, 160/5, 480/15, 17 + emoteX, 17 + emoteY, 38, 38)
 			
 			frameIndexY=2
 			frameIndexX++
@@ -478,15 +484,16 @@
 			ctx.drawImage(tree, framePlant3*96/4, 0, 96/4, 32, plantX3, plantY3, 2*96/4, 2* 32);
 			ctx.drawImage(tree, framePlant4*96/4, 0, 96/4, 32, plantX4, plantY4, 2*96/4, 2* 32);
 			ctx.drawImage(tree, framePlant5*96/4, 0, 96/4, 32, plantX5, plantY5, 2*96/4, 2* 32);
+
+			// plant on cats head v
+			ctx.drawImage(plantie, 5 *144/9 , 1 *80/5, 144/9, 80/5, x+30, y+10 +plantieY, 2*144/9, 2*80/5);
 			ctx.drawImage(image, frameCol * sizex, frameRow * sizey, sizex, sizey, x, y, 192/2.1,192/2.1);
 
+			ctx.drawImage(boxie, canvas.width/3.1 -30, canvas.height/2.6 +plantieY +up, 3.4*176, 2.9*48);
+			ctx.fillText(`Thanks for playing with me! =^w^=`, canvas.width/3,  canvas.height/2 + plantieY +up, canvas.width/3,canvas.height/2);
 		}
-		let treeCount = 0;
-		let tree = new Image();
-		tree.src = '/images/tree.png'
 			
 		function Plant(){
-			// console.log("START PLANT")
 			let plantX = -50;
 			let plantY = -50;
 			let framePlant = 0;
@@ -512,7 +519,6 @@
 						|| plantX + 10 >=437 && plantY + 50 >=467 && plantX -10 <=488 && plantY + 40 <=516)){
 						plantX = -50;
 						plantY = -50;
-						// console.log("FORA")
 					}else{
 						treeCount += 1;
 						ecoCounter -= 5;
@@ -533,13 +539,6 @@
 									framePlant1 = 1.99
 									growaudio.currentTime = 0;
 									growaudio.play();
-
-
-									// -------------------
-									EndGame();
-									// -------------------
-
-
 								},1500)
 							},1000)
 						}else if (treeCount == 2){
@@ -616,7 +615,7 @@
 									framePlant5 = 1.99
 									growaudio.currentTime = 0;
 									growaudio.play();
-									EndGame();
+									setInterval(EndGame, 1000 / 5);
 								},1000)
 							},1000)
 						}
@@ -720,7 +719,6 @@
 				}
 				if(Math.floor(ecoCounter)/5 > 0){
 					Plant();
-					console.log('hello')
 				}
 			}
 		}
@@ -735,7 +733,6 @@
 						|| x  + 192/6 >= border.x + border.width     //left
 						|| y + 192/2.9 <= border.y                   //down
 						|| y  + 192/7 >= border.y + border.height) { //up
-							// console.log('inside');
 						}
 						else {
 							outside = true;
@@ -757,7 +754,6 @@
 
 								// algumas borders especificas q n funcionam
 								if(x <= 617 && y>=90  && y<=169){
-									console.log('going')
 									x-=10;
 								}
 								if(x <= 916 && y>=150 && y<=348){
@@ -772,7 +768,6 @@
 							|| x  + 192/6 >= border.x + border.width     //left
 							|| y + 192/2.9 <= border.y                   //down
 							|| y  + 192/7 >= border.y + border.height) { //up
-								// console.log('inside');
 							}
 							else {
 								outside = true;
@@ -794,11 +789,9 @@
 
 								// algumas borders especificas q n funcionam
 								if(x <= 444 && y>=73  && y<=187){
-									console.log('going')
 									x+=10;
 								}
 								if(x <= 440 && y>=73  && y<=187){
-									console.log('going')
 									x-=10;
 								}
 							}
@@ -809,26 +802,33 @@
 					}
 				}
 
+				// setInterval(EndGame, 1000 / 3);
 		function EndGame(){
-			
-			// setTimeout( function(){ 
-				// 	frameRow = 0;
-				// 	frameCol++;	
-				// 	if (frameCol == 4)
-				// 	frameCol = 0;
-				// },1000)
-				frameRow = 0;
-				frameCol = 0;
-				while (frameCol < 4){
-					frameCol++;	
-					upKey = false;
-					downKey = false;
-					rightKey = false;
-					leftKey = false;
-				}
-				frameCol = 0;
+			const animate = true;
+				setTimeout( function(){
+					plantieY = 0;
+					frameRow = 0;
+					tinyBorders.push({
+										x: 0,
+										y: 0,
+										width: canvas.width,
+										height: canvas.height,
+									},)
+					frameCol++;
+					plantieY -= 2;
+					if (frameCol == 2){
+						frameCol = 0;
+						plantieY =0;
+					}
+					setTimeout(function(){
+						up = 0;
+						emoteX = canvas.width/4 -17
+						emoteY = canvas.height/2 -25
+					},1000)
+				},1000)
 		}
 
+		// lists for the map borders
 		let borders = [
 			{
 				x: 176,
