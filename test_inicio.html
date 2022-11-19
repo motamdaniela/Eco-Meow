@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>meow</title>
+    <style type="text/css">
+        *{ cursor : url('images/mouseicon.png'), auto}
+		*:active{ cursor : url('images/mouseicongrab.png'), auto}
+        body {
+            background-color: #9BD4C3;
+            overflow-x: hidden;
+        }
+        
+        .img{
+            position:absolute;
+            z-index:-1;
+            margin-top: 20px;
+            width: 1520px;
+            height: 650px;
+
+            
+            animation-name: bg_move;
+            animation-duration: 2s;
+            animation-direction: alternate;
+            animation-iteration-count: infinite;
+        }
+        
+
+        @keyframes bg_move {
+            0%{
+                transform: translate(-80px);
+                transform: scale(1.1);
+                transform-origin: 0%;
+            }
+            
+            100%{
+                transform: translate(100px);
+                transform: scale(1.1);
+                transform-origin: 100%;
+            }
+        }
+        
+    </style>
+</head>
+
+<body>
+    <audio autoplay id="myaudio" loop="true">
+        <source src="/sounds/song.mp3">
+    </audio>
+
+    <div style = "text-align: center">
+        <img class="img" src="images/bginicio.png">
+        <canvas id="myCanvas" width="1528" height="690">
+            Your browser does not support HTML5 Canvas.
+        </canvas>
+    </div>
+
+    
+	<script>
+        var audio = document.getElementById("myaudio");
+        audio.volume = 0.01
+
+		const canvas = document.querySelector('#myCanvas');
+		const ctx = canvas.getContext("2d");
+
+        let frameCol = 0;
+        let frameRow = 0;
+
+        let xbg = 0;
+        
+		const W = canvas.width, H = canvas.height;
+        let rightKey=false, leftKey=false, upKey=false, downKey=false, gKey=false;
+
+		let button = new Image();
+		button.src = 'images/button2.png';
+
+        let kitty = new Image();
+		kitty.src = 'images/kitty.png';
+
+		window.onload = function () {
+			setInterval(render, 1000 / 6);
+		};
+
+        let x=W/2
+        let y=H/2
+
+        const rectangles = [
+            {
+                x: x,
+                y: y+50,
+                width: 192,
+                height: 64,
+                sx: 0,
+                sy: 64/2,
+                sWidth: 192/2,
+                sHeight: 64/2,
+                dx: x-192/2,
+                dy: y-64/2+50,
+                page:'./game.html',
+                sxClick:192/2,
+                syClick:64/2,
+                src: button
+            },
+            {
+                x: x,
+                y: y+150,
+                width: 192,
+                height: 64,
+                sx: 0,
+                sy: 0,
+                sWidth: 192/2,
+                sHeight: 64/2,
+                dx: x-192/2,
+                dy: y-64/2 + 150,
+                page:'./regras.html',
+                sxClick:192/2,
+                syClick:0,
+                src: button
+            }
+        ]
+        
+        function render(){
+            if(audio.volume <= 0.4){
+                audio.volume += 0.01;
+            }
+
+            ctx.clearRect(0, 0, W, H);
+
+            rectangles.forEach(rectangle =>{
+                ctx.beginPath();
+                ctx.drawImage(kitty, frameCol * 192/4, frameRow * 192/4, 192/4, 192/4, canvas.width/2.3, canvas.height/5, 192,192);
+                ctx.rect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+                ctx.drawImage(rectangle.src, rectangle.sx, rectangle.sy,rectangle.sWidth, rectangle.sHeight, rectangle.dx, rectangle.dy, rectangle.width, rectangle.height)
+
+            })
+            frameCol++;	
+            if (frameCol == 4){
+                frameRow++;
+                frameCol = 0;
+                if (frameRow == 4){
+                    frameRow = 0;
+                }
+            }
+        }
+        
+        
+        function isIntersect(pos,rectangle){
+            return rectangle.dx<pos.x && pos.x<rectangle.dx+rectangle.width && rectangle.dy<pos.y && pos.y<rectangle.dy+rectangle.height
+        }
+
+        canvas.addEventListener('click', (e)=>{
+            console.log('ok');
+            const pos={
+                x: e.clientX,
+                y: e.clientY
+            };
+
+            
+            rectangles.forEach(rectangle=>{
+                console.log(pos)
+                console.log(rectangle.x, rectangle.y)
+                if(isIntersect(pos, rectangle)){
+                    console.log('ok2')
+                    rectangle.sx=192/2
+                    window.setTimeout(function(){
+                        rectangle.sx=0
+                    }, 250);
+                    window.setTimeout(function(){
+                    window.location.href = rectangle.page;
+                    }, 500);
+                
+                }
+            })
+        })
+
+        
+
+        canvas.addEventListener('mousemove', e => {
+				x = e.offsetX; y = e.offsetY;
+
+				// console.log(x,y)
+			});
+
+
+	</script>
+    
+</body>
+</html>
