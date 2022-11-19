@@ -30,6 +30,7 @@
     <script>
         const canvas = document.querySelector('#myCanvas');
 		const ctx = canvas.getContext("2d");
+        const W = canvas.width, H = canvas.height;
 
         let bg = new Image();
         bg.src='images/bg_regras.png';
@@ -38,18 +39,32 @@
         regras.src='images/regras.png';
 
         let box = new Image();
-        box.src='images/box.png'; 
+        box.src='images/big-box.png'; 
+
+        // let button = new Image();
+        // button.src='images/home.png';
 
         window.onload = function () {
 			setInterval(render, 1000 / 6);
 		};
-
+        
+        
         function render() {
             
             ctx.drawImage(bg, 50,0, canvas.width-100, canvas.height);
             ctx.drawImage(regras, canvas.width/2-100, 10, 98*2,34*2);
-            ctx.drawImage(box, 100,70, 51*5, 45*5);
-            ctx.drawImage(box, 100,300, 51*5, 45*5);
+
+            // ctx.drawImage(button, 10,10, 22*2, 24*2)
+
+            // 1st column
+            ctx.drawImage(box, 220, 100, 51*5, 45*5);
+            ctx.drawImage(box, 220, 340, 51*5, 45*5);
+            // 2nd column
+            ctx.drawImage(box, 630, 100, 51*5, 45*5);
+            ctx.drawImage(box, 630, 340, 51*5, 45*5);
+            // 3rd column
+            ctx.drawImage(box, 1040, 100, 51*5, 45*5);
+            ctx.drawImage(box, 1040, 340, 51*5, 45*5);
         }
         
     </script>
