@@ -100,6 +100,9 @@
 		//sprite frame counter 		
 		let frameCol = 0;
 		let frameRow = 0;
+
+		let frameIndexX=0;
+		let frameIndexY=0;
 		
 		let frameG = frameB = frameY = 0
 		
@@ -352,28 +355,27 @@
 			ecoCounter += 1;
 		}
 
-		let posEmote={
-                sx: 0,
-                sy: 0,
-                sWidth: 160/5,
-                sHeight: 480/15,
-                dx: 17,
-                dy: 17,
-                width: 38,
-                height: 38,
-                
-            }
+	
+
+		
 
 		function emoteAnimation(idk){
+			ctx.drawImage(emote, frameIndexX*160/5, frameIndexY*480/15, 160/5, 480/15, 17, 17, 38, 38)
 			if(idk=='errado'){
-				for(let step=0;step<3;step++){
-					posEmote.sy=160/5*10
-					posEmote.sx=0
-					// setTimeout(function(){
-						posEmote.sx=160/5
-					// }, 1000)
+				frameIndexY=2
+				frameIndexX++
+				if(frameIndexX == 2){
+					frameIndexX = 0
 				}
 				
+				// for(j=0;j<3;j++){
+				// 	posEmote.sy=160/5*10
+				// 	for(let frameIndex=0; frameIndex<2; frameIndex++){
+				// 		setTimeout(function(){
+				// 		posEmote.sx=0+frameIndex*160/5
+				// 	}, 1000)
+				// 	}
+				// }
 			}
 		}
 
@@ -460,7 +462,14 @@
 			ctx.fillText(`X ${Math.floor(ecoCounter/5)}`, seedX, 25);
 			ctx.drawImage(seed, 0, 0, 96/6, 32/2, 1370, 35, 40, 40)
 			ctx.fillText(`X ${ecoCounter}`, 1420, 70);
-			ctx.drawImage(emote, posEmote.sx, posEmote.sy, posEmote.sWidth, posEmote.sHeight, posEmote.dx, posEmote.dy, posEmote.width, posEmote.height)
+			ctx.drawImage(emote, frameIndexX*160/5, frameIndexY*480/15, 160/5, 480/15, 17, 17, 38, 38)
+			
+			frameIndexY=2
+			frameIndexX++
+			if(frameIndexX == 5){
+				frameIndexX = 0
+			}
+			// emoteAnimation('inicio')
 			
 			InsideMap();
 			renderTrash();	
