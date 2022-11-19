@@ -48,6 +48,8 @@
 		</div>
 		<span id="loader" style="font-family: 'VT323', monospace;"></span>
 	<script>
+
+		// sounds
 		var audio = document.getElementById("myaudio");
         audio.volume = 0;
 		audio.playbackRate = 5;
@@ -70,7 +72,7 @@
 		
 		// imagens
 		let bg = new Image();
-		bg.src = 'images/background.png'
+		bg.src = 'images/background1.png'
 		let water = new Image();
 		water.src = 'images/Water.png'
 		
@@ -487,72 +489,11 @@
 			});
 //-----------------------
 
-// draws and animates the water
-function Water(){
-	ctx.drawImage(water, waterFrame *64/4, 0, 64/4, 16, 762, 350, 1.8*64/4, 1.8*16)
-	ctx.drawImage(water, waterFrame *64/4, 0, 64/4, 16, 126, 68, 1.8*64/4, 1.8*16)
-	ctx.drawImage(water, waterFrameU *64/4, 0, 64/4, 16, 92, 96, 1.8*64/4, 1.8*16)
-	ctx.drawImage(water, waterFrame *64/4, 0, 64/4, 16, 1370, 98, 1.8*64/4, 1.8*16)
-	ctx.drawImage(water, waterFrame *64/4, 0, 64/4, 16, 1469, 445, 1.8*64/4, 1.8*16)
-	ctx.drawImage(water, waterFrameU *64/4, 0, 64/4, 16, 1432, 479, 1.8*64/4, 1.8*16)
-	ctx.drawImage(water, waterFrame *64/4, 0, 64/4, 16, 1373, 575, 1.8*64/4, 1.8*16)
-	ctx.drawImage(water, waterFrame *64/4, 0, 64/4, 16, 882, 575, 1.8*64/4, 1.8*16)
-	ctx.drawImage(water, waterFrame *64/4, 0, 64/4, 16, 924, 602, 1.8*64/4, 1.8*16)
-	ctx.drawImage(water, waterFrame *64/4, 0, 64/4, 16, 33, 576, 1.8*64/4, 1.8*16)
-
-	for(let i = 0; i < 150; i+= 2.8*16){
-		ctx.drawImage(water, waterFrameU *64/4.1, 0, 64/4, 16, 825, 163 + i, 1.8*64/4, 1.8*16)
-	}
-	for(let i = 0; i < 150; i+= 2.8*16){
-		ctx.drawImage(water, waterFrame *64/4.1, 0, 64/4, 16, 864, 140 + i, 1.8*64/4, 1.8*16)
-	}
-	for(let i = 0; i < 150; i+= 2.8*16){
-		ctx.drawImage(water, waterFrameU *64/4.1, 0, 64/4, 16, 798, 414 + i, 1.8*64/4, 1.8*16)
-	}
-	for(let i = 0; i < 150; i+= 2.8*16){
-		ctx.drawImage(water, waterFrame *64/4.1, 0, 64/4, 16, 760, 440 + i, 1.8*64/4, 1.8*16)
-	}
-	for(let i = 0; i < 150; i+= 2.8*16){
-		ctx.drawImage(water, waterFrameU *64/4.1, 0, 64/4, 16, 517 + i, 30, 1.8*64/4, 1.8*16)
-	}
-	for(let i = 0; i < 150; i+= 2.8*16){
-		ctx.drawImage(water, waterFrame *64/4.1, 0, 64/4, 16, 540 + i, 74, 1.8*64/4, 1.8*16)
-	}
-	for(let i = 0; i < 360; i+= 2.8*16){
-		ctx.drawImage(water, waterFrameU *64/4.1, 0, 64/4, 16, 968 + i, 10, 1.8*64/4, 1.8*16)
-	}
-	for(let i = 0; i < 360; i+= 2.8*16){
-		ctx.drawImage(water, waterFrame *64/4.1, 0, 64/4, 16, 946 + i, 30, 1.8*64/4, 1.8*16)
-	}
-	for(let i = 0; i < 150; i+= 2.8*16){
-		ctx.drawImage(water, waterFrameU *64/4.1, 0, 64/4, 16, 1438, 100 + i, 1.8*64/4, 1.8*16)
-	}
-	for(let i = 0; i < 120; i+= 2.8*16){
-		ctx.drawImage(water, waterFrame *64/4.1, 0, 64/4, 16, 22, 134 +i, 1.8*64/4, 1.8*16)
-	}
-	for(let i = 0; i < 120; i+= 2.8*16){
-		ctx.drawImage(water, waterFrameU *64/4.1, 0, 64/4, 16, 14, 400 +i, 1.8*64/4, 1.8*16)
-	}
-	for(let i = 0; i < 180; i+= 2.8*16){
-		ctx.drawImage(water, waterFrame *64/4.1, 0, 64/4, 16, 386 +i, 606, 1.8*64/4, 1.8*16)
-	}
-	
-	waterFrame++;
-	if(waterFrame == 4){
-		waterFrame = 0;
-	}
-	waterFrameU--;
-	if(waterFrameU == -1){
-		waterFrameU = 3;
-	}
-
-}
-
 		function render() {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			Water();
 			ctx.drawImage(bg, 0,0, canvas.width, canvas.height);
 	
-			Water();
 			
 			borders.forEach(border =>{
 				ctx.beginPath();
@@ -602,6 +543,26 @@ function Water(){
 			ctx.font = "20px VT323";
 			ctx.fillText(msg, 90, 40);
 		}
+
+// draws and animates the water
+function Water(){
+	for(let i = 0; i < 1000; i+= 4.8*16/4){
+		for(let j = 0; j < 1500; j+= 2.8*16){
+			ctx.drawImage(water, waterFrame *64/4.1, 0, 64/4, 16, j-150, i-200, 1.8*64/4, 1.8*16)
+			ctx.drawImage(water, waterFrameU *64/4.1, 0, 64/4, 16, j, i+100, 1.8*64/4, 1.8*16)
+		}
+	}
+	
+	waterFrame++;
+	if(waterFrame == 4){
+		waterFrame = 0;
+	}
+	waterFrameU--;
+	if(waterFrameU == -1){
+		waterFrameU = 3;
+	}
+
+}
 		
 		// function to plants trees
 		function Plant(){
