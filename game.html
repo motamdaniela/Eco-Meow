@@ -473,12 +473,12 @@
 			
 			InsideMap();
 			renderTrash();	
-			ctx.drawImage(image, frameCol * sizex, frameRow * sizey, sizex, sizey, x, y, 192/2.1,192/2.1);
 			ctx.drawImage(tree, framePlant1*96/4, 0, 96/4, 32, plantX1, plantY1, 2*96/4, 2* 32);
 			ctx.drawImage(tree, framePlant2*96/4, 0, 96/4, 32, plantX2, plantY2, 2*96/4, 2* 32);
 			ctx.drawImage(tree, framePlant3*96/4, 0, 96/4, 32, plantX3, plantY3, 2*96/4, 2* 32);
 			ctx.drawImage(tree, framePlant4*96/4, 0, 96/4, 32, plantX4, plantY4, 2*96/4, 2* 32);
 			ctx.drawImage(tree, framePlant5*96/4, 0, 96/4, 32, plantX5, plantY5, 2*96/4, 2* 32);
+			ctx.drawImage(image, frameCol * sizex, frameRow * sizey, sizex, sizey, x, y, 192/2.1,192/2.1);
 
 		}
 		let treeCount = 0;
@@ -493,7 +493,7 @@
 
 				if (frameRow == 0){
 					plantX = x+20;
-					plantY = y+60;
+					plantY = y+40;
 				}else if(frameRow == 1){
 					plantX = x+20;
 					plantY = y-30;
@@ -519,6 +519,13 @@
 						if (treeCount == 1){
 							plantX1 = plantX
 							plantY1 = plantY
+							framePlant1 = framePlant
+							tinyBorders.push({
+												x: plantX,
+            								    y: plantY,
+            								    width: 2*96/4,
+            								    height: 2* 32-30,
+											},)
 							setTimeout( function(){ 
 								framePlant1 = 0.8
 								growaudio.play();
@@ -526,46 +533,90 @@
 									framePlant1 = 1.99
 									growaudio.currentTime = 0;
 									growaudio.play();
+
+
+									// -------------------
+									EndGame();
+									// -------------------
+
+
 								},1500)
 							},1000)
 						}else if (treeCount == 2){
 							plantX2 = plantX
 							plantY2 = plantY
 							framePlant2 = framePlant
+							tinyBorders.push({
+												x: plantX,
+            								    y: plantY,
+            								    width: 2*96/4,
+            								    height: 2* 32-30,
+											},)
 							setTimeout( function(){ 
 								framePlant2 = 0.8
+								growaudio.play();
 								setTimeout( function(){ 
 									framePlant2 = 1.99
+									growaudio.currentTime = 0;
+									growaudio.play();
 								},1000)
 							},1000)
 						}else if (treeCount == 3){
 							plantX3 = plantX
 							plantY3 = plantY
 							framePlant3 = framePlant
+							tinyBorders.push({
+												x: plantX,
+            								    y: plantY,
+            								    width: 2*96/4,
+            								    height: 2* 32-30,
+											},)
 							setTimeout( function(){ 
 								framePlant3 = 0.8
+								growaudio.play();
 								setTimeout( function(){ 
 									framePlant3 = 1.99
+									growaudio.currentTime = 0;
+									growaudio.play();
 								},1000)
 							},1000)
 						}else if (treeCount == 4){
 							plantX4 = plantX
 							plantY4 = plantY
 							framePlant4 = framePlant
+							tinyBorders.push({
+												x: plantX,
+            								    y: plantY,
+            								    width: 2*96/4,
+            								    height: 2* 32-30,
+											},)
 							setTimeout( function(){ 
 								framePlant4 = 0.8
+								growaudio.play();
 								setTimeout( function(){ 
 									framePlant4 = 1.99
+									growaudio.currentTime = 0;
+									growaudio.play();
 								},1000)
 							},1000)
 						}else if (treeCount == 5){
 							plantX5 = plantX
 							plantY5 = plantY
 							framePlant5 = framePlant
+							tinyBorders.push({
+												x: plantX,
+            								    y: plantY,
+            								    width: 2*96/4,
+            								    height: 2* 32-30,
+											},)
 							setTimeout( function(){ 
 								framePlant5 = 0.8
+								growaudio.play();
 								setTimeout( function(){ 
 									framePlant5 = 1.99
+									growaudio.currentTime = 0;
+									growaudio.play();
+									EndGame();
 								},1000)
 							},1000)
 						}
@@ -757,6 +808,26 @@
 						actions();
 					}
 				}
+
+		function EndGame(){
+			
+			// setTimeout( function(){ 
+				// 	frameRow = 0;
+				// 	frameCol++;	
+				// 	if (frameCol == 4)
+				// 	frameCol = 0;
+				// },1000)
+				frameRow = 0;
+				frameCol = 0;
+				while (frameCol < 4){
+					frameCol++;	
+					upKey = false;
+					downKey = false;
+					rightKey = false;
+					leftKey = false;
+				}
+				frameCol = 0;
+		}
 
 		let borders = [
 			{
