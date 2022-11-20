@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>meow</title>
+</head>
+
+<style>
+    body {
+        /* background-color: #9BD4C3; */
+        background-image: url('images/Water.png');
+        background-size: 9%;
+        text-align:center;
+    }
+    .img{
+            position:absolute;
+            margin-top: 2%;          
+            animation-name: bg_in;
+            animation-duration: 1s;
+            animation-direction: normal;
+            animation-iteration-count: 1;
+        }
+    #title{
+        margin-left: -7.6%;
+        width: 15%;
+    }
+    #myCanvas{
+        margin-left: -50%;
+    }
+        
+
+        @keyframes bg_in {
+            from {
+            margin-top: 0%;
+            }
+            to {
+            margin-top: 2%;
+            }
+        }
+
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<body style = "text-align:center;">
+   
+    <div style = "text-align:center;">
+        <canvas class="img" id="myCanvas" width="1500" height="1550">
+            Your browser does not support HTML5 Canvas.
+        </canvas>
+        <!-- <img class="img" id="bg" src="images/head.png">
+            <img class="img" id="bg" src="images/body.png">
+            <img class="img" id="bg" src="images/foot.png"> -->
+        </div>
+        <img class="img" id="title" src="images/regras.png">
+
+    <span id="loader" style="font-family: 'VT323', monospace;"></span>
+    
+    <script>
+        const canvas = document.querySelector('#myCanvas');
+		const ctx = canvas.getContext("2d");
+        const W = canvas.width, H = canvas.height;
+
+        let bg = new Image();
+        bg.src='images/bg_regras.png';
+
+        let regras = new Image();
+        regras.src='images/regras.png';
+
+        let box = new Image();
+        box.src='images/big-box.png'; 
+
+        let lake = new Image();
+        lake.src='images/lillake.png';
+        let plantie = new Image();
+		plantie.src = 'images/biome.png'
+
+        let kitty = new Image();
+		kitty.src = 'images/kitty.png';
+        let frameCol = frameColA = 0;
+        let frameRowD = 0;
+        let frameRowU = 1;
+        let frameRowL = 2;
+        let frameRowR = 3;
+        let frameRowA = 0;
+        
+
+        // let button = new Image();
+        // button.src='images/home.png';
+
+        window.onload = function () {
+			setInterval(render, 1000 / 6);
+		};
+        
+        
+        function render() {
+            
+            ctx.drawImage(bg, 0, 0 * 336/3, 752, 336/3, 50, 10, canvas.width-100, 666/3);
+            ctx.drawImage(bg, 0, 1 * 336/3, 752, 336/3, 50, 666/3, canvas.width-100, 666/3);
+            ctx.drawImage(bg, 0, 1 * 336/3, 752, 336/3, 50, 2*666/3, canvas.width-100, 666/3);
+            ctx.drawImage(bg, 0, 1 * 336/3, 752, 336/3, 50, 3*666/3, canvas.width-100, 666/3);
+            ctx.drawImage(bg, 0, 1 * 336/3, 752, 336/3, 50, 4*666/3, canvas.width-100, 666/3);
+            ctx.drawImage(bg, 0, 1 * 336/3, 752, 336/3, 50, 5*666/3, canvas.width-100, 666/3);
+            ctx.drawImage(bg, 0, 2 * 336/3, 752, 336/3, 50, 6*666/3, canvas.width-100, 666/3);
+            // ctx.drawImage(regras, canvas.width/2-100, 10, 98*2,34*2);
+            
+            actionsList();
+
+            // ctx.drawImage(bg, 50,0, canvas.width-100, canvas.height);
+
+            // ctx.drawImage(button, 10,10, 22*2, 24*2)
+
+            // 1st column
+            // ctx.drawImage(box, 220, 100, 51*5, 45*5);
+            // ctx.drawImage(box, 220, 340, 51*5, 45*5);
+            // // 2nd column
+            // ctx.drawImage(box, 630, 100, 51*5, 45*5);
+            // ctx.drawImage(box, 630, 340, 51*5, 45*5);
+            // // 3rd column
+            // ctx.drawImage(box, 1040, 100, 51*5, 45*5);
+            // ctx.drawImage(box, 1040, 340, 51*5, 45*5);
+        }
+
+        function actionsList(){
+            ctx.font = "40px VT323";
+            ctx.fillStyle = "#B58861";
+            ctx.drawImage(plantie, 0 *144/9 , 1.9 *80/5, 144/9, 80/5, 0.85*canvas.width/2,  140, 2*144/9, 2*80/5);
+            ctx.drawImage(plantie, 0 *144/9 , 1.9 *80/5, 144/9, 80/5, 1.1*canvas.width/2,  140, 2*144/9, 2*80/5);
+            ctx.fillText('AÇÕES' , canvas.width/2.12,  170, 2*canvas.width/5,canvas.height/2);
+
+            ctx.drawImage(lake, 50+ canvas.width/6, 200, 160, 160);
+            ctx.drawImage(lake, 50+ 2*canvas.width/6, 200, 160, 160);
+            ctx.drawImage(lake, 50+ 3*canvas.width/6, 200, 160, 160);
+            ctx.drawImage(lake, 50+ 4*canvas.width/6, 200, 160, 160);
+
+            ctx.drawImage(kitty, frameCol * 192/4, frameRowD * 192/4, 192/4, 192/4, 35+ canvas.width/6, 185, 192,192);
+            ctx.drawImage(kitty, frameCol * 192/4, frameRowU * 192/4, 192/4, 192/4, 35+ 2*canvas.width/6, 185, 192,192);
+            ctx.drawImage(kitty, frameCol * 192/4, frameRowR * 192/4, 192/4, 192/4, 35+ 3*canvas.width/6, 185, 192,192);
+            ctx.drawImage(kitty, frameCol * 192/4, frameRowL * 192/4, 192/4, 192/4, 35+ 4*canvas.width/6, 185, 192,192);
+
+            frameCol++;	
+            if (frameCol == 4){
+                frameCol = 0;
+            }
+        }
+        
+    </script>
+</body>
+
+</html>
