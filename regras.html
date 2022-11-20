@@ -37,12 +37,30 @@
 
         let regras = new Image();
         regras.src='images/regras.png';
-
+        
+        let kitty = new Image();
+		kitty.src = 'images/kitty.png';
+        
         let box = new Image();
         box.src='images/big-box.png'; 
 
-        // let button = new Image();
-        // button.src='images/home.png';
+        let button = new Image();
+        button.src='images/home.png';
+        
+        let bgbox = new Image();
+        bgbox.src='images/bgbox.png'
+
+        let bgbox2 = new Image();
+        bgbox2.src='images/bgbox2.png';
+
+        let bgbox3 = new Image();
+        bgbox3.src='images/bgbox3.png'
+
+        let inventory = new Image();
+        inventory.src='images/inventory.png';
+
+        let frameCol = 0;
+        let frameRow = 0;
 
         window.onload = function () {
 			setInterval(render, 1000 / 6);
@@ -50,21 +68,57 @@
         
         
         function render() {
-            
-            ctx.drawImage(bg, 50,0, canvas.width-100, canvas.height);
+            ctx.clearRect(0,0,W,H);
+
+            ctx.drawImage(bg, 50,0, canvas.width-100, canvas.height+40);
             ctx.drawImage(regras, canvas.width/2-100, 10, 98*2,34*2);
 
-            // ctx.drawImage(button, 10,10, 22*2, 24*2)
+            ctx.drawImage(button, 10,10, 22*2, 24*2)
 
-            // 1st column
-            ctx.drawImage(box, 220, 100, 51*5, 45*5);
-            ctx.drawImage(box, 220, 340, 51*5, 45*5);
-            // 2nd column
-            ctx.drawImage(box, 630, 100, 51*5, 45*5);
-            ctx.drawImage(box, 630, 340, 51*5, 45*5);
-            // 3rd column
-            ctx.drawImage(box, 1040, 100, 51*5, 45*5);
-            ctx.drawImage(box, 1040, 340, 51*5, 45*5);
+            // 1st box
+            ctx.drawImage(box, 220, 80, 51*5, 45*5);
+            ctx.drawImage(bgbox, 209, 78, 51*5, 45*5);
+            ctx.drawImage(kitty, frameRow*192/4, frameCol*192/4, 192/4, 192/4, 275,125,90,90);
+            
+            frameCol = 0;
+            frameRow++;
+            if(frameRow ==4) {
+                frameRow=0;
+            }
+            
+            ctx.font = "25px VT323";
+			ctx.fillStyle = "#B58861";
+            ctx.fillText('Usa as teclas de setas', 230, 315);
+            ctx.fillText('para andar pelo mapa', 238, 335);
+
+            // 2nd
+            ctx.drawImage(box, 630, 80, 51*5, 45*5);
+            ctx.drawImage(bgbox2, 619, 78, 51*5, 45*5);
+            ctx.fillText('Começa por usar a tecla G', 620, 315);
+            ctx.fillText('para apanhar o lixo', 650, 335);
+            
+            
+            // 3rd
+            ctx.drawImage(box, 1040, 80, 51*5, 45*5);
+            ctx.drawImage(bgbox3, 1028, 78, 51*5, 45*5);
+            ctx.drawImage(inventory,1050, 150, 212, 80);
+            ctx.fillText('O lixo que apanhares', 1058, 315);
+            ctx.fillText('vai para o inventário', 1052, 335);
+            
+            // 4th
+            ctx.drawImage(box, 220, 360, 51*5, 45*5);
+            ctx.fillText('Clica no lixo e recicla-o', 210, 595);
+            ctx.fillText('no ecoponto correto', 240, 615);
+            
+            // 5th
+            ctx.drawImage(box, 630, 360, 51*5, 45*5);
+            ctx.fillText('Após cada 5 lixos reciclados', 610, 595);
+            ctx.fillText('recebes 1 semente', 660, 615);
+            
+            // 6th
+            ctx.drawImage(box, 1040, 360, 51*5, 45*5);
+            ctx.fillText('Escolhe um pedaço de terra', 1025, 595);
+            ctx.fillText('e planta as tuas sementes', 1030, 615);
         }
         
     </script>
