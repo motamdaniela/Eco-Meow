@@ -22,7 +22,7 @@
 
             transition-timing-function: ease-in-out;
             animation-name: bg_move;
-            animation-duration: 2s;
+            animation-duration: 6s;
             animation-direction: alternate;
             animation-iteration-count: infinite;
         }
@@ -89,7 +89,7 @@
         const rectangles = [
             {
                 x: x,
-                y: y+50,
+                y: y,
                 width: 192,
                 height: 64,
                 sx: 0,
@@ -105,7 +105,7 @@
             },
             {
                 x: x,
-                y: y+150,
+                y: y,
                 width: 192,
                 height: 64,
                 sx: 0,
@@ -113,7 +113,7 @@
                 sWidth: 192/2,
                 sHeight: 64/2,
                 dx: x-192/2,
-                dy: y-64/2 + 150,
+                dy: y-64/2 + 120,
                 page:'./regras.html',
                 sxClick:192/2,
                 syClick:0,
@@ -128,13 +128,36 @@
 
             ctx.clearRect(0, 0, W, H);
 
+            ctx.font = "100px VT323";
+            ctx.fillStyle = "#E8CFA6";
+            ctx.strokeStyle = "#B58861";
+            ctx.lineWidth = 10;
+            ctx.strokeText('ECO /ᐠ-ᐟ\\EOW' , canvas.width/3, canvas.height/4, canvas.width/3,canvas.height/2);
+            ctx.strokeStyle = "#F3E5C2";
+            ctx.lineWidth = 4;
+            ctx.strokeText('ECO /ᐠ-ᐟ\\EOW' , canvas.width/3,  canvas.height/4, canvas.width/3,canvas.height/2);
+            ctx.fillText('ECO /ᐠ-ᐟ\\EOW' , canvas.width/3,  canvas.height/4, canvas.width/3,canvas.height/2);
+
+            ctx.strokeStyle = "#B58861";
+            ctx.lineWidth = 10;
+            ctx.strokeText(`=•  •=`, canvas.width/3 +134,  canvas.height/4 +60, canvas.width/3,canvas.height/2);
+            ctx.strokeStyle = "#F3E5C2";
+            ctx.lineWidth = 4;
+            ctx.strokeText(`=•  •=`, canvas.width/3 +134,  canvas.height/4 +60, canvas.width/3,canvas.height/2);
+            ctx.fillText(`=•  •=`, canvas.width/3 +134,  canvas.height/4 +60, canvas.width/3,canvas.height/2);
+            ctx.stroke();
+            ctx.lineWidth = 0;
+            ctx.strokeStyle = "black";
+
+
+            ctx.drawImage(kitty, frameCol * 192/4, frameRow * 192/4, 192/4, 192/4, canvas.width/2.3, 2*canvas.height/6, 192,192);
+
             rectangles.forEach(rectangle =>{
                 ctx.beginPath();
-                ctx.drawImage(kitty, frameCol * 192/4, frameRow * 192/4, 192/4, 192/4, canvas.width/2.3, canvas.height/5, 192,192);
-                ctx.rect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
-                ctx.drawImage(rectangle.src, rectangle.sx, rectangle.sy,rectangle.sWidth, rectangle.sHeight, rectangle.dx, rectangle.dy, rectangle.width, rectangle.height)
-
+                ctx.rect(rectangle.dx, rectangle.dy, rectangle.swidth, rectangle.sheight);
+                ctx.drawImage(rectangle.src, rectangle.sx, rectangle.sy,rectangle.sWidth, rectangle.sHeight, rectangle.dx, rectangle.dy  + 50, rectangle.width, rectangle.height)
             })
+            
             frameCol++;	
             if (frameCol == 4){
                 frameRow++;
@@ -147,7 +170,7 @@
         
         
         function isIntersect(pos,rectangle){
-            return rectangle.dx<pos.x && pos.x<rectangle.dx+rectangle.width && rectangle.dy<pos.y && pos.y<rectangle.dy+rectangle.height
+            return rectangle.dx<pos.x && pos.x<rectangle.dx+rectangle.width && rectangle.dy+50<pos.y && pos.y<rectangle.dy+rectangle.height +50
         }
 
         canvas.addEventListener('click', (e)=>{
@@ -175,14 +198,25 @@
             })
         })
 
-        
+        canvas.addEventListener('mousemove', (e)=>{
+            console.log('ok');
+            const pos={
+                x: e.clientX,
+                y: e.clientY
+            };
 
-        canvas.addEventListener('mousemove', e => {
-				x = e.offsetX; y = e.offsetY;
-
-				// console.log(x,y)
-			});
-
+            
+            rectangles.forEach(rectangle=>{
+                console.log(pos)
+                console.log(rectangle.x, rectangle.y)
+                if(isIntersect(pos, rectangle)){
+                    console.log('ok2')
+                    rectangle.sx=192/2                
+                }else{
+                    rectangle.sx= 0;
+                }
+            })
+        })
 
 	</script>
     

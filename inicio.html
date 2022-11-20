@@ -10,18 +10,54 @@
 		*:active{ cursor : url('images/mouseicongrab.png'), auto}
         body {
             background-color: #9BD4C3;
+            overflow-x: hidden;
         }
+        
+        .img{
+            position:absolute;
+            z-index:-1;
+            margin-top: 20px;
+            width: 1520px;
+            height: 650px;
+
+            
+            animation-name: bg_move;
+            animation-duration: 6s;
+            animation-direction: alternate;
+            animation-iteration-count: infinite;
+        }
+        
+
+        @keyframes bg_move {
+            0%{
+                transform: translate(-80px);
+                transform: scale(1.1);
+                transform-origin: 0%;
+            }
+            
+            100%{
+                transform: translate(100px);
+                transform: scale(1.1);
+                transform-origin: 100%;
+            }
+        }
+        
     </style>
 </head>
+
 <body>
     <audio autoplay id="myaudio" loop="true">
         <source src="/sounds/song.mp3">
     </audio>
-    <div style = "text-align:center;">
-        <canvas id="myCanvas" width="1500" height="666">
+
+    <div style = "text-align: center">
+        <img class="img" src="images/bginicio.png">
+        <canvas id="myCanvas" width="1528" height="690">
             Your browser does not support HTML5 Canvas.
         </canvas>
     </div>
+
+    
 	<script>
         var audio = document.getElementById("myaudio");
         audio.volume = 0.01
@@ -43,9 +79,6 @@
         let kitty = new Image();
 		kitty.src = 'images/kitty.png';
 
-        let bg = new Image();
-		bg.src = 'images/bginicio.png';
-
 		window.onload = function () {
 			setInterval(render, 1000 / 6);
 		};
@@ -56,7 +89,7 @@
         const rectangles = [
             {
                 x: x,
-                y: y+50,
+                y: y,
                 width: 192,
                 height: 64,
                 sx: 0,
@@ -72,7 +105,7 @@
             },
             {
                 x: x,
-                y: y+150,
+                y: y,
                 width: 192,
                 height: 64,
                 sx: 0,
@@ -80,7 +113,7 @@
                 sWidth: 192/2,
                 sHeight: 64/2,
                 dx: x-192/2,
-                dy: y-64/2 + 150,
+                dy: y-64/2 + 120,
                 page:'./regras.html',
                 sxClick:192/2,
                 syClick:0,
@@ -94,26 +127,37 @@
             }
 
             ctx.clearRect(0, 0, W, H);
-            
-            // o bg poderia ser um elemento do canvas para animar mais tarde
-            ctx.drawImage(bg, xbg, 2, 752, 336, 0, 0, canvas.width*1.1,canvas.height*1.1);
-            
-            // animation for background
-            console.log(xbg)
-            if(xbg < 55){
-                xbg ++;
-            }
-            if(xbg >= 50){
-                xbg --;
-            }
+
+            ctx.font = "100px VT323";
+            ctx.fillStyle = "#E8CFA6";
+            ctx.strokeStyle = "#B58861";
+            ctx.lineWidth = 10;
+            ctx.strokeText('ECO /ᐠ-ᐟ\\EOW' , canvas.width/3, canvas.height/4, canvas.width/3,canvas.height/2);
+            ctx.strokeStyle = "#F3E5C2";
+            ctx.lineWidth = 4;
+            ctx.strokeText('ECO /ᐠ-ᐟ\\EOW' , canvas.width/3,  canvas.height/4, canvas.width/3,canvas.height/2);
+            ctx.fillText('ECO /ᐠ-ᐟ\\EOW' , canvas.width/3,  canvas.height/4, canvas.width/3,canvas.height/2);
+
+            ctx.strokeStyle = "#B58861";
+            ctx.lineWidth = 10;
+            ctx.strokeText(`=•  •=`, canvas.width/3 +134,  canvas.height/4 +60, canvas.width/3,canvas.height/2);
+            ctx.strokeStyle = "#F3E5C2";
+            ctx.lineWidth = 4;
+            ctx.strokeText(`=•  •=`, canvas.width/3 +134,  canvas.height/4 +60, canvas.width/3,canvas.height/2);
+            ctx.fillText(`=•  •=`, canvas.width/3 +134,  canvas.height/4 +60, canvas.width/3,canvas.height/2);
+            ctx.stroke();
+            ctx.lineWidth = 0;
+            ctx.strokeStyle = "black";
+
+
+            ctx.drawImage(kitty, frameCol * 192/4, frameRow * 192/4, 192/4, 192/4, canvas.width/2.3, 2*canvas.height/6, 192,192);
 
             rectangles.forEach(rectangle =>{
                 ctx.beginPath();
-                ctx.drawImage(kitty, frameCol * 192/4, frameRow * 192/4, 192/4, 192/4, canvas.width/2.3, canvas.height/5, 192,192);
-                ctx.rect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
-                ctx.drawImage(rectangle.src, rectangle.sx, rectangle.sy,rectangle.sWidth, rectangle.sHeight, rectangle.dx, rectangle.dy, rectangle.width, rectangle.height)
-
+                ctx.rect(rectangle.dx, rectangle.dy, rectangle.swidth, rectangle.sheight);
+                ctx.drawImage(rectangle.src, rectangle.sx, rectangle.sy,rectangle.sWidth, rectangle.sHeight, rectangle.dx, rectangle.dy  + 50, rectangle.width, rectangle.height)
             })
+            
             frameCol++;	
             if (frameCol == 4){
                 frameRow++;
@@ -126,7 +170,7 @@
         
         
         function isIntersect(pos,rectangle){
-            return rectangle.dx<pos.x && pos.x<rectangle.dx+rectangle.width && rectangle.dy<pos.y && pos.y<rectangle.dy+rectangle.height
+            return rectangle.dx<pos.x && pos.x<rectangle.dx+rectangle.width && rectangle.dy+50<pos.y && pos.y<rectangle.dy+rectangle.height +50
         }
 
         canvas.addEventListener('click', (e)=>{
@@ -154,14 +198,25 @@
             })
         })
 
-        
+        canvas.addEventListener('mousemove', (e)=>{
+            console.log('ok');
+            const pos={
+                x: e.clientX,
+                y: e.clientY
+            };
 
-        canvas.addEventListener('mousemove', e => {
-				x = e.offsetX; y = e.offsetY;
-
-				// console.log(x,y)
-			});
-
+            
+            rectangles.forEach(rectangle=>{
+                console.log(pos)
+                console.log(rectangle.x, rectangle.y)
+                if(isIntersect(pos, rectangle)){
+                    console.log('ok2')
+                    rectangle.sx=192/2                
+                }else{
+                    rectangle.sx= 0;
+                }
+            })
+        })
 
 	</script>
     
