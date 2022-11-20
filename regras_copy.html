@@ -65,27 +65,32 @@
 
         let bg = new Image();
         bg.src='images/bg_regras.png';
-
+        
         let regras = new Image();
         regras.src='images/regras.png';
+
+        let kitty = new Image();
+		kitty.src = 'images/kitty.png';
 
         let box = new Image();
         box.src='images/big-box.png'; 
 
         let lake = new Image();
         lake.src='images/lillake.png';
+
         let plantie = new Image();
 		plantie.src = 'images/biome.png'
 
-        let kitty = new Image();
-		kitty.src = 'images/kitty.png';
-        let frameCol = frameColA = 0;
+        let square_btn = new Image();
+        square_btn.src='images/square_buttons.png';
+
+        let frameCol = frameColA = frameBtnsX = frameBtnsAX= 0;
+        let frameBtnsY = frameBtnsAY = 1;
         let frameRowD = 0;
         let frameRowU = 1;
         let frameRowL = 2;
         let frameRowR = 3;
         let frameRowA = 0;
-        
 
         // let button = new Image();
         // button.src='images/home.png';
@@ -104,23 +109,10 @@
             ctx.drawImage(bg, 0, 1 * 336/3, 752, 336/3, 50, 4*666/3, canvas.width-100, 666/3);
             ctx.drawImage(bg, 0, 1 * 336/3, 752, 336/3, 50, 5*666/3, canvas.width-100, 666/3);
             ctx.drawImage(bg, 0, 2 * 336/3, 752, 336/3, 50, 6*666/3, canvas.width-100, 666/3);
-            // ctx.drawImage(regras, canvas.width/2-100, 10, 98*2,34*2);
             
             actionsList();
+            howToPlay();
 
-            // ctx.drawImage(bg, 50,0, canvas.width-100, canvas.height);
-
-            // ctx.drawImage(button, 10,10, 22*2, 24*2)
-
-            // 1st column
-            // ctx.drawImage(box, 220, 100, 51*5, 45*5);
-            // ctx.drawImage(box, 220, 340, 51*5, 45*5);
-            // // 2nd column
-            // ctx.drawImage(box, 630, 100, 51*5, 45*5);
-            // ctx.drawImage(box, 630, 340, 51*5, 45*5);
-            // // 3rd column
-            // ctx.drawImage(box, 1040, 100, 51*5, 45*5);
-            // ctx.drawImage(box, 1040, 340, 51*5, 45*5);
         }
 
         function actionsList(){
@@ -144,7 +136,90 @@
             if (frameCol == 4){
                 frameCol = 0;
             }
+
+            ctx.drawImage(square_btn, frameBtnsX * 96/2, frameBtnsY * 192/4, 96/2, 192/4, 82+ canvas.width/6, 340, 2*96/2, 2*192/4);
+            ctx.drawImage(square_btn, frameBtnsX * 96/2, frameBtnsY * 192/4, 96/2, 192/4, 82+ 2*canvas.width/6, 340, 2*96/2, 2*192/4);
+            ctx.drawImage(square_btn, frameBtnsX * 96/2, frameBtnsY * 192/4, 96/2, 192/4, 82+ 3*canvas.width/6, 340, 2*96/2, 2*192/4);
+            ctx.drawImage(square_btn, frameBtnsX * 96/2, frameBtnsY * 192/4, 96/2, 192/4, 82+ 4*canvas.width/6, 340, 2*96/2, 2*192/4);
+            ctx.fillText('▼' , 110+ canvas.width/6, 400, 2*96/2, 2*192/4);
+            ctx.fillText('▲' , 110+ 2*canvas.width/6, 400, 2*96/2, 2*192/4);
+            ctx.fillText('►' , 110+ 3*canvas.width/6, 400, 2*96/2, 2*192/4);
+            ctx.fillText('◄' , 110+ 4*canvas.width/6, 400, 2*96/2, 2*192/4);
+
+            if (frameBtnsX == 1){
+                setTimeout( function(){
+                    frameBtnsX = 0;
+                    frameBtnsY = 1;
+                },1500)
+            }
+            frameBtnsX = 1;
+            frameBtnsY = 2;
+
+            ctx.drawImage(lake, 50+ 2*canvas.width/7, 470, 160, 160);
+            ctx.drawImage(lake, 50+ 4*canvas.width/7, 470, 160, 160);
+            ctx.drawImage(kitty, frameCol * 192/4, frameRowD * 192/4, 192/4, 192/4, 35+ 2*canvas.width/7, 450, 192,192);
+            ctx.drawImage(kitty, frameCol * 192/4, frameRowU * 192/4, 192/4, 192/4, 35+ 4*canvas.width/7, 450, 192,192);
+
+            ctx.drawImage(square_btn, frameBtnsAX * 96/2, frameBtnsAY * 192/4, 96/2, 192/4, 82+ 2*canvas.width/7, 610, 2*96/2, 2*192/4);
+            ctx.drawImage(square_btn, frameBtnsAX * 96/2, frameBtnsAY * 192/4, 96/2, 192/4, 82+ 4*canvas.width/7, 610, 2*96/2, 2*192/4);
+            ctx.fillText('G' , 122+ 2*canvas.width/7, 670, 2*96/2, 2*192/4);
+            ctx.fillText('P' , 122+ 4*canvas.width/7, 670, 2*96/2, 2*192/4);
+
+            if (frameBtnsAX == 1){
+                setTimeout( function(){
+                    frameBtnsAX = 0;
+                    frameBtnsAY = 1;
+                },400)
+            }
+            frameBtnsAX = 1;
+            frameBtnsAY = 2;
         }
+
+        function howToPlay(){
+            ctx.font = "40px VT323";
+            ctx.fillStyle = "#B58861";
+            ctx.drawImage(plantie, 0 *144/9 , 1.9 *80/5, 144/9, 80/5, 0.80*canvas.width/2,  725, 2*144/9, 2*80/5);
+            ctx.drawImage(plantie, 0 *144/9 , 1.9 *80/5, 144/9, 80/5, 1.15*canvas.width/2,  725, 2*144/9, 2*80/5);
+            ctx.fillText('COMO JOGAR' , canvas.width/2.12 -40,  760, 2*canvas.width/5,canvas.height/2);
+
+
+        }
+
+
+
+
+
+
+
+        function actionsList2(){
+            ctx.drawImage(lake, 10+ canvas.width/8, 200, 160, 160);
+            ctx.drawImage(lake, 10+ 2*canvas.width/8, 200, 160, 160);
+            ctx.drawImage(lake, 10+ 3*canvas.width/8, 200, 160, 160);
+            ctx.drawImage(lake, 10+ 4*canvas.width/8, 200, 160, 160);
+            ctx.drawImage(lake, 10+ 5*canvas.width/8, 200, 160, 160);
+            ctx.drawImage(lake, 10+ 6*canvas.width/8, 200, 160, 160);
+
+            ctx.drawImage(kitty, frameCol * 192/4, frameRowD * 192/4, 192/4, 192/4, canvas.width/8 -5, 185, 192,192);
+            ctx.drawImage(kitty, frameCol * 192/4, frameRowU * 192/4, 192/4, 192/4, 2*canvas.width/8 -5, 185, 192,192);
+            ctx.drawImage(kitty, frameCol * 192/4, frameRowR * 192/4, 192/4, 192/4, 3*canvas.width/8 -5, 185, 192,192);
+            ctx.drawImage(kitty, frameCol * 192/4, frameRowL * 192/4, 192/4, 192/4, 4*canvas.width/8 -5, 185, 192,192);
+            ctx.drawImage(kitty, frameCol * 192/4, frameRowL * 192/4, 192/4, 192/4, 5*canvas.width/8 -5, 185, 192,192);
+            ctx.drawImage(kitty, frameCol * 192/4, frameRowL * 192/4, 192/4, 192/4, 6*canvas.width/8 -5, 185, 192,192);
+
+
+            frameCol++;	
+            if (frameCol == 4){
+                frameCol = 0;
+            }
+
+            ctx.drawImage(square_btn, frameBtnsX * 96/2, frameBtnsY * 192/4, 96/2, 192/4, 42+ canvas.width/8, 350, 2*96/2, 2*192/4);
+            ctx.drawImage(square_btn, frameBtnsX * 96/2, frameBtnsY * 192/4, 96/2, 192/4, 42+ 2*canvas.width/8, 350, 2*96/2, 2*192/4);
+            ctx.drawImage(square_btn, frameBtnsX * 96/2, frameBtnsY * 192/4, 96/2, 192/4, 42+ 3*canvas.width/8, 350, 2*96/2, 2*192/4);
+            ctx.drawImage(square_btn, frameBtnsX * 96/2, frameBtnsY * 192/4, 96/2, 192/4, 42+ 4*canvas.width/8, 350, 2*96/2, 2*192/4);
+            ctx.drawImage(square_btn, frameBtnsX * 96/2, frameBtnsY * 192/4, 96/2, 192/4, 42+ 5*canvas.width/8, 350, 2*96/2, 2*192/4);
+            ctx.drawImage(square_btn, frameBtnsX * 96/2, frameBtnsY * 192/4, 96/2, 192/4, 42+ 6*canvas.width/8, 350, 2*96/2, 2*192/4);
+        }
+        
         
     </script>
 </body>
