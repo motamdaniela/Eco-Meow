@@ -131,7 +131,9 @@
 		let pKey = false
 		
 		// variablesfor positions
-		let x = 1115;
+		let x = 500;
+
+		// let x = 1115;
 		let y = 120;
 		let sizex = 192/4;
 		let sizey = 192/4;		
@@ -143,11 +145,14 @@
 		
 		let emoteY = 0;
 		let emoteX = 0;
-		let up = -1000;
 		let plantieY = -1000;
+		let boxieY = 0;
+		// let up = -1000;
+
+		let boxiesizeX = boxiesizeY = 0;
 
 		let help=''
-		let msg=''
+		let msg =''
 		
 		// lists for inventory and bins
 		let positions = [
@@ -259,9 +264,8 @@
 			}
 			help='inicio'
 			
-			
 		}
-
+		
 		//loads inventory and trash items onto the canvas
 		function renderTrash(){
 			ctx.drawImage(inventory,0,0,192,64,W/2-(192*1.8)/2,H-120,192*1.8,64*1.8)
@@ -270,9 +274,15 @@
 				ctx.beginPath();
 				ctx.rect(trash.x, trash.y, trash.width, trash.height);
 				ctx.drawImage(trash.img, trash.x, trash.y, 30, 30);
+				
+			})
+			Trashes.forEach(trash =>{
+				if(trash.x>=x && trash.x<=x+50 && trash.y>=y && trash.y<=y+50 && (positions.find(position => position.full==false)) ){
+							help = '1opasso'
+					}
 			})
 		}
-
+		
 		function grab(x,y){
 			Trashes.forEach(trash =>{
 				if(trash.x>=x && trash.x<=x+50 && trash.y>=y && trash.y<=y+50){
@@ -285,6 +295,9 @@
 						trash.place=i
 						positions[i].full=true
 						grabaudio.play();
+						help = 'certo'
+					}else{
+						help = 'inventario'
 					}
 					
 				}
@@ -355,6 +368,7 @@
 							seedX += 1000;
 							setTimeout( function(){ 
 								seedX = 1420;
+								help='plantar'
 								setTimeout( function(){ 
 									seedX += 1000;
 									setTimeout( function(){ 
@@ -365,16 +379,14 @@
 								},300)
 							},300)
 					}
-					help='certo'
 				// wrong bin
 				}else{
 					rejectaudio.play();
 					trash.start = false;
 					rejectaudio.volume = 0.5;
-					rejectaudio.currentTime = 0.7
+					rejectaudio.currentTime = 0.7;
 					trash.x=positions[trash.place].x;
 					trash.y=positions[trash.place].y;
-					
 					help='errado'
 				}
 			})
@@ -382,20 +394,34 @@
 		
 		// removes trash from array
 		function destroyTrash(id) {
+			help='certo'
 			const IndexOfTrashToDestroy = Trashes.findIndex(trash => trash.id == id)
 			Trashes.splice(IndexOfTrashToDestroy,1)
 			ecoCounter += 1;
 		}
 
-		setInterval(emoteAnimation,5000)
-		// character expressions (doesn't work :) )
+		emoteAnimation()
+		// setInterval(emoteAnimation,1000/0.1)
+		// character expressions + tips
 		function emoteAnimation(){
-			ctx.drawImage(emote, frameIndexX*160/5, frameIndexY*480/15, 160/5, 480/15, 17, 17, 38, 38)
-			ctx.drawImage(boxie, 70, 10, 176*1.5, 48)
+			ctx.drawImage(emote, frameIndexX*160/5, frameIndexY*480/15, 160/5, 480/15, 17 +emoteX, 17 +emoteY, 38, 38)
+			ctx.drawImage(boxie, 70 +emoteX, 10 +emoteY +boxieY, 176*1.5 +boxiesizeX, 48 + boxiesizeY)
+			ctx.font = "20px VT323";
+			ctx.fillText(msg, 90 +emoteX, 40 +emoteY +boxieY);
+
 			
-			
-			if(help=='errado'){
-				msg='Coloca o lixo no ecoponto certo!'
+			if(help=='inicio'){
+				msg='Bem Vindo ao Eco-Meow!'
+				setTimeout(function(){
+					msg='Ajuda-me a apanhar o lixo!'
+				},2000)
+				frameIndexY=2
+				frameIndexX++
+				if(frameIndexX == 5){
+					frameIndexX = 0
+				}
+			}else if(help=='errado'){
+				msg='Ecoponto errado!'
 				if(frameIndexX>=2){
 					frameIndexX = 0
 				}
@@ -404,16 +430,9 @@
 				if(frameIndexX == 2){
 					frameIndexX = 0
 				}
-			}else if(help=='inicio'){
-				msg='Bem Vindo ao Eco-Meow!'
-				frameIndexY=2
-				frameIndexX++
-				if(frameIndexX == 5){
-					frameIndexX = 0
-				}
-				
 				
 			}else if(help=='certo'){
+				msg='Muito bem!'
 				if(frameIndexX>=2){
 					frameIndexX = 0
 				}
@@ -422,9 +441,63 @@
 				if(frameIndexX == 2){
 					frameIndexX = 0
 				}
+			}else if(help=='inventario'){
+				msg='O teu inventario está cheio!'
+				setTimeout(function(){
+					msg='Coloca o lixo nos ecopontos!'
+				},2000)
+				frameIndexX=0;
+				if(frameIndexY<=11){
+					frameIndexY = 11
+				}
+				frameIndexY++;
+				if(frameIndexY == 15){
+					frameIndexY = 11
+				}	
+			}else if(help=='fim'){
+				ctx.font = "40px VT323";
+				msg='Obrigado por jogares comigo! =^w^='
+				if(frameIndexX>=2){
+					frameIndexX = 0
+				}
+				frameIndexY=6
+				frameIndexX++
+				if(frameIndexX == 2){
+					frameIndexX = 0
+				}
+			}else if(help=='1opasso'){
+				msg='Carrega na tecla G!'
+				frameIndexY=2
+				frameIndexX++
+				if(frameIndexX == 5){
+					frameIndexX = 0
+				}	
+			}else if(help=='2opasso'){
+				msg='Planta na terra lavrada!'
+				setTimeout(function(){
+					msg='Carrega na tecla P!'
+				},5000)
+				frameIndexY=2
+				frameIndexX++
+				if(frameIndexX == 5){
+					frameIndexX = 0
+				}	
+			}else if(help=='plantar'){
+				msg='Planta a tua semente!'
+				if(frameIndexY < 4 || frameIndexY > 6){
+					frameIndexY=4
+					frameIndexX = 0;
+				}
+				frameIndexY++
+				if(frameIndexY == 6){
+					frameIndexY = 4
+					frameIndexX++
+					if(frameIndexX == 2){
+						frameIndexX = 0
+					}
+				}	
 			}
 		}
-
 		
 		//handler for keydown
 		function ArrowPressed(e) {
@@ -482,13 +555,6 @@
 		window.addEventListener('keydown', ArrowPressed);
 		window.addEventListener('keyup', ArrowReleased);		
 
-
-//-----------------------
-		canvas.addEventListener('click', e => {
-				console.log(e.offsetX, e.offsetY);
-			});
-//-----------------------
-
 		function render() {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			Water();
@@ -536,12 +602,13 @@
 			ctx.drawImage(plantie, 5 *144/9 , 1 *80/5, 144/9, 80/5, x+30, y+10 +plantieY, 2*144/9, 2*80/5);
 			ctx.drawImage(image, frameCol * sizex, frameRow * sizey, sizex, sizey, x, y, 192/2.1,192/2.1);
 
-			ctx.drawImage(boxie, canvas.width/3.1 -30, canvas.height/2.6 +plantieY +up, 3.4*176, 2.9*48);
-			ctx.fillText(`Thanks for playing with me! =^w^=`, canvas.width/3,  canvas.height/2 + plantieY +up, canvas.width/3,canvas.height/2);
+			// ctx.drawImage(boxie, canvas.width/3.1 -30, canvas.height/2.6 +plantieY +up, 3.4*176, 2.9*48);
+			// ctx.font = "40px VT323";
+			// ctx.fillText(`Obrigado por jogares comigo! =^w^=`, canvas.width/3,  canvas.height/2 + up, canvas.width/3,canvas.height/2);
 			emoteAnimation()
 			
-			ctx.font = "20px VT323";
-			ctx.fillText(msg, 90, 40);
+			// ctx.font = "20px VT323";
+			// ctx.fillText(msg, 90 +emoteX, 40 +emoteY +boxieY);
 		}
 
 // draws and animates the water
@@ -899,9 +966,12 @@ function Water(){
 						plantieY =0;
 					}
 					setTimeout(function(){
-						up = 0;
-						emoteX = canvas.width/4 -17
+						help='fim'
+						emoteX = canvas.width/4 +50
 						emoteY = canvas.height/2 -25
+						boxiesizeX = 300
+						boxiesizeY = 100
+						boxieY = -70 +plantieY
 					},1000)
 				},1000)
 		}
