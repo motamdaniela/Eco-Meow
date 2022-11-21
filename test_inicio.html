@@ -79,6 +79,15 @@
         let kitty = new Image();
 		kitty.src = 'images/kitty.png';
 
+        let kitty_black = new Image();
+		kitty_black.src = 'images/kitty_black.png';
+
+        let kitty_orange = new Image();
+		kitty_orange.src = 'images/kitty_orange.png';
+
+        let select = new Image();
+		select.src = 'images/select_brown.png';
+
 		window.onload = function () {
 			setInterval(render, 1000 / 6);
 		};
@@ -88,8 +97,6 @@
 
         const rectangles = [
             {
-                x: x,
-                y: y,
                 width: 192,
                 height: 64,
                 sx: 0,
@@ -104,8 +111,6 @@
                 src: button
             },
             {
-                x: x,
-                y: y,
                 width: 192,
                 height: 64,
                 sx: 0,
@@ -120,8 +125,45 @@
                 src: button
             }
         ]
+
         
         function render(){
+            let kitties = [
+                {
+                    sx: frameCol * 192/4,
+                    sy: frameRow * 192/4,
+                    sWidth: 192/4,
+                    sHeight: 192/4,
+                    dx: canvas.width/2.3,
+                    dy: 2*canvas.height/6,
+                    width: 192,
+                    height: 192,
+                    src: kitty
+                },
+                {
+                    sx: frameCol * 192/4,
+                    sy: frameRow * 192/4,
+                    sWidth: 192/4,
+                    sHeight: 192/4,
+                    dx: canvas.width/2.3-100,
+                    dy: 2*canvas.height/6,
+                    width: 192,
+                    height: 192,
+                    src: kitty_black
+                },
+                {
+                    sx: frameCol * 192/4,
+                    sy: frameRow * 192/4,
+                    sWidth: 192/4,
+                    sHeight: 192/4,
+                    dx: canvas.width/2.3+100,
+                    dy: 2*canvas.height/6,
+                    width: 192,
+                    height: 192,
+                    src: kitty_orange
+                },
+                
+            ]
             if(audio.volume <= 0.4){
                 audio.volume += 0.01;
             }
@@ -150,13 +192,24 @@
             ctx.strokeStyle = "black";
 
 
-            ctx.drawImage(kitty, frameCol * 192/4, frameRow * 192/4, 192/4, 192/4, canvas.width/2.3, 2*canvas.height/6, 192,192);
+            // ctx.drawImage(kitty, frameCol * 192/4, frameRow * 192/4, 192/4, 192/4, canvas.width/2.3, 2*canvas.height/6, 192,192);
+            // ctx.drawImage(kitty_black, frameCol * 192/4, frameRow * 192/4, 192/4, 192/4, canvas.width/2.3-100, 2*canvas.height/6, 192,192);
+            // ctx.drawImage(kitty_orange, frameCol * 192/4, frameRow * 192/4, 192/4, 192/4, canvas.width/2.3+100, 2*canvas.height/6, 192,192);
+
+            kitties.forEach(kitty =>{
+                ctx.beginPath();
+                ctx.rect(kitty.dx, kitty.dy, kitty.width, kitty.height);
+                ctx.drawImage(kitty.src, kitty.sx, kitty.sy,kitty.sWidth, kitty.sHeight, kitty.dx, kitty.dy, kitty.width, kitty.height)
+            })
+
+            ctx.drawImage(select, 710, 270, 100, 110)
 
             rectangles.forEach(rectangle =>{
                 ctx.beginPath();
-                ctx.rect(rectangle.dx, rectangle.dy, rectangle.swidth, rectangle.sheight);
+                ctx.rect(rectangle.dx, rectangle.dy, rectangle.width, rectangle.sHeight);
                 ctx.drawImage(rectangle.src, rectangle.sx, rectangle.sy,rectangle.sWidth, rectangle.sHeight, rectangle.dx, rectangle.dy  + 50, rectangle.width, rectangle.height)
             })
+
             
             frameCol++;	
             if (frameCol == 4){
@@ -170,7 +223,7 @@
         
         
         function isIntersect(pos,rectangle){
-            return rectangle.dx<pos.x && pos.x<rectangle.dx+rectangle.width && rectangle.dy+50<pos.y && pos.y<rectangle.dy+rectangle.height +50
+            return rectangle.dx+rectangle.width<pos.x && pos.x<rectangle.dx+rectangle.width*2 && rectangle.dy+50<pos.y && pos.y<rectangle.dy+rectangle.height +50
         }
 
         canvas.addEventListener('click', (e)=>{
