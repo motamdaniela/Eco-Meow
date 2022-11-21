@@ -69,6 +69,9 @@
 		const ctx = canvas.getContext("2d");
 		
 		const W = canvas.width, H = canvas.height;
+
+		let personagem = sessionStorage.getItem('personagem');
+		console.log(personagem)
 		
 		// imagens
 		let bg = new Image();
@@ -76,8 +79,23 @@
 		let water = new Image();
 		water.src = 'images/Water.png'
 		
+		let scr=''
+		let src2=''
 		let image = new Image();
-		image.src = 'images/kitty.png';
+		if(personagem == 1){
+			image.src = 'images/kitty_black.png';
+			src='images/kitty_black.png'
+			src2='images/actions_black.png'
+		}else if(personagem==2){
+			image.src = 'images/kitty.png';
+			src='images/kitty.png'
+			src2='images/actions.png'
+		}else if(personagem==3){
+			image.src = 'images/kitty_orange.png';
+			src='images/kitty_orange.png'
+			src2='images/actions_orange.png'
+		}
+
 		let ecopontos = new Image();
 		ecopontos.src = 'images/ecopontos.png';
 		
@@ -129,6 +147,8 @@
 		let downKey = false;
 		let gKey = false;
 		let pKey = false
+
+		
 		
 		// variablesfor positions
 		let x = 500;
@@ -153,6 +173,8 @@
 
 		let help=''
 		let msg =''
+
+		
 		
 		// lists for inventory and bins
 		let positions = [
@@ -520,7 +542,7 @@
 				sizex = 96/2
 				sizey = 576/12
 				if (!pKey){
-					image.src = 'images/actions.png'
+					image.src = src2
 				}
 				pKey = true;
 			}
@@ -804,7 +826,7 @@ function Water(){
 
 			function actions(){
 				if (rightKey){
-					image.src = 'images/kitty.png'
+					image.src = src
 					audio.volume = 0.3;
 					frameRow = 3;
 					x+=10;
@@ -814,7 +836,7 @@ function Water(){
 					
 				}
 				else if (leftKey){
-					image.src = 'images/kitty.png'
+					image.src = src
 				audio.volume = 0.3;
 				x-=10;
 				frameRow = 2;
@@ -823,7 +845,7 @@ function Water(){
 				frameCol = 0;
 			}
 			else if (upKey){
-				image.src = 'images/kitty.png'
+				image.src = src
 				audio.volume = 0.3;
 				y-=10;
 				frameRow = 1;
@@ -832,7 +854,7 @@ function Water(){
 				frameCol = 0;
 			}
 			else if (downKey){
-				image.src = 'images/kitty.png'
+				image.src = src
 				audio.volume = 0.3;
 				y+=10;
 				frameRow = 0;
@@ -855,7 +877,7 @@ function Water(){
 				}
 				frameCol--;	
 				if (frameCol == -1){
-					image.src = 'images/kitty.png'
+					image.src = src
 					pKey = false;
 					frameCol = 0;
 					sizex = 192/4

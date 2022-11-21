@@ -95,6 +95,8 @@
         let x=W/2
         let y=H/2
 
+        
+
         const rectangles = [
             {
                 width: 192,
@@ -126,20 +128,12 @@
             }
         ]
 
-        
+        let posX=710
+
+        let personagem=2
+
         function render(){
             let kitties = [
-                {
-                    sx: frameCol * 192/4,
-                    sy: frameRow * 192/4,
-                    sWidth: 192/4,
-                    sHeight: 192/4,
-                    dx: canvas.width/2.3,
-                    dy: 2*canvas.height/6,
-                    width: 192,
-                    height: 192,
-                    src: kitty
-                },
                 {
                     sx: frameCol * 192/4,
                     sy: frameRow * 192/4,
@@ -149,7 +143,20 @@
                     dy: 2*canvas.height/6,
                     width: 192,
                     height: 192,
-                    src: kitty_black
+                    src: kitty_black,
+                    id:1,
+                },
+                {
+                    sx: frameCol * 192/4,
+                    sy: frameRow * 192/4,
+                    sWidth: 192/4,
+                    sHeight: 192/4,
+                    dx: canvas.width/2.3,
+                    dy: 2*canvas.height/6,
+                    width: 192,
+                    height: 192,
+                    src: kitty,
+                    id:2,
                 },
                 {
                     sx: frameCol * 192/4,
@@ -160,9 +167,9 @@
                     dy: 2*canvas.height/6,
                     width: 192,
                     height: 192,
-                    src: kitty_orange
-                },
-                
+                    src: kitty_orange,
+                    id:3,
+                },  
             ]
             if(audio.volume <= 0.4){
                 audio.volume += 0.01;
@@ -192,17 +199,13 @@
             ctx.strokeStyle = "black";
 
 
-            // ctx.drawImage(kitty, frameCol * 192/4, frameRow * 192/4, 192/4, 192/4, canvas.width/2.3, 2*canvas.height/6, 192,192);
-            // ctx.drawImage(kitty_black, frameCol * 192/4, frameRow * 192/4, 192/4, 192/4, canvas.width/2.3-100, 2*canvas.height/6, 192,192);
-            // ctx.drawImage(kitty_orange, frameCol * 192/4, frameRow * 192/4, 192/4, 192/4, canvas.width/2.3+100, 2*canvas.height/6, 192,192);
-
             kitties.forEach(kitty =>{
                 ctx.beginPath();
-                ctx.rect(kitty.dx, kitty.dy, kitty.width, kitty.height);
+                ctx.rect(kitty.dx+70, kitty.dy+60, kitty.width-140, kitty.height-120);
                 ctx.drawImage(kitty.src, kitty.sx, kitty.sy,kitty.sWidth, kitty.sHeight, kitty.dx, kitty.dy, kitty.width, kitty.height)
             })
 
-            ctx.drawImage(select, 710, 270, 100, 110)
+            ctx.drawImage(select, posX, 270, 100, 110)
 
             rectangles.forEach(rectangle =>{
                 ctx.beginPath();
@@ -219,11 +222,39 @@
                     frameRow = 0;
                 }
             }
+
+            canvas.addEventListener('click', (e)=>{
+                const pos={
+                    x: e.clientX,
+                    y: e.clientY
+                };
+
+                kitties.forEach(kitty=>{
+                    if(isIntersectKitty(pos, kitty)){
+                        if(kitty.id == 1){
+                            posX=610
+                            personagem=kitty.id
+                        }else if(kitty.id == 2){
+                            posX=710
+                            personagem=kitty.id
+                        }else if(kitty.id == 3){
+                            posX=810
+                            personagem=kitty.id
+                        }
+                        
+                    
+                    }
+                })
+            })
         }
         
         
         function isIntersect(pos,rectangle){
-            return rectangle.dx+rectangle.width<pos.x && pos.x<rectangle.dx+rectangle.width*2 && rectangle.dy+50<pos.y && pos.y<rectangle.dy+rectangle.height +50
+            return rectangle.dx<pos.x && pos.x<rectangle.dx+rectangle.width*2 && rectangle.dy+50<pos.y && pos.y<rectangle.dy+rectangle.height +50
+        }
+
+        function isIntersectKitty(pos,kitty){
+            return kitty.dx+70<pos.x && pos.x<kitty.dx+70+kitty.width-140 && kitty.dy+60<pos.y && pos.y<kitty.dy+60+kitty.height-120
         }
 
         canvas.addEventListener('click', (e)=>{
@@ -235,10 +266,8 @@
 
             
             rectangles.forEach(rectangle=>{
-                console.log(pos)
-                console.log(rectangle.x, rectangle.y)
                 if(isIntersect(pos, rectangle)){
-                    console.log('ok2')
+                    sessionStorage.setItem('personagem',personagem)
                     rectangle.sx=192/2
                     window.setTimeout(function(){
                         rectangle.sx=0
@@ -252,7 +281,6 @@
         })
 
         canvas.addEventListener('mousemove', (e)=>{
-            console.log('ok');
             const pos={
                 x: e.clientX,
                 y: e.clientY
@@ -260,10 +288,7 @@
 
             
             rectangles.forEach(rectangle=>{
-                console.log(pos)
-                console.log(rectangle.x, rectangle.y)
                 if(isIntersect(pos, rectangle)){
-                    console.log('ok2')
                     rectangle.sx=192/2                
                 }else{
                     rectangle.sx= 0;
