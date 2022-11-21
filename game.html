@@ -69,6 +69,9 @@
 		const ctx = canvas.getContext("2d");
 		
 		const W = canvas.width, H = canvas.height;
+
+		let personagem = sessionStorage.getItem('personagem');
+		console.log(personagem)
 		
 		// imagens
 		let bg = new Image();
@@ -76,8 +79,23 @@
 		let water = new Image();
 		water.src = 'images/Water.png'
 		
+		let scr=''
+		let src2=''
 		let image = new Image();
-		image.src = 'images/kitty.png';
+		if(personagem == 1){
+			image.src = 'images/kitty_black.png';
+			src='images/kitty_black.png'
+			src2='images/actions_black.png'
+		}else if(personagem==2){
+			image.src = 'images/kitty.png';
+			src='images/kitty.png'
+			src2='images/actions.png'
+		}else if(personagem==3){
+			image.src = 'images/kitty_orange.png';
+			src='images/kitty_orange.png'
+			src2='images/actions_orange.png'
+		}
+
 		let ecopontos = new Image();
 		ecopontos.src = 'images/ecopontos.png';
 		
@@ -129,6 +147,8 @@
 		let downKey = false;
 		let gKey = false;
 		let pKey = false
+
+		
 		
 		// variablesfor positions
 		let x = 500;
@@ -153,6 +173,8 @@
 
 		let help=''
 		let msg =''
+
+		
 		
 		// lists for inventory and bins
 		let positions = [
@@ -357,7 +379,7 @@
 		function recycle(trash, pos){
 			posEco.forEach(eco=>{
 				// right bin
-				if(trash.trash==eco.name && eco.x<=pos.x && pos.x<=eco.x+2*240/5 && eco.y<=pos.y && pos.y<=eco.y+2*144/3){
+				if(trash.trash==eco.name && eco.x+25<=pos.x && pos.x<=eco.x+2*240/5-50 && eco.y+30<=pos.y && pos.y<=eco.y+2*144/3){
 					tingaudio.play();
 					rejectaudio.volume = 0;
 					positions[trash.place].full=false;
@@ -520,7 +542,7 @@
 				sizex = 96/2
 				sizey = 576/12
 				if (!pKey){
-					image.src = 'images/actions.png'
+					image.src = src2
 				}
 				pKey = true;
 			}
@@ -573,6 +595,9 @@
 			ctx.drawImage(ecopontos, frameG *240/5, 0, 240/5, 144/3, 1070, 380, 2*240/5, 2*144/3)
 			ctx.drawImage(ecopontos, frameB *240/5, 144/3, 240/5, 144/3, 1120, 380, 2*240/5, 2*144/3)
 			ctx.drawImage(ecopontos, frameY *240/5, 2*144/3.05, 240/5, 144/3, 1170, 380, 2*240/5, 2*144/3)
+			// ctx.beginPath();
+			// ctx.rect(1070+25, 380+30, 2*240/5-50, 2*144/3);
+			// ctx.stroke();
 			ctx.drawImage(seed, 0, 0, 96/6, 32/2, 1370, 0, 40, 40)
 			ctx.drawImage(box, 0 + emoteX, 0+ emoteY, 70, 70)
 			ctx.font = "40px VT323";
@@ -804,7 +829,7 @@ function Water(){
 
 			function actions(){
 				if (rightKey){
-					image.src = 'images/kitty.png'
+					image.src = src
 					audio.volume = 0.3;
 					frameRow = 3;
 					x+=10;
@@ -814,7 +839,7 @@ function Water(){
 					
 				}
 				else if (leftKey){
-					image.src = 'images/kitty.png'
+					image.src = src
 				audio.volume = 0.3;
 				x-=10;
 				frameRow = 2;
@@ -823,7 +848,7 @@ function Water(){
 				frameCol = 0;
 			}
 			else if (upKey){
-				image.src = 'images/kitty.png'
+				image.src = src
 				audio.volume = 0.3;
 				y-=10;
 				frameRow = 1;
@@ -832,7 +857,7 @@ function Water(){
 				frameCol = 0;
 			}
 			else if (downKey){
-				image.src = 'images/kitty.png'
+				image.src = src
 				audio.volume = 0.3;
 				y+=10;
 				frameRow = 0;
@@ -855,7 +880,7 @@ function Water(){
 				}
 				frameCol--;	
 				if (frameCol == -1){
-					image.src = 'images/kitty.png'
+					image.src = src
 					pKey = false;
 					frameCol = 0;
 					sizex = 192/4
