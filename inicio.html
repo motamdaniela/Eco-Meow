@@ -271,6 +271,7 @@
                 console.log(pos)
                 console.log(rectangle.x, rectangle.y)
                 if(isIntersect(pos, rectangle)){
+                    sessionStorage.setItem('personagem',personagem)
                     console.log('ok2')
                     rectangle.sx=192/2
                     window.setTimeout(function(){
