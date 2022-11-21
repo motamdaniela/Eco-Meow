@@ -168,9 +168,25 @@
             }
     }
 
-    
-
-
+    #container6 img{
+        position: relative;
+        display: inline-block;
+        height: 107px;
+        width: 421/4px;
+        margin-left: 1000px;
+        margin-top: 355px;
+        z-index: 1;
+        
+        
+        animation-name: tree;
+        animation-duration: 4s;
+        animation-timing-function: steps(4);
+        animation-iteration-count: infinite;
+    } 
+    @keyframes tree{
+        from {object-position: 0px}
+        to {object-position: -421px} 
+    }
 
     
 </style>
@@ -201,10 +217,13 @@
         </div>
     </div>
     
+    <div id="container6">
+        <img src="images/tree2.png">
+    </div>
 
     <div>
         <canvas id="myCanvas" width="1500" height="666" 
-        style="position: absolute; left: 10px; top: 0; z-index:0">
+        style="position: fixed; left: 10px; top: 0; z-index:0">
             Your browser does not support HTML5 Canvas.
         </canvas>
     </div>
@@ -259,8 +278,20 @@
         let actions = new Image();
         actions.src='images/actions.png';
 
+        let ecopontos = new Image();
+        ecopontos.src='images/ecopontos.png';
+
+        let count = new Image();
+        count.src='images/box5.png';
+
+        let recycle = new Image();
+        recycle.src='images/recycle.png';
+
+        let seed = new Image();
+        seed.src='images/basic_plants.png';
+
         let tree = new Image();
-        tree.src='images/tree.png';
+        tree.src='images/tree2.png';
 
         // 1st box
         let frameCol = 0;
@@ -268,19 +299,29 @@
         let frameRowU = 1;
         let frameRowL = 2;
         let frameRowR = 3;
-        // 2ndbox
-        let frameCol2 = 0;
-        let frameRow2 = 0;
-        // 4th box
+
         let frameColA = 0;
         let frameRowAR = 0;
         let frameRowAL = 1;
         let frameRowAU = 2;
         let frameRowAD = 3;
+        // 2ndbox
+        let frameCol2 = 0;
+        let frameRow2 = 0;
+        // 4th box
+        let frameColE = 0;
+        let frameColEA =0;
+        let frameRowEV = 0;
+        let frameRowEAz = 1;
+        let frameRowEAm = 2;
+        // 5th box
+        let frameColC = 0;
+        let frameRowC = 0;
+        let frameColS = 0;
+        let frameRowS = 1;
         // 6th box
         let frameColK = 0;
         let frameRowK = 11;
-
         let frameColP = 0;
         let frameRowP = 0;
 
@@ -298,7 +339,11 @@
             ctx.drawImage(button, 10,15, 22*2, 24*2)
 
             // 1st box
+            ctx.shadowColor="#529758";
+            ctx.shadowBlur = 20;
             ctx.drawImage(box, 220, 80, 51*5, 45*5);
+            ctx.shadowColor = "transparent";
+            ctx.shadowBlur=0;
             ctx.drawImage(bgbox, 209, 78, 51*5, 45*5);
             
             firstBoxKitty();
@@ -310,41 +355,64 @@
             ctx.fillText('para andar pelo mapa', 238, 335);
 
             // 2nd
+            ctx.shadowColor="#529758";
+            ctx.shadowBlur = 20;
             ctx.drawImage(box, 630, 80, 51*5, 45*5);
+            ctx.shadowColor = "transparent";
+            ctx.shadowBlur=0;
             ctx.drawImage(bgbox2, 619, 78, 51*5, 45*5);
             ctx.fillText('Começa por usar a tecla G', 620, 315);
             ctx.fillText('para apanhar o lixo', 650, 335);
-            
             secondBox();
             
             // 3rd
+            ctx.shadowColor='#529758';
+            ctx.shadowBlur = 20;
             ctx.drawImage(box, 1040, 80, 51*5, 45*5);
+            ctx.shadowColor = "transparent";
+            ctx.shadowBlur=0;
             ctx.drawImage(bgbox3, 1028, 78, 51*5, 45*5);
             ctx.drawImage(inventory,1050, 150, 212, 80);
             ctx.fillText('O lixo que apanhares', 1058, 315);
             ctx.fillText('vai para o inventário', 1052, 335);
             
             // 4th
+            ctx.shadowColor="#529758";
+            ctx.shadowBlur = 20;
             ctx.drawImage(box, 220, 360, 51*5, 45*5);
+            ctx.shadowColor = "transparent";
+            ctx.shadowBlur=0;
             ctx.drawImage(bgbox4, 209, 358, 51*5, 45*5);
             ctx.fillText('Seleciona o lixo e recicla-o', 200, 595);
             ctx.fillText('no ecoponto correto', 240, 615);
+            ctx.drawImage(ecopontos, frameColE*240/5, frameRowEV*144/3, 240/5, 144/3, 245, 410, 80, 80);
+            ctx.drawImage(ecopontos, frameColE*240/5, frameRowEAm*144/3, 240/5, 144/3, 345, 410, 80, 80);
+            fourthBox();
 
-            
             // 5th
+            ctx.shadowColor="#529758";
+            ctx.shadowBlur = 20;
             ctx.drawImage(box, 630, 360, 51*5, 45*5);
+            ctx.shadowColor = "transparent";
+            ctx.shadowBlur=0;
             ctx.drawImage(bgbox5, 619, 358, 51*5, 45*5);
             ctx.fillText('Após cada 5 lixos reciclados', 610, 595);
             ctx.fillText('recebes 1 semente', 660, 615);
-            
+            ctx.drawImage(seed, frameColS*96/6, frameRowS*32/2, 96/6, 32/2, 680, 420, 45, 45)
+            ctx.drawImage(recycle, 685, 480, 40,40);
+            fifthBox();
+
             // 6th
+            ctx.shadowColor="#529758";
+            ctx.shadowBlur = 20;
             ctx.drawImage(box, 1040, 360, 51*5, 45*5);
+            ctx.shadowColor = "transparent";
+            ctx.shadowBlur=0;
             ctx.drawImage(bgbox6, 1028, 358, 51*5, 45*5);
             ctx.fillText('Escolhe um pedaço de terra', 1025, 595);
             ctx.fillText('e planta as tuas sementes', 1030, 615);
-
             sixthBoxKitty();
-            sixthBoxPlant();
+            // sixthBoxPlant();
         }
         
         function firstBoxKitty() {
@@ -372,7 +440,7 @@
         };
 
         function secondBox() {
-            ctx.drawImage(kitty, frameCol2* 192/4,frameRow2* 192/4, 192/4, 192/4, 710, 125,100,100);
+            ctx.drawImage(kitty, frameCol2* 192/4,frameRow2* 192/4, 192/4, 192/4, 710, 125,90,90);
             setInterval(function() {
                 frameCol2++;
                 if (frameCol2==2){
@@ -381,27 +449,43 @@
             },1000) 
         };
 
+        function fourthBox() {
+            ctx.drawImage(ecopontos, frameColEA*240/5, frameRowEAz*144/3, 240/5, 140/3, 295,407,80,80);
+            frameColEA++;
+            if (frameColEA==5){
+                frameColEA = 0;
+            }
+        }
+
+        function fifthBox () {
+            ctx.drawImage(count, frameColC* 631/6, frameRowC*107, 631/6, 107, 660, 390 ,170, 170);
+            
+            frameColC++;
+            if (frameColC == 6){
+                frameColC = 0;
+            }  
+        }
+
         function sixthBoxKitty() {
             ctx.drawImage(actions, frameColK* 96/2, frameRowK* 576/12, 576/12, 96/2, 1040, 420, 90,90) ;
             setInterval(function(){
                 frameColK++;	
                 if (frameColK == 2){
                     frameColK = 0;
-            }
-            }, 2000)
+                }
+            }, 1000)
         };
 
         // function sixthBoxPlant() {
-        //     ctx.drawImage(tree, frameColP * 32, frameRowP*96/3, 32, 96/3, 1050, 420, 80,80);
-        //     setInterval(function(){
+        //     ctx.drawImage(tree, frameColP * 421/4, frameRowP*107, 421/4, 107, 1120, 410, 80,80);
+        //     setInterval(function() {
         //         frameColP++;	
-        //         if (frameColP == 2){
+        //         if (frameColP == 4){
         //             frameColP = 0;
-        //     }
-        //     }, 2000)
+        //         }
+        //     },2000)
         // }
         
-
     </script>
 </body>
 
