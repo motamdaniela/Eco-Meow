@@ -203,6 +203,7 @@
                 ctx.beginPath();
                 ctx.rect(kitty.dx+70, kitty.dy+60, kitty.width-140, kitty.height-120);
                 ctx.drawImage(kitty.src, kitty.sx, kitty.sy,kitty.sWidth, kitty.sHeight, kitty.dx, kitty.dy, kitty.width, kitty.height)
+                ctx.stroke()
             })
 
             ctx.drawImage(select, posX, 270, 100, 110)
@@ -231,6 +232,7 @@
 
                 kitties.forEach(kitty=>{
                     if(isIntersectKitty(pos, kitty)){
+                        console.log(kitty)
                         if(kitty.id == 1){
                             posX=610
                             personagem=kitty.id
