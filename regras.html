@@ -11,50 +11,204 @@
         /* background-color: #9BD4C3; */
         background-image: url('images/Water.png');
         background-size: 9%;
-        text-align:center;
+        margin-top: 20px; 
     }
-    .img{
-            position:absolute;
-            margin-top: 2%;          
-            animation-name: bg_in;
-            animation-duration: 1s;
-            animation-direction: normal;
-            animation-iteration-count: 1;
-        }
-    #title{
-        margin-left: -7.6%;
-        width: 15%;
-    }
-    #myCanvas{
-        margin-left: -50%;
-    }
-        
 
-        @keyframes bg_in {
-            from {
-            margin-top: 0%;
-            }
-            to {
-            margin-top: 2%;
-            }
-        }
+    /* animation box2 */
+    #container2 {
+        position: absolute;
+        width: 32px;
+        height: 32px;
+        margin-left: 725px;
+        margin-top: 168px;
+        z-index: 1;
 
+        animation-name: box2;
+        animation-duration: 2s;
+        animation-iteration-count: infinite;}
+    @keyframes box2{
+        0%{
+            transform: scale(1);
+        }
+        70%{
+            transform: scale(1);
+        }
+        80%{
+            transform: scale(0);
+        }
+        100%{
+            transform: scale(0);
+        }
+    }
+
+    /* animation box3 */
+    #container3 img {
+        width: 20px;
+        height: 20px;
+    }
+    #inventory1 {
+        position: absolute;
+        margin-left: 1088px;
+        margin-top: 160px;
+        z-index: 1;
+
+        animation-name:inv1;
+        animation-duration: 5s;
+        animation-iteration-count: infinite;
+    }
+    @keyframes inv1 {
+            0% {
+                transform: scale(0);
+            }
+            10% {
+                transform: scale(1);
+            }
+            100%{
+                transform: scale(1);
+            }
+    }
+
+    #inventory2 {
+        position: absolute;
+        margin-left: 1118px;
+        margin-top: 160px;
+        z-index: 1;
+
+        animation-name:inv2;
+        animation-duration: 5s;
+        animation-iteration-count: infinite;
+    }
+    @keyframes inv2 {
+            0%{
+                transform: scale(0);
+            }
+            20% {
+                transform: scale(0);
+            }
+            30%{
+                transform: scale(1);
+            }
+            100%{
+                transform: scale(1);
+            }
+    }
+    
+    #inventory3 {
+        position: absolute;
+        margin-left: 1148px;
+        margin-top: 160px;
+        z-index: 1;
+
+        animation-name:inv3;
+        animation-duration: 5s;
+        animation-iteration-count: infinite;
+    }
+    @keyframes inv3 {
+            0% {
+                transform: scale(0);
+            }
+            40%{
+                transform: scale(0);
+            }
+            50% {
+                transform: scale(1);
+            }
+            100%{
+                transform: scale(1);
+            }
+    }
+
+    #inventory4 {
+        position: absolute;
+        margin-left: 1178px;
+        margin-top: 160px;
+        z-index: 1;
+
+        animation-name:inv4;
+        animation-duration: 5s;
+        animation-iteration-count: infinite;
+    }
+    @keyframes inv4 {
+            0% {
+                transform: scale(0);
+            }
+            60%{
+                transform: scale(0);
+            }
+            70% {
+                transform: scale(1);
+            }
+            100%{
+                transform: scale(1);
+            }
+    }
+
+    #inventory5 {
+        position: absolute;
+        margin-left: 1208px;
+        margin-top: 160px;
+        z-index: 1;
+
+        animation-name:inv5;
+        animation-duration: 5s;
+        animation-iteration-count: infinite;
+    }
+    @keyframes inv5 {
+            0% {
+                transform: scale(0);
+            }
+            80%{
+                transform: scale(0);
+            }
+            90% {
+                transform: scale(1);
+            }
+            100%{
+                transform: scale(1);
+            }
+    }
+
+    
+
+
+
+    
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<body style = "text-align:center;">
-   
-    <div style = "text-align:center;">
-        <canvas class="img" id="myCanvas" width="1500" height="1550">
+<body>
+    <div id="container2">
+        <img src="trash/potatochip_yellow.png">
+    </div>
+
+    <div id="container3">
+        <div id="inventory1">
+            <img src="trash/wine_white2.png">
+        </div>
+        <div id="inventory2">
+            <img src="trash/rubber_duck.png">
+        </div>
+        <div id="inventory3">
+            <img src="trash/receipt.png">
+        </div>
+        <div id="inventory4">
+            <img src="trash/detergent.png">
+        </div>
+        <div id="inventory5">
+            <img src="trash/candy_bar.png">
+        </div>
+    </div>
+    
+
+    <div>
+        <canvas id="myCanvas" width="1500" height="666" 
+        style="position: absolute; left: 10px; top: 0; z-index:0">
             Your browser does not support HTML5 Canvas.
         </canvas>
-        <!-- <img class="img" id="bg" src="images/head.png">
-            <img class="img" id="bg" src="images/body.png">
-            <img class="img" id="bg" src="images/foot.png"> -->
-        </div>
-        <img class="img" id="title" src="images/regras.png">
+    </div>
+    
 
     <span id="loader" style="font-family: 'VT323', monospace;"></span>
     
@@ -68,27 +222,67 @@
 
         let regras = new Image();
         regras.src='images/regras.png';
-
+        
+        let kitty = new Image();
+		kitty.src = 'images/kitty.png';
+        
         let box = new Image();
         box.src='images/big-box.png'; 
 
-        let lake = new Image();
-        lake.src='images/lillake.png';
-        let plantie = new Image();
-		plantie.src = 'images/biome.png'
+        let button = new Image();
+        button.src='images/home.png';
+        
+        let bgbox = new Image();
+        bgbox.src='images/bgbox.png'
 
-        let kitty = new Image();
-		kitty.src = 'images/kitty.png';
-        let frameCol = frameColA = 0;
+        let bgbox2 = new Image();
+        bgbox2.src='images/bgbox2.png';
+
+        let bgbox3 = new Image();
+        bgbox3.src='images/bgbox3.png'
+
+        let bgbox4 = new Image();
+        bgbox4.src='images/bgbox4.png';
+
+        let bgbox5 = new Image();
+        bgbox5.src='images/bgbox5.png';
+
+        let bgbox6 = new Image();
+        bgbox6.src='images/bgbox6.png';
+
+        let arrows = new Image();
+        arrows.src='images/arrows.png';
+
+        let inventory = new Image();
+        inventory.src='images/inventory.png';
+
+        let actions = new Image();
+        actions.src='images/actions.png';
+
+        let tree = new Image();
+        tree.src='images/tree.png';
+
+        // 1st box
+        let frameCol = 0;
         let frameRowD = 0;
         let frameRowU = 1;
         let frameRowL = 2;
         let frameRowR = 3;
-        let frameRowA = 0;
-        
+        // 2ndbox
+        let frameCol2 = 0;
+        let frameRow2 = 0;
+        // 4th box
+        let frameColA = 0;
+        let frameRowAR = 0;
+        let frameRowAL = 1;
+        let frameRowAU = 2;
+        let frameRowAD = 3;
+        // 6th box
+        let frameColK = 0;
+        let frameRowK = 11;
 
-        // let button = new Image();
-        // button.src='images/home.png';
+        let frameColP = 0;
+        let frameRowP = 0;
 
         window.onload = function () {
 			setInterval(render, 1000 / 6);
@@ -96,56 +290,118 @@
         
         
         function render() {
+            ctx.clearRect(0,0,W,H);
+
+            ctx.drawImage(bg, 50,0, canvas.width-100, canvas.height+40);
+            ctx.drawImage(regras, canvas.width/2-100, 10, 98*2,34*2);
+
+            ctx.drawImage(button, 10,15, 22*2, 24*2)
+
+            // 1st box
+            ctx.drawImage(box, 220, 80, 51*5, 45*5);
+            ctx.drawImage(bgbox, 209, 78, 51*5, 45*5);
             
-            ctx.drawImage(bg, 0, 0 * 336/3, 752, 336/3, 50, 10, canvas.width-100, 666/3);
-            ctx.drawImage(bg, 0, 1 * 336/3, 752, 336/3, 50, 666/3, canvas.width-100, 666/3);
-            ctx.drawImage(bg, 0, 1 * 336/3, 752, 336/3, 50, 2*666/3, canvas.width-100, 666/3);
-            ctx.drawImage(bg, 0, 1 * 336/3, 752, 336/3, 50, 3*666/3, canvas.width-100, 666/3);
-            ctx.drawImage(bg, 0, 1 * 336/3, 752, 336/3, 50, 4*666/3, canvas.width-100, 666/3);
-            ctx.drawImage(bg, 0, 1 * 336/3, 752, 336/3, 50, 5*666/3, canvas.width-100, 666/3);
-            ctx.drawImage(bg, 0, 2 * 336/3, 752, 336/3, 50, 6*666/3, canvas.width-100, 666/3);
-            // ctx.drawImage(regras, canvas.width/2-100, 10, 98*2,34*2);
+            firstBoxKitty();
+            firstBoxArrows();
             
-            actionsList();
+            ctx.font = "25px VT323";
+			ctx.fillStyle = "#B58861";
+            ctx.fillText('Usa as teclas de setas', 230, 315);
+            ctx.fillText('para andar pelo mapa', 238, 335);
 
-            // ctx.drawImage(bg, 50,0, canvas.width-100, canvas.height);
+            // 2nd
+            ctx.drawImage(box, 630, 80, 51*5, 45*5);
+            ctx.drawImage(bgbox2, 619, 78, 51*5, 45*5);
+            ctx.fillText('Começa por usar a tecla G', 620, 315);
+            ctx.fillText('para apanhar o lixo', 650, 335);
+            
+            secondBox();
+            
+            // 3rd
+            ctx.drawImage(box, 1040, 80, 51*5, 45*5);
+            ctx.drawImage(bgbox3, 1028, 78, 51*5, 45*5);
+            ctx.drawImage(inventory,1050, 150, 212, 80);
+            ctx.fillText('O lixo que apanhares', 1058, 315);
+            ctx.fillText('vai para o inventário', 1052, 335);
+            
+            // 4th
+            ctx.drawImage(box, 220, 360, 51*5, 45*5);
+            ctx.drawImage(bgbox4, 209, 358, 51*5, 45*5);
+            ctx.fillText('Seleciona o lixo e recicla-o', 200, 595);
+            ctx.fillText('no ecoponto correto', 240, 615);
 
-            // ctx.drawImage(button, 10,10, 22*2, 24*2)
+            
+            // 5th
+            ctx.drawImage(box, 630, 360, 51*5, 45*5);
+            ctx.drawImage(bgbox5, 619, 358, 51*5, 45*5);
+            ctx.fillText('Após cada 5 lixos reciclados', 610, 595);
+            ctx.fillText('recebes 1 semente', 660, 615);
+            
+            // 6th
+            ctx.drawImage(box, 1040, 360, 51*5, 45*5);
+            ctx.drawImage(bgbox6, 1028, 358, 51*5, 45*5);
+            ctx.fillText('Escolhe um pedaço de terra', 1025, 595);
+            ctx.fillText('e planta as tuas sementes', 1030, 615);
 
-            // 1st column
-            // ctx.drawImage(box, 220, 100, 51*5, 45*5);
-            // ctx.drawImage(box, 220, 340, 51*5, 45*5);
-            // // 2nd column
-            // ctx.drawImage(box, 630, 100, 51*5, 45*5);
-            // ctx.drawImage(box, 630, 340, 51*5, 45*5);
-            // // 3rd column
-            // ctx.drawImage(box, 1040, 100, 51*5, 45*5);
-            // ctx.drawImage(box, 1040, 340, 51*5, 45*5);
+            sixthBoxKitty();
+            sixthBoxPlant();
         }
-
-        function actionsList(){
-            ctx.font = "40px VT323";
-            ctx.fillStyle = "#B58861";
-            ctx.drawImage(plantie, 0 *144/9 , 1.9 *80/5, 144/9, 80/5, 0.85*canvas.width/2,  140, 2*144/9, 2*80/5);
-            ctx.drawImage(plantie, 0 *144/9 , 1.9 *80/5, 144/9, 80/5, 1.1*canvas.width/2,  140, 2*144/9, 2*80/5);
-            ctx.fillText('AÇÕES' , canvas.width/2.12,  170, 2*canvas.width/5,canvas.height/2);
-
-            ctx.drawImage(lake, 50+ canvas.width/6, 200, 160, 160);
-            ctx.drawImage(lake, 50+ 2*canvas.width/6, 200, 160, 160);
-            ctx.drawImage(lake, 50+ 3*canvas.width/6, 200, 160, 160);
-            ctx.drawImage(lake, 50+ 4*canvas.width/6, 200, 160, 160);
-
-            ctx.drawImage(kitty, frameCol * 192/4, frameRowD * 192/4, 192/4, 192/4, 35+ canvas.width/6, 185, 192,192);
-            ctx.drawImage(kitty, frameCol * 192/4, frameRowU * 192/4, 192/4, 192/4, 35+ 2*canvas.width/6, 185, 192,192);
-            ctx.drawImage(kitty, frameCol * 192/4, frameRowR * 192/4, 192/4, 192/4, 35+ 3*canvas.width/6, 185, 192,192);
-            ctx.drawImage(kitty, frameCol * 192/4, frameRowL * 192/4, 192/4, 192/4, 35+ 4*canvas.width/6, 185, 192,192);
-
+        
+        function firstBoxKitty() {
+            ctx.drawImage(kitty, frameCol * 192/4, frameRowD * 192/4, 192/4, 192/4, 250, 115, 90, 90);
+            ctx.drawImage(kitty, frameCol * 192/4, frameRowU * 192/4, 192/4, 192/4, 330, 115, 90,90);
+            ctx.drawImage(kitty, frameCol * 192/4, frameRowR * 192/4, 192/4, 192/4, 250, 185, 90,90);
+            ctx.drawImage(kitty, frameCol * 192/4, frameRowL * 192/4, 192/4, 192/4, 330, 185,90,90);
+            
             frameCol++;	
             if (frameCol == 4){
                 frameCol = 0;
             }
-        }
+        };
+
+        function firstBoxArrows () {
+            ctx.drawImage(arrows, frameColA * 29/2, frameRowAD * 63/4, 63/4, 29/2, 285, 115, 20, 20);
+            ctx.drawImage(arrows, frameColA * 29/2, frameRowAU * 63/4, 63/4, 29/2, 365, 115, 20, 20);
+            ctx.drawImage(arrows, frameColA * 29/2, frameRowAR * 63/4, 63/4, 29/2, 285, 185, 20,20);
+            ctx.drawImage(arrows, frameColA * 29/2, frameRowAL * 63/4, 63/4, 29/2, 365, 185, 20, 20);
+            
+            frameColA++;	
+            if (frameColA == 4){
+                frameColA = 0;
+            }
+        };
+
+        function secondBox() {
+            ctx.drawImage(kitty, frameCol2* 192/4,frameRow2* 192/4, 192/4, 192/4, 710, 125,100,100);
+            setInterval(function() {
+                frameCol2++;
+                if (frameCol2==2){
+                    frameCol2 = 0;
+                }
+            },1000) 
+        };
+
+        function sixthBoxKitty() {
+            ctx.drawImage(actions, frameColK* 96/2, frameRowK* 576/12, 576/12, 96/2, 1040, 420, 90,90) ;
+            setInterval(function(){
+                frameColK++;	
+                if (frameColK == 2){
+                    frameColK = 0;
+            }
+            }, 2000)
+        };
+
+        // function sixthBoxPlant() {
+        //     ctx.drawImage(tree, frameColP * 32, frameRowP*96/3, 32, 96/3, 1050, 420, 80,80);
+        //     setInterval(function(){
+        //         frameColP++;	
+        //         if (frameColP == 2){
+        //             frameColP = 0;
+        //     }
+        //     }, 2000)
+        // }
         
+
     </script>
 </body>
 
