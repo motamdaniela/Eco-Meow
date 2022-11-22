@@ -168,31 +168,36 @@
             }
     }
 
-    /* #container6 img{
-        position: relative;
-        display: inline-block;
-        height: 107px;
-        width: 421/4px;
-        margin-left: 1000px;
-        margin-top: 355px;
-        z-index: 1;
-        
-        
-        animation-name: tree;
-        animation-duration: 4s;
-        animation-timing-function: steps(4);
-        animation-iteration-count: infinite;
-    } 
-    @keyframes tree{
-        from {
-            object-position: 0px;
-            padding-right: -10%;
+    body {
+        /* background-color: #9BD4C3; */
+        background-image: url('images/Water.png');
+        background-size: 9%;
+        text-align:center;
+    }
+    #title, #myCanvas{
+            position:absolute;
+            margin-top: 2%;          
+            animation-name: bg_in;
+            animation-duration: 1s;
+            animation-direction: normal;
+            animation-iteration-count: 1;
         }
-        to {
-            object-position: -421px;
-            padding-right: -10%;
-        } 
-    } */
+    #title{
+        margin-left: -6.7%;
+        width: 12%;
+        margin-top: -2px;
+    }
+    #myCanvas{
+        margin-top: -2px;
+    }
+        @keyframes bg_in {
+            from {
+            margin-top: -10px;
+            }
+            to {
+            margin-top: -2px;
+            }
+        }
 
     
 </style>
@@ -222,16 +227,13 @@
             <img src="trash/candy_bar.png">
         </div>
     </div>
-    
-    <div id="container6">
-        <img src="images/tree2.png">
-    </div>
 
     <div>
-        <canvas id="myCanvas" width="1500" height="666" 
-        style="position: fixed; left: 10px; top: 0; z-index:0">
+        <canvas id="myCanvas" width="1500" height="910" 
+        style=" left: 10px; top: 0; z-index:0">
             Your browser does not support HTML5 Canvas.
         </canvas>
+        <img class="title" id="title" src="images/regras.png">
     </div>
     
 
@@ -244,9 +246,6 @@
 
         let bg = new Image();
         bg.src='images/bg_regras.png';
-
-        let regras = new Image();
-        regras.src='images/regras.png';
         
         let kitty = new Image();
 		kitty.src = 'images/kitty.png';
@@ -331,6 +330,8 @@
         let frameColP = 0;
         let frameRowP = 0;
 
+        let frameColP1 = frameColP2 = frameColP3 = frameColP4 = frameColP5 = 0;
+
         let N = 0;
 
         window.onload = function () {
@@ -342,8 +343,6 @@
             ctx.clearRect(0,0,W,H);
 
             ctx.drawImage(bg, 50,0, canvas.width-100, canvas.height+40);
-            ctx.drawImage(regras, canvas.width/2-100, 10, 98*2,34*2);
-
             ctx.drawImage(button, 10,15, 22*2, 24*2)
 
             // 1st box
@@ -452,8 +451,21 @@
                     },400)
                 }
             },800)
+
+            // trees
+            ctx.fillText('Planta 5 árvores para completar o jogo!', 550, 800);
+            ctx.drawImage(tree, frameColP1 * 421/4, 0, 421/4, 107, 510, 690, 80,80);
+            ctx.drawImage(tree, frameColP2 * 421/4, 0, 421/4, 107, 610, 690, 80,80);
+            ctx.drawImage(tree, frameColP3 * 421/4, 0, 421/4, 107, 710, 690, 80,80);
+            ctx.drawImage(tree, frameColP4* 421/4, 0, 421/4, 107, 810, 690, 80,80);
+            ctx.drawImage(tree, frameColP5 * 421/4, 0, 421/4, 107, 910, 690, 80,80);
+
+            frameColP1++;
+            Trees();
         }
         
+
+        // functions
         function firstBoxKitty() {
             ctx.drawImage(kitty, frameCol * 192/4, frameRowD * 192/4, 192/4, 192/4, 250, 115, 90, 90);
             ctx.drawImage(kitty, frameCol * 192/4, frameRowU * 192/4, 192/4, 192/4, 330, 115, 90,90);
@@ -516,6 +528,37 @@
                     frameColP = 0;
                 }
         }
+
+
+        function Trees(){
+            if(frameColP1 == 4){
+                frameColP1 = 3
+                frameColP2++;
+            }
+            if(frameColP2 == 4){
+                frameColP2 = 3
+                frameColP3++;
+            }
+            if(frameColP3 == 4){
+                frameColP3 = 3
+                frameColP4++;
+            }
+            if(frameColP4 == 4){
+                frameColP4 = 3
+                frameColP5++;
+            }
+            if(frameColP5 == 4){
+                frameColP5 = 3
+                setTimeout(function(){
+                    frameColP1 = 0;
+                    frameColP2 = 0;
+                    frameColP3 = 0;
+                    frameColP4 = 0;
+                    frameColP5 = 0;
+                },2000)
+            }
+        }
+
         
     </script>
 </body>
