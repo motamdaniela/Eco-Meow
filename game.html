@@ -409,7 +409,9 @@
 					rejectaudio.currentTime = 0.7;
 					trash.x=positions[trash.place].x;
 					trash.y=positions[trash.place].y;
-					help='errado'
+					if(positions[trash.place].full==true){
+						help='errado'
+					}
 				}
 			})
 		}
