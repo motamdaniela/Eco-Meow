@@ -151,9 +151,7 @@
 		
 		
 		// variablesfor positions
-		let x = 500;
-
-		// let x = 1115;
+		let x = 1115;
 		let y = 120;
 		let sizex = 192/4;
 		let sizey = 192/4;		
@@ -403,14 +401,14 @@
 					}
 				// wrong bin
 				}else{
-					rejectaudio.play();
 					trash.start = false;
-					rejectaudio.volume = 0.5;
-					rejectaudio.currentTime = 0.7;
 					trash.x=positions[trash.place].x;
 					trash.y=positions[trash.place].y;
 					if(positions[trash.place].full==true){
 						help='errado'
+						rejectaudio.volume = 0.5;
+						rejectaudio.currentTime = 0.7;
+						rejectaudio.play();
 					}
 				}
 			})
@@ -600,12 +598,12 @@
 			// ctx.beginPath();
 			// ctx.rect(1070+25, 380+30, 2*240/5-50, 2*144/3);
 			// ctx.stroke();
-			ctx.drawImage(seed, 0, 0, 96/6, 32/2, 1370, 0, 40, 40)
+			ctx.drawImage(seed, 0, 32/2, 96/6, 32/2, 1370, -4, 40, 40)
 			ctx.drawImage(box, 0 + emoteX, 0+ emoteY, 70, 70)
 			ctx.font = "40px VT323";
 			ctx.fillStyle = "#B58861";
 			ctx.fillText(`X ${Math.floor(ecoCounter/5)}`, seedX, 25);
-			ctx.drawImage(ecoIcon, 0, 0, 275, 275, 1375, 40, 35, 35)
+			ctx.drawImage(ecoIcon, 0, 0, 275, 275, 1375, 45, 35, 35)
 			ctx.fillText(`X ${ecoCounter}`, 1420, 70);
 			// ctx.drawImage(emote, frameIndexX*160/5, frameIndexY*480/15, 160/5, 480/15, 17, 17, 38, 38)
 			
