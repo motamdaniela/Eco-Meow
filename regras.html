@@ -168,31 +168,34 @@
             }
     }
 
-    /* #container6 img{
-        position: relative;
-        display: inline-block;
-        height: 107px;
-        width: 421/4px;
-        margin-left: 1000px;
-        margin-top: 355px;
+    #container4 {
+        position: absolute;
+        width: 32px;
+        height: 32px;
+        /* margin-left: 270px;
+        margin-top: 490px; */
         z-index: 1;
-        
-        
-        animation-name: tree;
-        animation-duration: 4s;
-        animation-timing-function: steps(4);
+
+        animation-name: box4;
+        animation-duration: 1.65s;
         animation-iteration-count: infinite;
-    } 
-    @keyframes tree{
-        from {
-            object-position: 0px;
-            padding-right: -10%;
+    }
+    @keyframes box4 {
+        0%{
+            margin-left: 270px;
+            margin-top: 490px;
         }
-        to {
-            object-position: -421px;
-            padding-right: -10%;
-        } 
-    } */
+        80%{
+            margin-left: 320px;
+            margin-top: 407px;
+            transform: scale(1);
+        }
+        100%{
+            margin-left: 320px;
+            margin-top: 407px;
+            transform:scale(0);
+        }
+    }
 
     
 </style>
@@ -221,6 +224,10 @@
         <div id="inventory5">
             <img src="trash/candy_bar.png">
         </div>
+    </div>
+
+    <div id="container4">
+        <img src="trash/paper_bag.png">
     </div>
 
     <div>
