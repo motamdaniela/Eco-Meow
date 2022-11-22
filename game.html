@@ -629,7 +629,6 @@
 		// funtion for the home button
 		function Btn() {
             canvas.addEventListener('mousemove', e => {
-				console.log(e.offsetY)
                 if(e.offsetX > 10 && e.offsetY > 610 && e.offsetX < 2*58/2 -10 && e.offsetY < 610+ 2*28){
                     frameBtn = 1;
                     canvas.addEventListener('click', e => {
@@ -900,6 +899,10 @@ function Water(){
 				}
 			}
 		}
+
+		canvas.addEventListener('click', (e)=>{
+			console.log(e.offsetX, e.offsetY);
+		})
 		
 		//function that doesnt allows character to walk beyond the map borders
 		function InsideMap(){
@@ -926,12 +929,15 @@ function Water(){
 								if(y + 193/7 < (border.y) + (border.height)){
 									y-=10;
 								}
-								if(downKey){
-									y-=10;
-								}
+								// if(downKey){
+								// 	y-=10;
+								// }
 
 								// algumas borders especificas q n funcionam
 								if(x <= 617 && y>=90  && y<=169){
+									x-=10;
+								}
+								if(x <= 764 && y>=150  && y<=306){
 									x-=10;
 								}
 								if(x <= 916 && y>=150 && y<=348){
