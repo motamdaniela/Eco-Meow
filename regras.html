@@ -168,7 +168,7 @@
             }
     }
 
-    #container6 img{
+    /* #container6 img{
         position: relative;
         display: inline-block;
         height: 107px;
@@ -184,9 +184,15 @@
         animation-iteration-count: infinite;
     } 
     @keyframes tree{
-        from {object-position: 0px}
-        to {object-position: -421px} 
-    }
+        from {
+            object-position: 0px;
+            padding-right: -10%;
+        }
+        to {
+            object-position: -421px;
+            padding-right: -10%;
+        } 
+    } */
 
     
 </style>
@@ -316,7 +322,7 @@
         let frameRowEAm = 2;
         // 5th box
         let frameColC = 0;
-        let frameRowC = 0;
+        // let frameRowC = 0;
         let frameColS = 0;
         let frameRowS = 1;
         // 6th box
@@ -324,6 +330,8 @@
         let frameRowK = 11;
         let frameColP = 0;
         let frameRowP = 0;
+
+        let N = 0;
 
         window.onload = function () {
 			setInterval(render, 1000 / 6);
@@ -387,7 +395,17 @@
             ctx.fillText('no ecoponto correto', 240, 615);
             ctx.drawImage(ecopontos, frameColE*240/5, frameRowEV*144/3, 240/5, 144/3, 245, 410, 80, 80);
             ctx.drawImage(ecopontos, frameColE*240/5, frameRowEAm*144/3, 240/5, 144/3, 345, 410, 80, 80);
-            fourthBox();
+            ctx.drawImage(ecopontos, frameColEA*240/5, frameRowEAz*144/3, 240/5, 140/3, 295,407,80,80);
+            // setInterval(fourthBox,1000/1)
+            setTimeout( function(){
+            frameColEA++;
+            if (frameColEA==5){
+                frameColEA=4;
+                setTimeout( function(){
+                    frameColEA = 0;
+                },400)
+            }
+            },300)
 
             // 5th
             ctx.shadowColor="#529758";
@@ -400,7 +418,19 @@
             ctx.fillText('recebes 1 semente', 660, 615);
             ctx.drawImage(seed, frameColS*96/6, frameRowS*32/2, 96/6, 32/2, 680, 420, 45, 45)
             ctx.drawImage(recycle, 685, 480, 40,40);
-            fifthBox();
+            ctx.font = "50px VT323";
+            ctx.fillText(`X ${Math.floor(N/5)}`, 750, 460);
+            ctx.fillText(`X ${N}`, 750, 520);
+            ctx.font = "25px VT323";
+            N++;
+            if(N >= 2){
+                setTimeout(function(){
+                    N=5;
+                    setTimeout(function(){
+                        N=0;
+                    },600)
+                },500)
+            }
 
             // 6th
             ctx.shadowColor="#529758";
@@ -409,10 +439,19 @@
             ctx.shadowColor = "transparent";
             ctx.shadowBlur=0;
             ctx.drawImage(bgbox6, 1028, 358, 51*5, 45*5);
-            ctx.fillText('Escolhe um pedaço de terra', 1025, 595);
-            ctx.fillText('e planta as tuas sementes', 1030, 615);
+            ctx.fillText('Escolhe um pedaço de terra e planta', 990, 595);
+            ctx.fillText('as tuas sementes com a tecla P', 1015, 615);
             sixthBoxKitty();
-            // sixthBoxPlant();
+            ctx.drawImage(tree, frameColP * 421/4, frameRowP*107, 421/4, 107, 1120, 410, 80,80);
+            setTimeout( function(){
+                frameColP++;	
+                if (frameColP == 4){
+                    frameColP = 3;
+                    setTimeout( function(){
+                        frameColP = 0;
+                    },400)
+                }
+            },800)
         }
         
         function firstBoxKitty() {
@@ -435,7 +474,9 @@
             
             frameColA++;	
             if (frameColA == 4){
-                frameColA = 0;
+                setTimeout(function(){
+                    frameColA = 0;
+                },600)
             }
         };
 
@@ -450,20 +491,13 @@
         };
 
         function fourthBox() {
-            ctx.drawImage(ecopontos, frameColEA*240/5, frameRowEAz*144/3, 240/5, 140/3, 295,407,80,80);
-            frameColEA++;
-            if (frameColEA==5){
-                frameColEA = 0;
-            }
-        }
+            setTimeout( function(){
 
-        function fifthBox () {
-            ctx.drawImage(count, frameColC* 631/6, frameRowC*107, 631/6, 107, 660, 390 ,170, 170);
-            
-            frameColC++;
-            if (frameColC == 6){
-                frameColC = 0;
-            }  
+                frameColEA++;
+                if (frameColEA==5){
+                    frameColEA = 0;
+                }
+            },300)
         }
 
         function sixthBoxKitty() {
@@ -473,18 +507,15 @@
                 if (frameColK == 2){
                     frameColK = 0;
                 }
-            }, 1000)
+            }, 700)
         };
 
-        // function sixthBoxPlant() {
-        //     ctx.drawImage(tree, frameColP * 421/4, frameRowP*107, 421/4, 107, 1120, 410, 80,80);
-        //     setInterval(function() {
-        //         frameColP++;	
-        //         if (frameColP == 4){
-        //             frameColP = 0;
-        //         }
-        //     },2000)
-        // }
+        function sixthBoxPlant() {
+                frameColP++;	
+                if (frameColP == 4){
+                    frameColP = 0;
+                }
+        }
         
     </script>
 </body>
