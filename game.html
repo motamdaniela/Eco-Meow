@@ -71,7 +71,6 @@
 		const W = canvas.width, H = canvas.height;
 
 		let personagem = sessionStorage.getItem('personagem');
-		console.log(personagem)
 		
 		// imagens
 		let bg = new Image();
@@ -79,26 +78,34 @@
 		let water = new Image();
 		water.src = 'images/Water.png'
 		
+		
+		let emote = new Image();
+		
 		let scr=''
 		let src2=''
 		let image = new Image();
 		if(personagem == 1){
+			emote.src = 'images/emoteanimations_black.png'
 			image.src = 'images/kitty_black.png';
 			src='images/kitty_black.png'
 			src2='images/actions_black.png'
 		}else if(personagem==2){
+			emote.src = 'images/emoteanimations.png'
 			image.src = 'images/kitty.png';
 			src='images/kitty.png'
 			src2='images/actions.png'
 		}else if(personagem==3){
+			emote.src = 'images/emoteanimations_orange.png'
 			image.src = 'images/kitty_orange.png';
 			src='images/kitty_orange.png'
 			src2='images/actions_orange.png'
 		}
 
+		let button = new Image();
+        button.src='images/home_btn.png';
+
 		let ecopontos = new Image();
 		ecopontos.src = 'images/ecopontos.png';
-		
 		
 		let inventory = new Image();
 		inventory.src = 'images/inventory.png';
@@ -110,9 +117,6 @@
 		
 		let box = new Image();
 		box.src = 'images/caixa.png'
-		
-		let emote = new Image();
-		emote.src = 'images/emoteanimations.png'
 		
 		let tree = new Image();
 		tree.src = 'images/tree.png'
@@ -148,7 +152,7 @@
 		let gKey = false;
 		let pKey = false
 
-		
+		let frameBtn = 0;
 		
 		// variablesfor positions
 		let x = 1115;
@@ -165,7 +169,7 @@
 		let emoteX = 0;
 		let plantieY = -1000;
 		let boxieY = 0;
-		// let up = -1000;
+		let up = -1000;
 
 		let boxiesizeX = boxiesizeY = 0;
 
@@ -270,15 +274,6 @@
 					xInit = 90 + Math.random() * (600);
 				    yInit = 110 + Math.random() * (400);
 				}
-				// checks if a trash has already been placed in that spot
-				// if(Trashes.length){
-				// 	Trashes.forEach(trash, () =>{
-				// 		while(xInit == trash.x && trash.y == yInit){
-				// 			xInit = 90 + Math.random() * (600);
-				// 			yInit = 110 + Math.random() * (400);
-				// 		}
-				// 	})
-				// }
 
 				Trashes.push(new Trash(src, img, xInit, yInit, trash,i))
 			}
@@ -477,8 +472,7 @@
 					frameIndexY = 11
 				}	
 			}else if(help=='fim'){
-				ctx.font = "40px VT323";
-				msg='Obrigado por jogares comigo! =^w^='
+				msg = ''
 				if(frameIndexY < 4 || frameIndexY > 6){
 					frameIndexY=4
 					frameIndexX = 0;
@@ -580,7 +574,8 @@
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			Water();
 			ctx.drawImage(bg, 0,0, canvas.width, canvas.height);
-	
+			ctx.drawImage(button, frameBtn*58/2, 0, 58/2, 28, 10, 610, 2*58/2,2*28);
+            Btn();
 			
 			borders.forEach(border =>{
 				ctx.beginPath();
@@ -626,14 +621,27 @@
 			ctx.drawImage(plantie, 5 *144/9 , 1 *80/5, 144/9, 80/5, x+30, y+10 +plantieY, 2*144/9, 2*80/5);
 			ctx.drawImage(image, frameCol * sizex, frameRow * sizey, sizex, sizey, x, y, 192/2.1,192/2.1);
 
-			// ctx.drawImage(boxie, canvas.width/3.1 -30, canvas.height/2.6 +plantieY +up, 3.4*176, 2.9*48);
-			// ctx.font = "40px VT323";
-			// ctx.fillText(`Obrigado por jogares comigo! =^w^=`, canvas.width/3,  canvas.height/2 + up, canvas.width/3,canvas.height/2);
 			emoteAnimation()
-			
-			// ctx.font = "20px VT323";
-			// ctx.fillText(msg, 90 +emoteX, 40 +emoteY +boxieY);
+			ctx.font = "40px VT323";
+			ctx.fillText(`Obrigado por jogares comigo! =^w^=`, canvas.width/3 +30,  canvas.height/2 + up +plantieY, canvas.width/3,canvas.height/2);
 		}
+
+		// funtion for the home button
+		function Btn() {
+            canvas.addEventListener('mousemove', e => {
+				console.log(e.offsetY)
+                if(e.offsetX > 10 && e.offsetY > 610 && e.offsetX < 2*58/2 -10 && e.offsetY < 610+ 2*28){
+                    frameBtn = 1;
+                    canvas.addEventListener('click', e => {
+                        window.setTimeout(function(){
+                        window.location.href = './inicio.html';
+                        }, 300);
+                    })
+                }else{
+                    frameBtn = 0;
+                }
+            })
+        }
 
 // draws and animates the water
 function Water(){
@@ -972,7 +980,6 @@ function Water(){
 					}
 				}
 
-				// setInterval(EndGame, 1000 / 3);
 		// function for end of game
 		function EndGame(){
 			const animate = true;
@@ -998,6 +1005,7 @@ function Water(){
 						boxiesizeX = 300
 						boxiesizeY = 100
 						boxieY = -70 +plantieY
+						up = 0;
 					},1000)
 				},1000)
 		}
