@@ -14,7 +14,18 @@
 				background-image: url('images/Water.png');
 				background-size: 9%;
 				margin-top: 20px; 
-			}
+				animation-name:game_in;
+    		    animation-duration: 1s;
+    		    animation-iteration-count: normal;
+    		}
+    		@keyframes game_in {
+    		        0% {
+    		            transform: scale(1.2);
+    		        }
+    		        100%{
+    		            transform: scale(1);
+    		        }
+    		}
 		</style>
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -176,6 +187,8 @@
 		let help=''
 		let msg =''
 
+		let BtnPosX = 10;
+		let BtnPosY = 610;
 		
 		
 		// lists for inventory and bins
@@ -234,10 +247,326 @@
 		let Trashes = new Array();
 		const lixos=[['candy_bar','yellow'],['detergent','yellow'],['light_bulb','green'],['orange_juice','yellow'],['rubber_duck','yellow'],['snack1','yellow'],['potatochip_yellow','yellow'], ['spatula','yellow'],['paper_bag','blue'],['receipt','blue'], ['toilet_paper','blue'], ['wine_white2','green']]
 		
-		// let yellow = ['candy_bar','glue_stick','rubber_duck', 'snack1', 'snack2', 'spatula']
-		// let green = []
-		// let blue = ['paper_bag','receipt', 'toilet_paper']
+
+		// emoteAnimation()
+		// setInterval(emoteAnimation,1000/1)
+		// character expressions + tips
+		function emoteAnimation(){
+			ctx.drawImage(emote, frameIndexX*160/5, frameIndexY*480/15, 160/5, 480/15, 17 +emoteX, 17 +emoteY, 38, 38)
+			ctx.drawImage(boxie, 70 +emoteX, 10 +emoteY +boxieY, 176*1.5 +boxiesizeX, 48 + boxiesizeY)
+			// ctx.font = "20px VT323";
+			// ctx.fillText(msg, 90 +emoteX, 40 +emoteY +boxieY);
+
+			
+			if(help=='inicio'){
+				msg='Bem Vindo ao Eco-Meow!'
+				setTimeout(function(){
+					msg='Ajuda-me a apanhar o lixo!'
+				},2000)
+				frameIndexY=2
+				frameIndexX++
+				if(frameIndexX == 5){
+					frameIndexX = 0
+				}
+			}else if(help=='errado'){
+				msg='Ecoponto errado!'
+				if(frameIndexX>=2){
+					frameIndexX = 0
+				}
+				frameIndexY=9
+				frameIndexX++
+				if(frameIndexX == 2){
+					frameIndexX = 0
+				}
+				
+			}else if(help=='certo'){
+				msg='Muito bem!'
+				if(frameIndexX>=2){
+					frameIndexX = 0
+				}
+				frameIndexY=6
+				frameIndexX++
+				if(frameIndexX == 2){
+					frameIndexX = 0
+				}
+			}else if(help=='inventario'){
+				msg='O teu inventario está cheio!'
+				setTimeout(function(){
+					msg='Coloca o lixo nos ecopontos!'
+				},2000)
+				frameIndexX=0;
+				if(frameIndexY<=11){
+					frameIndexY = 11
+				}
+				frameIndexY++;
+				if(frameIndexY == 15){
+					frameIndexY = 11
+				}	
+			}else if(help=='fim'){
+				msg = ''
+				if(frameIndexY < 4 || frameIndexY > 6){
+					frameIndexY=4
+					frameIndexX = 0;
+				}
+				frameIndexY++
+				if(frameIndexY == 6){
+					frameIndexY = 4
+					frameIndexX++
+					if(frameIndexX == 2){
+						frameIndexX = 0
+					}
+				}
+			}else if(help=='1opasso'){
+				msg='Carrega na tecla G!'
+				frameIndexY=2
+				frameIndexX++
+				if(frameIndexX == 5){
+					frameIndexX = 0
+				}	
+			}else if(help=='2opasso'){
+				msg='Planta na terra lavrada!'
+				setTimeout(function(){
+					msg='Carrega na tecla P!'
+				},5000)
+				frameIndexY=2
+				frameIndexX++
+				if(frameIndexX == 5){
+					frameIndexX = 0
+				}	
+			}else if(help=='plantar'){
+				msg='Planta a tua semente!'
+				frameIndexY=3
+				frameIndexX++
+				if(frameIndexX == 4){
+					frameIndexX = 0
+				}
+			}
+			ctx.font = "20px VT323";
+			ctx.fillText(msg, 90 +emoteX, 40 +emoteY +boxieY);
+		}	
 		
+		// draws and animates the water
+		function Water(){
+			for(let i = 0; i < 1000; i+= 4.8*16/4){
+				for(let j = 0; j < 1500; j+= 2.8*16){
+					ctx.drawImage(water, waterFrame *64/4.1, 0, 64/4, 16, j-150, i-200, 1.8*64/4, 1.8*16)
+					ctx.drawImage(water, waterFrameU *64/4.1, 0, 64/4, 16, j, i+100, 1.8*64/4, 1.8*16)
+				}
+			}
+			
+			waterFrame++;
+			if(waterFrame == 4){
+				waterFrame = 0;
+			}
+			waterFrameU--;
+			if(waterFrameU == -1){
+				waterFrameU = 3;
+			}
+		
+		}
+
+		function render() {
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			Water();
+			ctx.drawImage(bg, 0,0, canvas.width, canvas.height);
+			
+			borders.forEach(border =>{
+				ctx.beginPath();
+				ctx.rect(border.x, border.y, border.width, border.height);
+			})
+			
+			tinyBorders.forEach(border =>{
+				ctx.beginPath();
+				ctx.rect(border.x, border.y, border.width, border.height);
+			})
+			
+			ctx.drawImage(ecopontos, frameG *240/5, 0, 240/5, 144/3, 1070, 380, 2*240/5, 2*144/3)
+			ctx.drawImage(ecopontos, frameB *240/5, 144/3, 240/5, 144/3, 1120, 380, 2*240/5, 2*144/3)
+			ctx.drawImage(ecopontos, frameY *240/5, 2*144/3.05, 240/5, 144/3, 1170, 380, 2*240/5, 2*144/3)
+			// ctx.beginPath();
+			// ctx.rect(1070+25, 380+30, 2*240/5-50, 2*144/3);
+			// ctx.stroke();
+			ctx.drawImage(seed, 0, 32/2, 96/6, 32/2, 1370, -4, 40, 40)
+			ctx.drawImage(box, 0 + emoteX, 0+ emoteY, 70, 70)
+			ctx.font = "40px VT323";
+			ctx.fillStyle = "#B58861";
+			ctx.fillText(`X ${Math.floor(ecoCounter/5)}`, seedX, 25);
+			ctx.drawImage(ecoIcon, 0, 0, 275, 275, 1375, 45, 35, 35)
+			ctx.fillText(`X ${ecoCounter}`, 1420, 70);
+			// ctx.drawImage(emote, frameIndexX*160/5, frameIndexY*480/15, 160/5, 480/15, 17, 17, 38, 38)
+			
+			// emoteAnimation('inicio')
+			// frameIndexY=2
+			// frameIndexX++
+			// if(frameIndexX == 5){
+				// 	frameIndexX = 0
+			// }
+			
+			InsideMap();
+			renderTrash();	
+			ctx.drawImage(tree, framePlant1*96/4, 0, 96/4, 32, plantX1, plantY1, 2*96/4, 2* 32);
+			ctx.drawImage(tree, framePlant2*96/4, 0, 96/4, 32, plantX2, plantY2, 2*96/4, 2* 32);
+			ctx.drawImage(tree, framePlant3*96/4, 0, 96/4, 32, plantX3, plantY3, 2*96/4, 2* 32);
+			ctx.drawImage(tree, framePlant4*96/4, 0, 96/4, 32, plantX4, plantY4, 2*96/4, 2* 32);
+			ctx.drawImage(tree, framePlant5*96/4, 0, 96/4, 32, plantX5, plantY5, 2*96/4, 2* 32);
+
+			emoteAnimation()
+
+			// plant on cats head: (for end of the game)
+			ctx.drawImage(plantie, 5 *144/9 , 1 *80/5, 144/9, 80/5, x+30, y+10 +plantieY, 2*144/9, 2*80/5);
+			// character:
+			ctx.drawImage(image, frameCol * sizex, frameRow * sizey, sizex, sizey, x, y, 192/2.1,192/2.1);
+
+			ctx.font = "40px VT323";
+			ctx.fillText(`Obrigado por jogares comigo! =^w^=`, canvas.width/3 +30,  canvas.height/2 + up +plantieY, canvas.width/3,canvas.height/2);
+
+			ctx.drawImage(button, frameBtn*58/2, 0, 58/2, 28, BtnPosX, BtnPosY, 2*58/2,2*28);
+            Btn();
+		}
+		
+		window.onload = function () {
+			init();
+			setInterval(render, 1000 / 10);
+			};
+
+		// funtion for the home button
+		function Btn() {
+            canvas.addEventListener('mousemove', e => {
+                if(e.offsetX > BtnPosX && e.offsetY > BtnPosY && e.offsetX < 2*58/2 -10 && e.offsetY < 610+ 2*28){
+                    frameBtn = 1;
+                    canvas.addEventListener('click', e => {
+                        window.setTimeout(function(){
+                        window.location.href = './inicio.html';
+                        }, 300);
+                    })
+                }else{
+                    frameBtn = 0;
+                }
+            })
+        }
+
+		//handler for keydown
+		function ArrowPressed(e) {
+			e.preventDefault();
+			if (e.key == 'ArrowRight') {
+				rightKey = true; //Canvas#2
+			}
+			else if (e.key == 'ArrowLeft'){
+				leftKey = true; //Canvas#
+			}
+			else if (e.key == 'ArrowUp') {
+				upKey = true; //Canvas#2
+			}
+			else if (e.key == 'ArrowDown'){
+				downKey = true; //Canvas#
+			}
+			else if(e.keyCode==71){
+				gKey = true;
+			}
+			else if(e.keyCode==80){
+				sizex = 96/2
+				sizey = 576/12
+				if (!pKey){
+					image.src = src2
+				}
+				pKey = true;
+			}
+		}
+		
+		//handler for keyup
+		function ArrowReleased(e) {
+			if (e.key == 'ArrowRight'){
+				audio.volume = 0;
+				rightKey = false;
+				frameCol = 0;
+			}
+			else if (e.key == 'ArrowLeft'){
+				audio.volume = 0;
+				leftKey = false;
+				frameCol = 0;
+			}
+			else if (e.key == 'ArrowUp'){
+				audio.volume = 0;
+				upKey = false;
+				frameCol = 0;
+			}
+			else if (e.key == 'ArrowDown'){
+				audio.volume = 0;
+				downKey = false;
+				frameCol = 0;
+			}
+		}
+		
+		//sets handlers for events keydown & keyup
+		window.addEventListener('keydown', ArrowPressed);
+		window.addEventListener('keyup', ArrowReleased);
+
+		function actions(){
+				if (rightKey){
+					image.src = src
+					audio.volume = 0.3;
+					frameRow = 3;
+					x+=10;
+					frameCol++;	
+					if (frameCol == 4)
+					frameCol = 2;
+					
+				}
+				else if (leftKey){
+					image.src = src
+				audio.volume = 0.3;
+				x-=10;
+				frameRow = 2;
+				frameCol++;	
+				if (frameCol == 4)
+				frameCol = 0;
+			}
+			else if (upKey){
+				image.src = src
+				audio.volume = 0.3;
+				y-=10;
+				frameRow = 1;
+				frameCol++;	
+				if (frameCol == 3)
+				frameCol = 0;
+			}
+			else if (downKey){
+				image.src = src
+				audio.volume = 0.3;
+				y+=10;
+				frameRow = 0;
+				frameCol++;	
+				if (frameCol == 4)
+				frameCol = 0;
+			}
+			else if (gKey){
+				frameCol++;	
+				if (frameCol == 2){
+					frameCol = 0;
+					gKey = false;
+				}
+				grab(x,y)
+			}
+			else if (pKey){
+				if (frameRow < 8){
+					frameRow += 8
+					frameCol = 2
+				}
+				frameCol--;	
+				if (frameCol == -1){
+					image.src = src
+					pKey = false;
+					frameCol = 0;
+					sizex = 192/4
+					sizey = 192/4
+					frameRow -= 8
+				}
+				if(Math.floor(ecoCounter)/5 > 0){
+					Plant();
+				}
+			}
+		}
+
 		class Trash {
 			constructor(src, img, x, y, trash, id) {    // CONSTRUCTOR
 				this.src = src;
@@ -417,250 +746,54 @@
 			ecoCounter += 1;
 		}
 
-		emoteAnimation()
-		// setInterval(emoteAnimation,1000/0.1)
-		// character expressions + tips
-		function emoteAnimation(){
-			ctx.drawImage(emote, frameIndexX*160/5, frameIndexY*480/15, 160/5, 480/15, 17 +emoteX, 17 +emoteY, 38, 38)
-			ctx.drawImage(boxie, 70 +emoteX, 10 +emoteY +boxieY, 176*1.5 +boxiesizeX, 48 + boxiesizeY)
-			// ctx.font = "20px VT323";
-			// ctx.fillText(msg, 90 +emoteX, 40 +emoteY +boxieY);
-
-			
-			if(help=='inicio'){
-				msg='Bem Vindo ao Eco-Meow!'
-				setTimeout(function(){
-					msg='Ajuda-me a apanhar o lixo!'
-				},2000)
-				frameIndexY=2
-				frameIndexX++
-				if(frameIndexX == 5){
-					frameIndexX = 0
+		// opens or closes recycling bins
+		function EcoActions(){
+				canvas.addEventListener('mousemove', e => {
+						if(e.offsetX >= 1095 && e.offsetY >= 415 &&  e.offsetX <= 1135 && e.offsetY <= 455){
+							frameB = frameY = 0;
+							setTimeout( function(){
+							frameG++;
+							if (frameG == 5){
+								frameG =4;
+									frameG--;
+									if(frameG == 0){
+										frameG = 0;
+									}
+								}
+							},100)
+						}
+						else if(e.offsetX >= 1150 && e.offsetY >= 415 &&  e.offsetX <= 1190 && e.offsetY <= 455){
+							frameG = frameY = 0;
+							setTimeout( function(){
+							frameB++;
+							if (frameB == 5){
+								frameB =4;
+									frameB--;
+									if(frameB == 0){
+										frameB = 0;
+									}
+								}
+							},100)
+						}
+						else if(e.offsetX >= 1200 && e.offsetY >= 415 &&  e.offsetX <= 1240 && e.offsetY <= 455){
+							frameB = frameG = 0;
+							setTimeout( function(){
+							frameY++;
+							if (frameY == 5){
+								frameY =4;
+									frameY--;
+									if(frameY == 0){
+										frameY = 0;
+									}
+								}
+							},100)
+						}else{
+							frameG = 0;
+							frameB = 0;
+							frameY = 0;
+						}
+					})
 				}
-			}else if(help=='errado'){
-				msg='Ecoponto errado!'
-				if(frameIndexX>=2){
-					frameIndexX = 0
-				}
-				frameIndexY=9
-				frameIndexX++
-				if(frameIndexX == 2){
-					frameIndexX = 0
-				}
-				
-			}else if(help=='certo'){
-				msg='Muito bem!'
-				if(frameIndexX>=2){
-					frameIndexX = 0
-				}
-				frameIndexY=6
-				frameIndexX++
-				if(frameIndexX == 2){
-					frameIndexX = 0
-				}
-			}else if(help=='inventario'){
-				msg='O teu inventario está cheio!'
-				setTimeout(function(){
-					msg='Coloca o lixo nos ecopontos!'
-				},2000)
-				frameIndexX=0;
-				if(frameIndexY<=11){
-					frameIndexY = 11
-				}
-				frameIndexY++;
-				if(frameIndexY == 15){
-					frameIndexY = 11
-				}	
-			}else if(help=='fim'){
-				msg = ''
-				if(frameIndexY < 4 || frameIndexY > 6){
-					frameIndexY=4
-					frameIndexX = 0;
-				}
-				frameIndexY++
-				if(frameIndexY == 6){
-					frameIndexY = 4
-					frameIndexX++
-					if(frameIndexX == 2){
-						frameIndexX = 0
-					}
-				}
-			}else if(help=='1opasso'){
-				msg='Carrega na tecla G!'
-				frameIndexY=2
-				frameIndexX++
-				if(frameIndexX == 5){
-					frameIndexX = 0
-				}	
-			}else if(help=='2opasso'){
-				msg='Planta na terra lavrada!'
-				setTimeout(function(){
-					msg='Carrega na tecla P!'
-				},5000)
-				frameIndexY=2
-				frameIndexX++
-				if(frameIndexX == 5){
-					frameIndexX = 0
-				}	
-			}else if(help=='plantar'){
-				msg='Planta a tua semente!'
-				frameIndexY=3
-				frameIndexX++
-				if(frameIndexX == 4){
-					frameIndexX = 0
-				}
-			}
-			ctx.font = "20px VT323";
-			ctx.fillText(msg, 90 +emoteX, 40 +emoteY +boxieY);
-		}
-		
-		//handler for keydown
-		function ArrowPressed(e) {
-			e.preventDefault();
-			if (e.key == 'ArrowRight') {
-				rightKey = true; //Canvas#2
-			}
-			else if (e.key == 'ArrowLeft'){
-				leftKey = true; //Canvas#
-			}
-			else if (e.key == 'ArrowUp') {
-				upKey = true; //Canvas#2
-			}
-			else if (e.key == 'ArrowDown'){
-				downKey = true; //Canvas#
-			}
-			else if(e.keyCode==71){
-				gKey = true;
-			}
-			else if(e.keyCode==80){
-				sizex = 96/2
-				sizey = 576/12
-				if (!pKey){
-					image.src = src2
-				}
-				pKey = true;
-			}
-		}
-		
-		//handler for keyup
-		function ArrowReleased(e) {
-			if (e.key == 'ArrowRight'){
-				audio.volume = 0;
-				rightKey = false;
-				frameCol = 0;
-			}
-			else if (e.key == 'ArrowLeft'){
-				audio.volume = 0;
-				leftKey = false;
-				frameCol = 0;
-			}
-			else if (e.key == 'ArrowUp'){
-				audio.volume = 0;
-				upKey = false;
-				frameCol = 0;
-			}
-			else if (e.key == 'ArrowDown'){
-				audio.volume = 0;
-				downKey = false;
-				frameCol = 0;
-			}
-		}
-		
-		//sets handlers for events keydown & keyup
-		window.addEventListener('keydown', ArrowPressed);
-		window.addEventListener('keyup', ArrowReleased);		
-
-		function render() {
-			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			Water();
-			ctx.drawImage(bg, 0,0, canvas.width, canvas.height);
-			ctx.drawImage(button, frameBtn*58/2, 0, 58/2, 28, 10, 610, 2*58/2,2*28);
-            Btn();
-			
-			borders.forEach(border =>{
-				ctx.beginPath();
-				ctx.rect(border.x, border.y, border.width, border.height);
-			})
-			
-			tinyBorders.forEach(border =>{
-				ctx.beginPath();
-				ctx.rect(border.x, border.y, border.width, border.height);
-			})
-			
-			ctx.drawImage(ecopontos, frameG *240/5, 0, 240/5, 144/3, 1070, 380, 2*240/5, 2*144/3)
-			ctx.drawImage(ecopontos, frameB *240/5, 144/3, 240/5, 144/3, 1120, 380, 2*240/5, 2*144/3)
-			ctx.drawImage(ecopontos, frameY *240/5, 2*144/3.05, 240/5, 144/3, 1170, 380, 2*240/5, 2*144/3)
-			// ctx.beginPath();
-			// ctx.rect(1070+25, 380+30, 2*240/5-50, 2*144/3);
-			// ctx.stroke();
-			ctx.drawImage(seed, 0, 32/2, 96/6, 32/2, 1370, -4, 40, 40)
-			ctx.drawImage(box, 0 + emoteX, 0+ emoteY, 70, 70)
-			ctx.font = "40px VT323";
-			ctx.fillStyle = "#B58861";
-			ctx.fillText(`X ${Math.floor(ecoCounter/5)}`, seedX, 25);
-			ctx.drawImage(ecoIcon, 0, 0, 275, 275, 1375, 45, 35, 35)
-			ctx.fillText(`X ${ecoCounter}`, 1420, 70);
-			// ctx.drawImage(emote, frameIndexX*160/5, frameIndexY*480/15, 160/5, 480/15, 17, 17, 38, 38)
-			
-			// emoteAnimation('inicio')
-			// frameIndexY=2
-			// frameIndexX++
-			// if(frameIndexX == 5){
-				// 	frameIndexX = 0
-			// }
-			
-			InsideMap();
-			renderTrash();	
-			ctx.drawImage(tree, framePlant1*96/4, 0, 96/4, 32, plantX1, plantY1, 2*96/4, 2* 32);
-			ctx.drawImage(tree, framePlant2*96/4, 0, 96/4, 32, plantX2, plantY2, 2*96/4, 2* 32);
-			ctx.drawImage(tree, framePlant3*96/4, 0, 96/4, 32, plantX3, plantY3, 2*96/4, 2* 32);
-			ctx.drawImage(tree, framePlant4*96/4, 0, 96/4, 32, plantX4, plantY4, 2*96/4, 2* 32);
-			ctx.drawImage(tree, framePlant5*96/4, 0, 96/4, 32, plantX5, plantY5, 2*96/4, 2* 32);
-
-			// plant on cats head v
-			ctx.drawImage(plantie, 5 *144/9 , 1 *80/5, 144/9, 80/5, x+30, y+10 +plantieY, 2*144/9, 2*80/5);
-			ctx.drawImage(image, frameCol * sizex, frameRow * sizey, sizex, sizey, x, y, 192/2.1,192/2.1);
-
-			emoteAnimation()
-			ctx.font = "40px VT323";
-			ctx.fillText(`Obrigado por jogares comigo! =^w^=`, canvas.width/3 +30,  canvas.height/2 + up +plantieY, canvas.width/3,canvas.height/2);
-		}
-
-		// funtion for the home button
-		function Btn() {
-            canvas.addEventListener('mousemove', e => {
-                if(e.offsetX > 10 && e.offsetY > 610 && e.offsetX < 2*58/2 -10 && e.offsetY < 610+ 2*28){
-                    frameBtn = 1;
-                    canvas.addEventListener('click', e => {
-                        window.setTimeout(function(){
-                        window.location.href = './inicio.html';
-                        }, 300);
-                    })
-                }else{
-                    frameBtn = 0;
-                }
-            })
-        }
-
-// draws and animates the water
-function Water(){
-	for(let i = 0; i < 1000; i+= 4.8*16/4){
-		for(let j = 0; j < 1500; j+= 2.8*16){
-			ctx.drawImage(water, waterFrame *64/4.1, 0, 64/4, 16, j-150, i-200, 1.8*64/4, 1.8*16)
-			ctx.drawImage(water, waterFrameU *64/4.1, 0, 64/4, 16, j, i+100, 1.8*64/4, 1.8*16)
-		}
-	}
-	
-	waterFrame++;
-	if(waterFrame == 4){
-		waterFrame = 0;
-	}
-	waterFrameU--;
-	if(waterFrameU == -1){
-		waterFrameU = 3;
-	}
-
-}
 		
 		// function to plants trees
 		function Plant(){
@@ -797,117 +930,46 @@ function Water(){
 						}
 					}
 				}
-
-			// opens or closes recycling bins
-			function EcoActions(){
-				canvas.addEventListener('mousemove', e => {
-						if(e.offsetX >= 1095 && e.offsetY >= 415 &&  e.offsetX <= 1135 && e.offsetY <= 455){
-							frameB = frameY = 0;
-							frameG++;
-							if (frameG == 5){
-									frameG--;
-								}
-						}
-						else if(e.offsetX >= 1150 && e.offsetY >= 415 &&  e.offsetX <= 1190 && e.offsetY <= 455){
-							frameG = frameY = 0;
-							frameB++;
-							if (frameB == 5){
-								frameB --;
-							}
-						}
-						else if(e.offsetX >= 1200 && e.offsetY >= 415 &&  e.offsetX <= 1240 && e.offsetY <= 455){
-							frameB = frameG = 0;
-							frameY++;
-							if (frameY == 5){
-								frameY--;
-							}
-						}else{
-							frameG = 0;
-							frameB = 0;
-							frameY = 0;
-						}
-					})
-				}
 				
-			window.onload = function () {
-					init();
-					setInterval(render, 1000 / 10);
-				};
+				// setInterval(EndGame,1000/3)
 
-			function actions(){
-				if (rightKey){
-					image.src = src
-					audio.volume = 0.3;
-					frameRow = 3;
-					x+=10;
-					frameCol++;	
-					if (frameCol == 4)
-					frameCol = 2;
-					
-				}
-				else if (leftKey){
-					image.src = src
-				audio.volume = 0.3;
-				x-=10;
-				frameRow = 2;
-				frameCol++;	
-				if (frameCol == 4)
-				frameCol = 0;
+		// function for end of game
+		function EndGame(){
+			const animate = true;
+				setTimeout( function(){
+					plantieY = 0;
+					frameRow = 0;
+					tinyBorders.push({
+										x: 0,
+										y: 0,
+										width: canvas.width,
+										height: canvas.height,
+									},)
+					frameCol++;
+					plantieY -= 2;
+					if (frameCol == 2){
+						frameCol = 0;
+						plantieY =0;
+					}
+					setTimeout(function(){
+						help='fim'
+						emoteX = canvas.width/4 +50
+						emoteY = canvas.height/2 -25
+						boxiesizeX = 300
+						boxiesizeY = 100
+						boxieY = -70 +plantieY
+						up = 0;
+						BtnPosX = canvas.width/2
+						BtnPosY = 1.9*canvas.height/3
+						Btn();
+					},1000)
+				},1000)
 			}
-			else if (upKey){
-				image.src = src
-				audio.volume = 0.3;
-				y-=10;
-				frameRow = 1;
-				frameCol++;	
-				if (frameCol == 3)
-				frameCol = 0;
-			}
-			else if (downKey){
-				image.src = src
-				audio.volume = 0.3;
-				y+=10;
-				frameRow = 0;
-				frameCol++;	
-				if (frameCol == 4)
-				frameCol = 0;
-			}
-			else if (gKey){
-				frameCol++;	
-				if (frameCol == 2){
-					frameCol = 0;
-					gKey = false;
-				}
-				grab(x,y)
-			}
-			else if (pKey){
-				if (frameRow < 8){
-					frameRow += 8
-					frameCol = 2
-				}
-				frameCol--;	
-				if (frameCol == -1){
-					image.src = src
-					pKey = false;
-					frameCol = 0;
-					sizex = 192/4
-					sizey = 192/4
-					frameRow -= 8
-				}
-				if(Math.floor(ecoCounter)/5 > 0){
-					Plant();
-				}
-			}
-		}
-
-		canvas.addEventListener('click', (e)=>{
-			console.log(e.offsetX, e.offsetY);
-		})
-		
+			
 		//function that doesnt allows character to walk beyond the map borders
 		function InsideMap(){
 			let outside = false;
-			// verifica borders mapa
+			// checks maps borders
 			borders.forEach(border =>{
 				if(!outside){
 						if (x + 192/3 <= border.x                    //right
@@ -929,11 +991,11 @@ function Water(){
 								if(y + 193/7 < (border.y) + (border.height)){
 									y-=10;
 								}
-								// if(downKey){
-								// 	y-=10;
-								// }
+								if(downKey){
+									y-=10;
+								}
 
-								// algumas borders especificas q n funcionam
+								// some specific borders
 								if(x <= 617 && y>=90  && y<=169){
 									x-=10;
 								}
@@ -971,7 +1033,6 @@ function Water(){
 									y-=10;
 								}
 
-								// algumas borders especificas q n funcionam
 								if(x <= 444 && y>=73  && y<=187){
 									x+=10;
 								}
@@ -985,36 +1046,6 @@ function Water(){
 						actions();
 					}
 				}
-
-		// function for end of game
-		function EndGame(){
-			const animate = true;
-				setTimeout( function(){
-					plantieY = 0;
-					frameRow = 0;
-					tinyBorders.push({
-										x: 0,
-										y: 0,
-										width: canvas.width,
-										height: canvas.height,
-									},)
-					frameCol++;
-					plantieY -= 2;
-					if (frameCol == 2){
-						frameCol = 0;
-						plantieY =0;
-					}
-					setTimeout(function(){
-						help='fim'
-						emoteX = canvas.width/4 +50
-						emoteY = canvas.height/2 -25
-						boxiesizeX = 300
-						boxiesizeY = 100
-						boxieY = -70 +plantieY
-						up = 0;
-					},1000)
-				},1000)
-		}
 
 		// lists for the map borders
 		let borders = [
