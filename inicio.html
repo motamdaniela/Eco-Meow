@@ -117,7 +117,7 @@
                 sHeight: 64/2,
                 dx: x-192/2,
                 dy: y-64/2+50,
-                page:'./game.html',
+                page:'./NameYourKitty.html',
                 sxClick:192/2,
                 syClick:64/2,
                 src: button
@@ -282,25 +282,21 @@
 
             
             rectangles.forEach(rectangle=>{
-                console.log(pos)
-                console.log(rectangle.x, rectangle.y)
                 if(isIntersect(pos, rectangle)){
                     sessionStorage.setItem('personagem',personagem)
-                    console.log('ok2')
                     rectangle.sx=192/2
                     window.setTimeout(function(){
                         rectangle.sx=0
                     }, 250);
                     window.setTimeout(function(){
                     window.location.href = rectangle.page;
-                    }, 300);
+                    }, 100);
                 
                 }
             })
         })
 
         canvas.addEventListener('mousemove', (e)=>{
-            console.log('ok');
             const pos={
                 x: e.clientX,
                 y: e.clientY
@@ -308,10 +304,8 @@
 
             
             rectangles.forEach(rectangle=>{
-                console.log(pos)
                 console.log(rectangle.x, rectangle.y)
                 if(isIntersect(pos, rectangle)){
-                    console.log('ok2')
                     rectangle.sx=192/2                
                 }else{
                     rectangle.sx= 0;

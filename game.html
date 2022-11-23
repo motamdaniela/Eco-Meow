@@ -82,6 +82,7 @@
 		const W = canvas.width, H = canvas.height;
 
 		let personagem = sessionStorage.getItem('personagem');
+		let kittyName = sessionStorage.getItem('nome');
 		
 		// imagens
 		let bg = new Image();
@@ -396,13 +397,16 @@
 			ctx.drawImage(tree, framePlant5*96/4, 0, 96/4, 32, plantX5, plantY5, 2*96/4, 2* 32);
 			
 			// emote
-			ctx.drawImage(box, 0 + emoteX, 0+ emoteY, 70, 70)
-			ctx.drawImage(boxie, 70 +emoteX, 10 +emoteY +boxieY, 176*1.5 +boxiesizeX, 48 + boxiesizeY)
-			ctx.drawImage(emote, frameIndexX*160/5, frameIndexY*480/15, 160/5, 480/15, 17 +emoteX, 17 +emoteY, 38, 38)
 			ctx.font = "20px VT323";
-			ctx.fillText(msg, 90 +emoteX, 40 +emoteY +boxieY);
+			ctx.strokeStyle = "#E8CFA6";
+            ctx.lineWidth = 3;
+			ctx.drawImage(box, 0 + emoteX, 0+ emoteY, 70, 70)
+			ctx.strokeText(kittyName, 85 +emoteX, 15 +emoteY +boxieY);
+			ctx.fillText(kittyName, 85 +emoteX, 15 +emoteY +boxieY);
+			ctx.drawImage(boxie, 70 +emoteX, 20 +emoteY +boxieY, 176*1.5 +boxiesizeX, 48 + boxiesizeY)
+			ctx.drawImage(emote, frameIndexX*160/5, frameIndexY*480/15, 160/5, 480/15, 17 +emoteX, 17 +emoteY, 38, 38)
+			ctx.fillText(msg, 90 +emoteX, 50 +emoteY +boxieY);
 			emoteAnimation()
-			
 			
 			// plant on cats head: (for end of the game)
 			ctx.drawImage(plantie, 5 *144/9 , 1 *80/5, 144/9, 80/5, x+30, y+10 +plantieY, 2*144/9, 2*80/5);
@@ -923,6 +927,7 @@
 					}
 				}
 				
+				setInterval(EndGame,1000/5)
 
 		// function for end of game
 		function EndGame(){
@@ -952,6 +957,7 @@
 						up = 0;
 						BtnPosX = canvas.width/2
 						BtnPosY = 1.9*canvas.height/3
+						kittyName = ''
 					},1000)
 				},1000)
 			}
