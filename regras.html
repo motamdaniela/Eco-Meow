@@ -174,12 +174,12 @@
             position:absolute;
             margin-top: 2%;          
             animation-name: bg_in;
-            animation-duration: 1s;
+            animation-duration: 0.5s;
             animation-direction: normal;
             animation-iteration-count: 1;
         }
     #title{
-        margin-left: -6.7%;
+        margin-left: 43%;
         width: 12%;
         margin-top: -2px;
     }
@@ -324,6 +324,33 @@
         let tree = new Image();
         tree.src='images/tree2.png';
 
+        let bush = new Image();
+        bush.src='images/bush.png';
+
+        let mushroom = new Image();
+        mushroom.src='images/mushroom.png';
+
+        let rock = new Image();
+        rock.src='images/rock.png';
+
+        let tiny = new Image();
+        tiny.src='images/tiny.png';
+
+        let tronco = new Image();
+        tronco.src='images/tronco.png';
+
+        let yellow_flower = new Image();
+        yellow_flower.src='images/yellow_flower.png';
+
+        let round_tree = new Image();
+        round_tree.src='images/round_tree.png';
+
+        let blue_flower = new Image();
+        blue_flower.src='images/blue_flower.png';
+
+        let pink_flower = new Image();
+        pink_flower.src='images/pink_flower.png';
+
         // 1st box
         let frameCol = 0;
         let frameRowD = 0;
@@ -357,6 +384,8 @@
         let frameRowP = 0;
         let frameBtn = 0;
 
+        let frameColPR = 3;
+        let frameRowPR = 0;
         let frameColP1 = frameColP2 = frameColP3 = frameColP4 = frameColP5 = 0;
 
         let N = 0;
@@ -372,6 +401,32 @@
             ctx.drawImage(bg, 50,0, canvas.width-100, canvas.height+40);
             ctx.drawImage(button, frameBtn*58/2, 0, 58/2, 28, 10, 15, 2*58/2,2*28);
             Btn();
+
+            // regras 
+            ctx.drawImage(bush, 900, 440, 35,35);
+            ctx.drawImage(bush, 480, 130, 35,35);
+            ctx.drawImage(mushroom, 570, 200, 22,22);
+            ctx.drawImage(mushroom, 950, 410, 22,22);
+            ctx.drawImage(rock, 160, 160, 35,30);
+            ctx.drawImage(rock, 1330, 520, 35,30);
+            ctx.drawImage(tiny, 160, 410, 22,12);
+            ctx.drawImage(tiny, 530, 230, 22,12);
+            ctx.drawImage(tiny, 130, 440, 22,12);
+            ctx.drawImage(tiny, 530, 420, 22,12);
+            ctx.drawImage(tiny, 940, 240, 22,12);
+            ctx.drawImage(tronco, 490, 440,40,30);
+            ctx.drawImage(tronco, 1290, 120,40,30);
+            ctx.drawImage(tree, frameColPR * 421/4, frameRowPR*107, 421/4, 107, 100, 100, 80,80);
+            ctx.drawImage(tree, frameColPR * 421/4, frameRowPR*107, 421/4, 107, 950, 170, 80,80);
+            ctx.drawImage(yellow_flower, 530, 110, 25,15);
+            ctx.drawImage(yellow_flower, 990, 500, 25,15);
+            ctx.drawImage(yellow_flower, 1310, 350, 25,15);
+            ctx.drawImage(blue_flower, 580, 500, 27,28);
+            ctx.drawImage(blue_flower, 1330, 160, 27,28);
+            ctx.drawImage(pink_flower, 130, 250, 27,20);
+            ctx.drawImage(pink_flower, 890, 130, 27,20);
+            ctx.drawImage(pink_flower, 1340, 375, 20,17);
+
 
             // 1st box
             ctx.shadowColor="#529758";
@@ -481,7 +536,7 @@
             },800)
 
             // trees
-            ctx.fillText('Planta 5 árvores para completar o jogo!', 550, 800);
+            ctx.fillText('Planta 5 árvores para completar o jogo!', 550, 820);
             ctx.drawImage(tree, frameColP1 * 421/4, 0, 421/4, 107, 510, 690, 80,80);
             ctx.drawImage(tree, frameColP2 * 421/4, 0, 421/4, 107, 610, 690, 80,80);
             ctx.drawImage(tree, frameColP3 * 421/4, 0, 421/4, 107, 710, 690, 80,80);
