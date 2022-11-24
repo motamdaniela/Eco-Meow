@@ -274,7 +274,6 @@
         }
 
         canvas.addEventListener('click', (e)=>{
-            console.log('ok');
             const pos={
                 x: e.clientX,
                 y: e.clientY
@@ -304,7 +303,6 @@
 
             
             rectangles.forEach(rectangle=>{
-                console.log(rectangle.x, rectangle.y)
                 if(isIntersect(pos, rectangle)){
                     rectangle.sx=192/2                
                 }else{

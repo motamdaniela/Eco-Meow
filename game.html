@@ -429,12 +429,6 @@
 			// buttons home and sound
 			ctx.drawImage(button, frameBtn*58/2, 0, 58/2, 28, BtnPosX, BtnPosY, 2*58/2,2*28);
 			ctx.drawImage(square_btn, frameBtnS * 96/2, 1 * 192/4, 96/2, 192/4, BtnPosX +50, BtnPosY -15, 2.7*60/2,2.7*30);
-			ctx.beginPath();
-			ctx.rect(BtnPosX, BtnPosY, 2*58/2,2*28);
-			ctx.stroke()
-			ctx.beginPath();
-			ctx.rect(BtnPosX +50+15, BtnPosY , 2.7*60/2,2.7*20);
-			ctx.stroke()
 			ctx.fillText('♪', BtnPosX +81, BtnPosY +38, 2.7*60/2,2.7*30);
 			ctx.fillText(sound, BtnPosX +81, BtnPosY +38, 2.7*60/2,2.7*30);
 			// Btns();
@@ -474,23 +468,21 @@
 			if(isIntersectBtns(pos,BtnPosX, BtnPosY)){
 				frameBtn = 1;
 				frameBtnS = 0;
-				canvas.addEventListener('click', e => {
-					window.setTimeout(function(){
-					window.location.href = './inicio.html';
-					}, 300);
-				})
+				window.setTimeout(function(){
+				window.location.href = './inicio.html';
+				}, 300);
+				
 			}else if(isIntersectBtns(pos,BtnPosX+50+15, BtnPosY)){
 				frameBtnS = 1;
 				frameBtn = 0;
-				canvas.addEventListener('click', e => {
-					if(bgaudio.volume != 0){
-						bgaudio.volume = 0
-						sound="\\"
-					}else if(bgaudio.volume == 0){
-						bgaudio.volume = 0.01
-						sound=''
-					}
-				})
+				if(bgaudio.volume != 0){
+					bgaudio.volume = 0
+					sound="\\"
+				}else if(bgaudio.volume == 0){
+					bgaudio.volume = 0.01
+					sound=''
+				}
+				
 			}else{
 				frameBtn = 0;
 				frameBtnS = 0;

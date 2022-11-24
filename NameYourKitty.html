@@ -174,25 +174,25 @@
 			if(frameIndexX == 4){
 				frameIndexX = 0
 			}
-            Btn();
         }
 
-        function Btn() {
-            canvas.addEventListener('mousemove', e => {
-                if(e.offsetX > 4*canvas.width/6  && e.offsetY > 3*canvas.height/5  && e.offsetX < 4*canvas.width/6 + 80 && e.offsetY < 3*canvas.height/5+ 80){
-                    frameBtn = 1;
-                    canvas.addEventListener('click', e => {
-                        let name = document.getElementById('nome').value;
-                        sessionStorage.setItem('nome', name)
-                        window.setTimeout(function(){
-                        window.location.href = './game.html';
-                        }, 300);
-                    })
-                }else{
-                    frameBtn = 0;
-                }
-            })
-        }
+        canvas.addEventListener('mousemove', e => {
+            if(e.offsetX > 4*canvas.width/6  && e.offsetY > 3*canvas.height/5  && e.offsetX < 4*canvas.width/6 + 80 && e.offsetY < 3*canvas.height/5+ 80){
+                frameBtn = 1;
+            }else{
+                frameBtn = 0;
+            }
+        })
+        canvas.addEventListener('click', e => {
+            if(e.offsetX > 4*canvas.width/6  && e.offsetY > 3*canvas.height/5  && e.offsetX < 4*canvas.width/6 + 80 && e.offsetY < 3*canvas.height/5+ 80){
+            
+                let name = document.getElementById('nome').value;
+                sessionStorage.setItem('nome', name)
+                window.setTimeout(function(){
+                window.location.href = './game.html';
+                }, 300);
+            }
+        })
         
         window.addEventListener('keydown', actions)
 
