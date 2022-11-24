@@ -33,26 +33,26 @@
 	
 	<body>
 		<audio autoplay id="bgaudio" loop="true">
-			<source src="/sounds/bgsound.mp3">
+			<source src="sounds/bgsound.mp3">
 		</audio>
 
 		<audio autoplay id="myaudio" loop="true">
-			<source src="/sounds/boop.mp3">
+			<source src="sounds/boop.mp3">
 		</audio>
 		<audio id="grabaudio">
-			<source src="/sounds/grab.mp4">
+			<source src="sounds/grab.mp4">
 		</audio>
 		<audio id="tingaudio">
-			<source src="/sounds/ting.mp3">
+			<source src="sounds/ting.mp3">
 		</audio>
 		<audio id="rejectaudio">
-			<source src="/sounds/reject.mp4">
+			<source src="sounds/reject.mp4">
 		</audio>
 		<audio id="seedaudio">
-			<source src="/sounds/seed.mp4">
+			<source src="sounds/seed.mp4">
 		</audio>
 		<audio id="growaudio">
-			<source src="/sounds/grow.mp4">
+			<source src="sounds/grow.mp4">
 		</audio>
 	
 
@@ -108,16 +108,25 @@
 			image.src = 'images/kitty_black.png';
 			src='images/kitty_black.png'
 			src2='images/actions_black.png'
+			if(kittyName == ''){
+				kittyName = 'teemo'
+			}
 		}else if(personagem==2){
 			emote.src = 'images/emoteanimations.png'
 			image.src = 'images/kitty.png';
 			src='images/kitty.png'
 			src2='images/actions.png'
+			if(kittyName == ''){
+				kittyName = 'cookie'
+			}
 		}else if(personagem==3){
 			emote.src = 'images/emoteanimations_orange.png'
 			image.src = 'images/kitty_orange.png';
 			src='images/kitty_orange.png'
 			src2='images/actions_orange.png'
+			if(kittyName == ''){
+				kittyName = 'nunu'
+			}
 		}
 
 		let button = new Image();
