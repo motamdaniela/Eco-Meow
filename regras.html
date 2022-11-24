@@ -14,6 +14,8 @@
         background-image: url('images/Water.png');
         background-size: 9%;
         margin-top: 20px; 
+        margin-left: auto;
+        margin-right: auto;
     }
 
     /* animation box2 */
@@ -47,6 +49,12 @@
     #container3 img {
         width: 20px;
         height: 20px;
+        position: relative;
+    }
+    .cnt3{
+        position: absolute;
+        left: 9px;
+        top: 18px;
     }
     #inventory1 {
         position: absolute;
@@ -233,19 +241,19 @@
     </div>
 
     <div id="container3">
-        <div id="inventory1">
+        <div id="inventory1" class="cnt3">
             <img src="trash/wine_white2.png">
         </div>
-        <div id="inventory2">
+        <div id="inventory2" class="cnt3">
             <img src="trash/rubber_duck.png">
         </div>
-        <div id="inventory3">
+        <div id="inventory3" class="cnt3">
             <img src="trash/receipt.png">
         </div>
-        <div id="inventory4">
+        <div id="inventory4" class="cnt3">
             <img src="trash/detergent.png">
         </div>
-        <div id="inventory5">
+        <div id="inventory5" class="cnt3">
             <img src="trash/paper_bag.png">
         </div>
     </div>
