@@ -431,43 +431,64 @@
 			ctx.drawImage(square_btn, frameBtnS * 96/2, 1 * 192/4, 96/2, 192/4, BtnPosX +50, BtnPosY -15, 2.7*60/2,2.7*30);
 			ctx.fillText('♪', BtnPosX +81, BtnPosY +38, 2.7*60/2,2.7*30);
 			ctx.fillText(sound, BtnPosX +81, BtnPosY +38, 2.7*60/2,2.7*30);
-			Btns();
+			// Btns();
 		}
 		
 		window.onload = function () {
 			init();
 			setInterval(render, 1000 / 10);
 			};
+		
+		function isIntersectBtns(pos,btnX, btnY){
+            return btnX<=pos.x && pos.x<=btnX+ 2*58/3 && btnY<=pos.y && pos.y<=btnY+ 2*22
+        }
 
 		// funtion for the home button
-		function Btns() {
-            canvas.addEventListener('mousemove', e => {
-                if(e.offsetX > BtnPosX && e.offsetY > BtnPosY && e.offsetX < BtnPosX + 2*58/2 && e.offsetY < BtnPosY+ 2*28){
-                    frameBtn = 1;
-					frameBtnS = 0;
-                    canvas.addEventListener('click', e => {
-                        window.setTimeout(function(){
-                        window.location.href = './inicio.html';
-                        }, 300);
-                    })
-                }else if(e.offsetX > BtnPosX+50 && e.offsetY > BtnPosY-15 && e.offsetX < BtnPosX+50 + 2*58/2 && e.offsetY-15 < BtnPosY+ 2*28){
-					frameBtnS = 1;
-					frameBtn = 0;
-                    canvas.addEventListener('click', e => {
-                        if(bgaudio.volume != 0){
-							bgaudio.volume = 0
-							sound="\\"
-						}else if(bgaudio.volume == 0){
-							bgaudio.volume = 0.01
-							sound=''
-						}
-                    })
-                }else{
-					frameBtn = 0;
-                    frameBtnS = 0;
-                }
-            })
-        }
+		canvas.addEventListener('mousemove', e => {
+			let pos={
+				x: e.offsetX,
+				y: e.offsetY
+			};
+			if(isIntersectBtns(pos,BtnPosX, BtnPosY)){
+				frameBtn = 1;
+				frameBtnS = 0;
+			}else if(isIntersectBtns(pos,BtnPosX+50+15, BtnPosY)){
+				frameBtnS = 1;
+				frameBtn = 0;
+			}else{
+				frameBtn = 0;
+				frameBtnS = 0;
+			}
+		})
+		canvas.addEventListener('click', e => {
+			let pos={
+				x: e.offsetX,
+				y: e.offsetY
+			};
+			if(isIntersectBtns(pos,BtnPosX, BtnPosY)){
+				frameBtn = 1;
+				frameBtnS = 0;
+				window.setTimeout(function(){
+				window.location.href = './inicio.html';
+				}, 300);
+				
+			}else if(isIntersectBtns(pos,BtnPosX+50+15, BtnPosY)){
+				frameBtnS = 1;
+				frameBtn = 0;
+				if(bgaudio.volume != 0){
+					bgaudio.volume = 0
+					sound="\\"
+				}else if(bgaudio.volume == 0){
+					bgaudio.volume = 0.01
+					sound=''
+				}
+				
+			}else{
+				frameBtn = 0;
+				frameBtnS = 0;
+			}
+
+		})
 
 		//handler for keydown
 		function ArrowPressed(e) {
@@ -775,42 +796,24 @@
 				canvas.addEventListener('mousemove', e => {
 						if(e.offsetX >= 1095 && e.offsetY >= 415 &&  e.offsetX <= 1135 && e.offsetY <= 455){
 							frameB = frameY = 0;
-							setTimeout( function(){
 							frameG++;
 							if (frameG == 5){
-								frameG =4;
 									frameG--;
-									if(frameG == 0){
-										frameG = 0;
-									}
 								}
-							},100)
 						}
 						else if(e.offsetX >= 1150 && e.offsetY >= 415 &&  e.offsetX <= 1190 && e.offsetY <= 455){
 							frameG = frameY = 0;
-							setTimeout( function(){
 							frameB++;
 							if (frameB == 5){
-								frameB =4;
-									frameB--;
-									if(frameB == 0){
-										frameB = 0;
-									}
-								}
-							},100)
+								frameB --;
+							}
 						}
 						else if(e.offsetX >= 1200 && e.offsetY >= 415 &&  e.offsetX <= 1240 && e.offsetY <= 455){
 							frameB = frameG = 0;
-							setTimeout( function(){
 							frameY++;
 							if (frameY == 5){
-								frameY =4;
-									frameY--;
-									if(frameY == 0){
-										frameY = 0;
-									}
-								}
-							},100)
+								frameY--;
+							}
 						}else{
 							frameG = 0;
 							frameB = 0;
