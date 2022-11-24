@@ -775,42 +775,24 @@
 				canvas.addEventListener('mousemove', e => {
 						if(e.offsetX >= 1095 && e.offsetY >= 415 &&  e.offsetX <= 1135 && e.offsetY <= 455){
 							frameB = frameY = 0;
-							setTimeout( function(){
 							frameG++;
 							if (frameG == 5){
-								frameG =4;
 									frameG--;
-									if(frameG == 0){
-										frameG = 0;
-									}
 								}
-							},100)
 						}
 						else if(e.offsetX >= 1150 && e.offsetY >= 415 &&  e.offsetX <= 1190 && e.offsetY <= 455){
 							frameG = frameY = 0;
-							setTimeout( function(){
 							frameB++;
 							if (frameB == 5){
-								frameB =4;
-									frameB--;
-									if(frameB == 0){
-										frameB = 0;
-									}
-								}
-							},100)
+								frameB --;
+							}
 						}
 						else if(e.offsetX >= 1200 && e.offsetY >= 415 &&  e.offsetX <= 1240 && e.offsetY <= 455){
 							frameB = frameG = 0;
-							setTimeout( function(){
 							frameY++;
 							if (frameY == 5){
-								frameY =4;
-									frameY--;
-									if(frameY == 0){
-										frameY = 0;
-									}
-								}
-							},100)
+								frameY--;
+							}
 						}else{
 							frameG = 0;
 							frameB = 0;
