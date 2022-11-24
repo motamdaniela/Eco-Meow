@@ -400,7 +400,7 @@
 
             ctx.drawImage(bg, 50,0, canvas.width-100, canvas.height+40);
             ctx.drawImage(button, frameBtn*58/2, 0, 58/2, 28, 10, 15, 2*58/2,2*28);
-            
+
             // regras 
             ctx.drawImage(bush, 900, 440, 35,35);
             ctx.drawImage(bush, 480, 130, 35,35);
@@ -553,25 +553,26 @@
             ctx.drawImage(tree, frameColP5 * 421/4, 0, 421/4, 107, 910, 690, 80,80);
 
             frameColP1++;
+            Trees();
         }
         
 
         // functions
-        canvas.addEventListener('mousemove', e => {
-            if(e.offsetX > 10 && e.offsetY > 15 && e.offsetX < 2*58/2 +10 && e.offsetY < 2*28 +15){
-                frameBtn = 1;
-            }else{
-                frameBtn = 0;
-            }
-        })
-        canvas.addEventListener('click', e => {
-            if(e.offsetX > 10 && e.offsetY > 15 && e.offsetX < 2*58/2 +10 && e.offsetY < 2*28 +15){
-            
-                window.setTimeout(function(){
-                window.location.href = './inicio.html';
-                }, 300);
-            }
-        })
+            canvas.addEventListener('mousemove', e => {
+                if(e.offsetX > 10 && e.offsetY > 15 && e.offsetX < 2*58/2 +10 && e.offsetY < 2*28 +15){
+                    frameBtn = 1;
+                }else{
+                    frameBtn = 0;
+                }
+            })
+            canvas.addEventListener('click', e => {
+                if(e.offsetX > 10 && e.offsetY > 15 && e.offsetX < 2*58/2 +10 && e.offsetY < 2*28 +15){
+                
+                    window.setTimeout(function(){
+                    window.location.href = './inicio.html';
+                    }, 300);
+                }
+            })
 
         //actions for cat 1st box
         function firstBoxKitty() {
