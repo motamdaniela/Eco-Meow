@@ -16,7 +16,7 @@
 <body>
     
     <script type="module">
-        import {OrbitControls} from '/libs/OrbitControls.js'
+        import {OrbitControls} from './libs/OrbitControls.js'
         import * as THREE from './libs/three.module.js';
         import * as BufferGeometryUtils from './libs/BufferGeometryUtils.js';
 
@@ -24,11 +24,10 @@
         let controls;
 
         let camera, scene, renderer, hello;
-        let head,forehead, ear, ear1, eye, eye1, body, arms, arm1, leg, leg1
-
+        
         window.onload = function init() {
             scene = new THREE.Scene();
-
+            
             
             const aspect = window.innerWidth / window.innerHeight;
             camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 100); // perspective camera
@@ -41,9 +40,11 @@
             renderer.setSize(window.innerWidth, window.innerHeight); // set output canvas and viewport size
             
             controls = new OrbitControls(camera, renderer.domElement);
-
+            
             // configure renderer clear color
             renderer.setClearColor("#9BD4C3");
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
             // add the output of the renderer to an HTML element (adds a Canvas element to the body)
             document.body.appendChild(renderer.domElement);
@@ -54,14 +55,18 @@
         //----------------------------------------------------------------
 // lights
             // let light = new THREE.AmbientLight(0xffffff, 0.7);
-            let light = new THREE.AmbientLight(0xEEBA77, 0.9);
+            let light = new THREE.AmbientLight(0xEAE178, 0.7);
             scene.add(light);
 
             let light2 = new THREE.PointLight(0xEAE178, 0.7);
-            light2.position.set(5, 5, 5);
+            light2.position.set(-10, 5, 5);
+            light2.castShadow = true;
+            light2.shadow.camera;
             scene.add(light2);
+            
+
             let light3 = new THREE.PointLight(0xEEBA77, 0.8);
-            light3.position.set(-5, 6, 5);
+            light3.position.set(5, 6, 5);
             scene.add(light3);
             // light helper
             let pointLightHelper = new THREE.PointLightHelper(light2, 0.4);
@@ -69,6 +74,7 @@
             // pointLightHelper.name = "helper";
             scene.add(pointLightHelper);
             scene.add(pointLightHelper1);
+
 // ----------
 // colors
 const colorGreenShade = new THREE.MeshPhongMaterial({color: 0xA4C263, flatShading:true, shininess: 0});
@@ -87,9 +93,10 @@ const colorGreenShade = new THREE.MeshPhongMaterial({color: 0xA4C263, flatShadin
 
             //sphere 1 (low poly)
             geometry = new THREE.BoxGeometry(2, 2, 2);
-            material = new THREE.MeshBasicMaterial({ color: "green" });
             let sphere1 = new THREE.Mesh(geometry, colorGreenShade);
             sphere1.position.set(-3, 0, 1);
+            sphere1.receiveShadow = true;
+            sphere1.castShadow = true;
             scene.add(sphere1);
             
 function handleKeyDown(e) {
@@ -110,6 +117,7 @@ function handleKeyDown(e) {
             geometry = new THREE.BoxGeometry(15, 0.5, 15)
             let plane = new THREE.Mesh(geometry, colorGreenShade);
             plane.position.y = -1;
+            plane.receiveShadow = true;
             plane.name = "plane";
             scene.add(plane);
 
@@ -168,7 +176,9 @@ function handleKeyDown(e) {
                 new THREE.MeshPhongMaterial({ vertexColors: true, flatShading: true, shininess: 0})
             )
             pineTree.position.z = -5;
+            pineTree.castShadow = true;
             scene.add(pineTree)
+            pineTree1.castShadow = true;
             pineTree1.position.x = -5; pineTree1.position.z = -3;
             scene.add(pineTree1)
 
@@ -224,7 +234,7 @@ function handleKeyDown(e) {
                 blackCatGeometry,
                 new THREE.MeshPhongMaterial({ vertexColors: true, flatShading: true, shininess: 0})
             )
-            // blackCat.position.z = -5;
+            blackCat.castShadow = true;
             scene.add(blackCat)
 
 
