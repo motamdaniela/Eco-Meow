@@ -63,6 +63,9 @@
             light2.castShadow = true;
             light2.shadow.camera;
             scene.add(light2);
+
+            // light2.shadow.mapSize.width(2,2);
+            // light2.shadow.mapSize.height(2,2);
             
 
             let light3 = new THREE.PointLight(0xEEBA77, 0.8);
@@ -190,46 +193,103 @@ function handleKeyDown(e) {
 
             const catGeometries = []
 
-            const head = new THREE.BoxGeometry(1.5, 1.5, 1);
-            const colorsHead = []; // array of colors for each vertex of the leaves geometry
+            const body = new THREE.BoxGeometry(1.5, 1, 1);
+            const colorsBody = []; // array of colors for each vertex of the leaves geometry
             // Do this ONLY ONCE, since ALL 3 level catGeometries have the SAME number of vertices
             for (let i = 0; i < level1.attributes.position.count; i++)
-                colorsHead.push(colorBlack.r, colorBlack.g, colorBlack.b);
+                colorsBody.push(colorBlack.r, colorBlack.g, colorBlack.b);
 
-            head.translate(0, 0.7, 0)
-            // add color attribute to the head buffer geometry
-            head.setAttribute(
-                'color',
-                new THREE.BufferAttribute(new Float32Array(colorsHead), 3));
-            catGeometries.push(head);
-
-            const legl = new THREE.BoxGeometry(0.3, 0.8, 0.3);
-            legl.translate(0, -0.5, 0)
-            // add color attribute to the legl buffer geometry
-            legl.setAttribute(
-                'color',
-                new THREE.BufferAttribute(new Float32Array(colorsHead), 3));
-            catGeometries.push(legl);
-
-            const legr = new THREE.BoxGeometry(2, 2, 2);
-            legr.translate(-0.5, 3, 1)
-            // add color attribute to the legr buffer geometry
-            legr.setAttribute(
-                'color',
-                new THREE.BufferAttribute(new Float32Array(colorsHead), 3));
-            catGeometries.push(legr);
-
-            const body = new THREE.BoxGeometry(1, 2, 1);
-
-            const colorsBody = []; // array of colors for each vertex of the trunk geometry
-            for (let i = 0; i < body.attributes.position.count; i++)
-                colorsBody.push(colorWhite.r, colorWhite.g, colorWhite.b);
+            body.translate(0, 0.2, 0)
             // add color attribute to the body buffer geometry
             body.setAttribute(
                 'color',
                 new THREE.BufferAttribute(new Float32Array(colorsBody), 3));
-            body.translate(0, 5,0);
             catGeometries.push(body);
+
+            const head = new THREE.BoxGeometry(2, 2, 1.6);
+            head.translate(0, 1.7, 0)
+            // add color attribute to the head buffer geometry
+            head.setAttribute(
+                'color',
+                new THREE.BufferAttribute(new Float32Array(colorsBody), 3));
+            catGeometries.push(head);
+
+            const snout = new THREE.BoxGeometry(2, 1, 0.3);
+            snout.translate(0, 1.2, 0.9)
+            // add color attribute to the snout buffer geometry
+            snout.setAttribute(
+                'color',
+                new THREE.BufferAttribute(new Float32Array(colorsBody), 3));
+            catGeometries.push(snout);
+
+
+            const arml = new THREE.BoxGeometry(0.4, 0.5, 0.5);
+            arml.translate(-0.9, 0.4, 0)
+            // add color attribute to the arml buffer geometry
+            arml.setAttribute(
+                'color',
+                new THREE.BufferAttribute(new Float32Array(colorsBody), 3));
+            catGeometries.push(arml);
+
+            const armr = new THREE.BoxGeometry(0.4, 0.5, 0.5);
+            armr.translate(0.9, 0.4, 0)
+            // add color attribute to the armr buffer geometry
+            armr.setAttribute(
+                'color',
+                new THREE.BufferAttribute(new Float32Array(colorsBody), 3));
+            catGeometries.push(armr);
+
+
+
+
+//white parts of body
+
+// legs
+            const legl = new THREE.BoxGeometry(0.5, 0.5, 0.6);
+            const colorsWhite = []; // array of colors for each vertex of the trunk geometry
+            for (let i = 0; i < legl.attributes.position.count; i++)
+                colorsWhite.push(colorWhite.r, colorWhite.g, colorWhite.b);
+
+            legl.translate(-0.5, -0.55, 0)
+            // add color attribute to the legl buffer geometry
+            legl.setAttribute(
+                'color',
+                new THREE.BufferAttribute(new Float32Array(colorsWhite), 3));
+            catGeometries.push(legl);
+
+            const legr = new THREE.BoxGeometry(0.5, 0.5, 0.6);
+            legr.translate(0.5, -0.55, 0)
+            // add color attribute to the legr buffer geometry
+            legr.setAttribute(
+                'color',
+                new THREE.BufferAttribute(new Float32Array(colorsWhite), 3));
+            catGeometries.push(legr);
+//arms
+            const forearml = new THREE.BoxGeometry(0.4, 0.5, 0.5);
+            forearml.translate(-1.3, 0.4, 0)
+            // add color attribute to the forearml buffer geometry
+            forearml.setAttribute(
+                'color',
+                new THREE.BufferAttribute(new Float32Array(colorsWhite), 3));
+            catGeometries.push(forearml);
+
+            const forearmr = new THREE.BoxGeometry(0.4, 0.5, 0.5);
+            forearmr.translate(1.3, 0.4, 0)
+            // add color attribute to the forearmr buffer geometry
+            forearmr.setAttribute(
+                'color',
+                new THREE.BufferAttribute(new Float32Array(colorsWhite), 3));
+            catGeometries.push(forearmr);
+
+
+
+            const forehead = new THREE.BoxGeometry(1, 2, 1);
+            forehead.translate(0, 5,0);
+            // add color attribute to the forehead buffer geometry
+            forehead.setAttribute(
+                'color',
+                new THREE.BufferAttribute(new Float32Array(colorsWhite), 3));
+            catGeometries.push(forehead);
 
             const blackCatGeometry = BufferGeometryUtils.mergeBufferGeometries(catGeometries);
             const blackCat = new THREE.Mesh(
