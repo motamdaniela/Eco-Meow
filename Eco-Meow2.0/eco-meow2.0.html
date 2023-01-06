@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        body{
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    
+    <script type="module">
+        import {OrbitControls} from '/libs/OrbitControls.js'
+        import * as THREE from './libs/three.module.js';
+        import * as BufferGeometryUtils from './libs/BufferGeometryUtils.js';
+
+        // const geometry = new BufferGeometry();
+        let controls;
+
+        let camera, scene, renderer, hello;
+        let head,forehead, ear, ear1, eye, eye1, body, arms, arm1, leg, leg1
+
+        window.onload = function init() {
+            scene = new THREE.Scene();
+
+            
+            const aspect = window.innerWidth / window.innerHeight;
+            camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 100); // perspective camera
+            camera.position.x = 2;
+            camera.position.y = 2; // place the camera using world coordinates
+            camera.position.z = 13;
+            camera.lookAt(scene.position); //point the camera to the center of the scene
+            
+            renderer = new THREE.WebGLRenderer();
+            renderer.setSize(window.innerWidth, window.innerHeight); // set output canvas and viewport size
+            
+            controls = new OrbitControls(camera, renderer.domElement);
+
+            // configure renderer clear color
+            renderer.setClearColor("#9BD4C3");
+
+            // add the output of the renderer to an HTML element (adds a Canvas element to the body)
+            document.body.appendChild(renderer.domElement);
+
+            const axeHelper = new THREE.AxesHelper(5);
+            scene.add(axeHelper);
+
+        //----------------------------------------------------------------
+// lights
+            // let light = new THREE.AmbientLight(0xffffff, 0.7);
+            let light = new THREE.AmbientLight(0xEEBA77, 0.9);
+            scene.add(light);
+
+            let light2 = new THREE.PointLight(0xEAE178, 0.7);
+            light2.position.set(5, 5, 5);
+            scene.add(light2);
+            let light3 = new THREE.PointLight(0xEEBA77, 0.8);
+            light3.position.set(-5, 6, 5);
+            scene.add(light3);
+            // light helper
+            let pointLightHelper = new THREE.PointLightHelper(light2, 0.4);
+            let pointLightHelper1 = new THREE.PointLightHelper(light3, 0.4);
+            // pointLightHelper.name = "helper";
+            scene.add(pointLightHelper);
+            scene.add(pointLightHelper1);
+// ----------
+// colors
+const colorGreenShade = new THREE.MeshPhongMaterial({color: 0xA4C263, flatShading:true, shininess: 0});
+        const colorGreen = new THREE.Color(0xA4C263);
+        const colorBrown = new THREE.Color(0x8C7369);
+        const colorBlack = new THREE.Color(0x494949);
+        const colorWhite = new THREE.Color(0xF7F7F2);
+        const colorPink = new THREE.Color(0xE8B5AC);
+        const colorPurple = new THREE.Color(0xE1C5DD);
+        const colorYellow = new THREE.Color(0xEAE178);
+
+// ground
+
+            let material = new THREE.MeshBasicMaterial({ color: 0x4b4b4b, wireframe: false });
+            let geometry = new THREE.PlaneGeometry(20, 20);
+
+            //sphere 1 (low poly)
+            geometry = new THREE.BoxGeometry(2, 2, 2);
+            material = new THREE.MeshBasicMaterial({ color: "green" });
+            let sphere1 = new THREE.Mesh(geometry, colorGreenShade);
+            sphere1.position.set(-3, 0, 1);
+            scene.add(sphere1);
+            
+function handleKeyDown(e) {
+            if (e.key == "f") {
+                scene.traverse(function (child) {
+                    if (child instanceof THREE.Mesh && child.name == "") {
+                        child.material = new THREE.MeshPhongMaterial({
+                                color: 0x2194ce
+                                , flatShading: true
+                        });
+                    }
+                });
+            }
+        }
+        document.onkeydown = handleKeyDown;
+
+// ground
+            geometry = new THREE.BoxGeometry(15, 0.5, 15)
+            let plane = new THREE.Mesh(geometry, colorGreenShade);
+            plane.position.y = -1;
+            plane.name = "plane";
+            scene.add(plane);
+
+
+        const geometries = []
+        // TRUNK: 1st geometry
+// trees
+        const trunk = new THREE.BoxGeometry(1, 2, 1);
+
+            const colorsTrunk = []; // array of colors for each vertex of the trunk geometry
+            for (let i = 0; i < trunk.attributes.position.count; i++)
+                colorsTrunk.push(colorBrown.r, colorBrown.g, colorBrown.b);
+            // add color attribute to the trunk buffer geometry
+            trunk.setAttribute(
+                'color',
+                new THREE.BufferAttribute(new Float32Array(colorsTrunk), 3));
+
+            geometries.push(trunk);
+
+            const level1 = new THREE.BoxGeometry(2.5, 2.5, 2.5);
+            const colorsLevels = []; // array of colors for each vertex of the leaves geometry
+            // Do this ONLY ONCE, since ALL 3 level geometries have the SAME number of vertices
+            for (let i = 0; i < level1.attributes.position.count; i++)
+                colorsLevels.push(colorGreen.r, colorGreen.g, colorGreen.b);
+
+            level1.translate(0, 2, 0)
+            // add color attribute to the level1 buffer geometry
+            level1.setAttribute(
+                'color',
+                new THREE.BufferAttribute(new Float32Array(colorsLevels), 3));
+            geometries.push(level1);
+
+            const level2 = new THREE.BoxGeometry(1.5, 1.5, 1.5);
+            level2.translate(1, 3, 0)
+            // add color attribute to the level2 buffer geometry
+            level2.setAttribute(
+                'color',
+                new THREE.BufferAttribute(new Float32Array(colorsLevels), 3));
+            geometries.push(level2);
+
+            const level3 = new THREE.BoxGeometry(2, 2, 2);
+            level3.translate(-0.5, 3, 1)
+            // add color attribute to the level3 buffer geometry
+            level3.setAttribute(
+                'color',
+                new THREE.BufferAttribute(new Float32Array(colorsLevels), 3));
+            geometries.push(level3);
+
+            const pineTreeGeometry = BufferGeometryUtils.mergeBufferGeometries(geometries);
+            const pineTree = new THREE.Mesh(
+                pineTreeGeometry,
+                new THREE.MeshPhongMaterial({ vertexColors: true, flatShading: true, shininess: 0})
+            )
+            const pineTree1 = new THREE.Mesh(
+                pineTreeGeometry,
+                new THREE.MeshPhongMaterial({ vertexColors: true, flatShading: true, shininess: 0})
+            )
+            pineTree.position.z = -5;
+            scene.add(pineTree)
+            pineTree1.position.x = -5; pineTree1.position.z = -3;
+            scene.add(pineTree1)
+
+        //------------------------
+
+// first cat
+
+            const catGeometries = []
+
+            const head = new THREE.BoxGeometry(2.5, 2.5, 2.5);
+            const colorsHead = []; // array of colors for each vertex of the leaves geometry
+            // Do this ONLY ONCE, since ALL 3 level catGeometries have the SAME number of vertices
+            for (let i = 0; i < level1.attributes.position.count; i++)
+                colorsHead.push(colorBlack.r, colorBlack.g, colorBlack.b);
+
+            head.translate(0, 2, 0)
+            // add color attribute to the head buffer geometry
+            head.setAttribute(
+                'color',
+                new THREE.BufferAttribute(new Float32Array(colorsHead), 3));
+            catGeometries.push(head);
+
+            const legl = new THREE.BoxGeometry(1.5, 1.5, 1.5);
+            legl.translate(1, 3, 0)
+            // add color attribute to the legl buffer geometry
+            legl.setAttribute(
+                'color',
+                new THREE.BufferAttribute(new Float32Array(colorsHead), 3));
+            catGeometries.push(legl);
+
+            const ear1 = new THREE.BoxGeometry(2, 2, 2);
+            ear1.translate(-0.5, 3, 1)
+            // add color attribute to the ear1 buffer geometry
+            ear1.setAttribute(
+                'color',
+                new THREE.BufferAttribute(new Float32Array(colorsHead), 3));
+            catGeometries.push(ear1);
+
+            const body = new THREE.BoxGeometry(1, 2, 1);
+
+            const colorsBody = []; // array of colors for each vertex of the trunk geometry
+            for (let i = 0; i < body.attributes.position.count; i++)
+                colorsBody.push(colorWhite.r, colorWhite.g, colorWhite.b);
+            // add color attribute to the body buffer geometry
+            body.setAttribute(
+                'color',
+                new THREE.BufferAttribute(new Float32Array(colorsBody), 3));
+
+            catGeometries.push(body);
+
+            const blackCatGeometry = BufferGeometryUtils.mergeBufferGeometries(catGeometries);
+            const blackCat = new THREE.Mesh(
+                blackCatGeometry,
+                new THREE.MeshPhongMaterial({ vertexColors: true, flatShading: true, shininess: 0})
+            )
+            // blackCat.position.z = -5;
+            scene.add(blackCat)
+
+
+
+// ----------------------------           
+                renderer.setAnimationLoop(render);
+            }
+            
+            function render(){
+                // rotate the cube around its axes
+                
+                // camera.rotation.y += 0.01;
+                // cube.rotation.z += 0.1;
+                // rectangle.position.x = 20;
+                // hello.position.y = 2
+                // hello.position.z = 10;
+                // hello.rotation.x += 0.1;
+            renderer.render(scene, camera);
+            // controls.update();
+
+
+        }
+    </script>
+</body>
+</html>
