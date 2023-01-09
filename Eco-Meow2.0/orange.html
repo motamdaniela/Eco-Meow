@@ -132,13 +132,13 @@
 
         let orangeCatGeometries = [];
 
-        const oHead = new THREE.BoxGeometry(2.2, 1.8, 2);
+        const oHead = new THREE.BoxGeometry(2.2, 1.6, 2);
         const colorsOrange = [];
 
         for (let i = 0; i < oHead.attributes.position.count; i++)
           colorsOrange.push(colorOrange.r, colorOrange.g, colorOrange.b);
 
-        oHead.translate(0, 1.6, 0);
+        oHead.translate(0, 1.5, 0);
         oHead.setAttribute(
           "color",
           new THREE.BufferAttribute(new Float32Array(colorsOrange), 3)
@@ -154,7 +154,7 @@
         orangeCatGeometries.push(oBody);
 
         const oEarL = new THREE.BoxGeometry(0.6, 0.4, 0.4);
-        oEarL.translate(0.7, 2.7, 0.5);
+        oEarL.translate(0.7, 2.5, 0.5);
         oEarL.setAttribute(
           "color",
           new THREE.BufferAttribute(new Float32Array(colorsOrange), 3)
@@ -173,6 +173,8 @@
           new THREE.BufferAttribute(new Float32Array(colorsGreen), 3)
         );
         orangeCatGeometries.push(oColar);
+
+        // spheres
 
         const oBell = new THREE.SphereGeometry(0.2, 7, 7);
         const colorsYellow = [];
@@ -198,7 +200,24 @@
         const oEyeR = oEyeL.clone();
         oEyeR.translate(1.5, 0, 0);
 
-        orangeCatGeometries.push(oEyeL, oEyeR);
+        const oNose = new THREE.SphereGeometry(0.1, 7, 5);
+        oNose.translate(0, 1.35, 1);
+        oNose.setAttribute(
+          "color",
+          new THREE.BufferAttribute(new Float32Array(colorsGray), 3)
+        );
+
+        const oTail = new THREE.SphereGeometry(0.2, 5, 3);
+        const colorsWhite = [];
+        for (let i = 0; i < oTail.attributes.position.count; i++)
+          colorsWhite.push(colorWhite.r, colorWhite.g, colorWhite.b);
+        oTail.translate(0, 0, -0.8);
+        oTail.setAttribute(
+          "color",
+          new THREE.BufferAttribute(new Float32Array(colorsWhite), 3)
+        );
+
+        orangeCatGeometries.push(oEyeL, oEyeR, oNose, oTail);
 
         const oBlushL = new THREE.PlaneGeometry(0.4, 0.2);
         oBlushL.translate(0.75, 1.25, 1.01);
@@ -214,10 +233,23 @@
         oBlushR.translate(-1.5, 0, 0);
 
         const oEarPinkL = oBlushL.clone();
-        oEarPinkL.translate(-0.05, 1.45, -0.3);
+        oEarPinkL.translate(-0.05, 1.25, -0.3);
 
         const oEarPinkR = oEarPinkL.clone();
         oEarPinkR.translate(-1.4, 0, 0);
+
+        let oMouth = new THREE.Mesh(
+          new THREE.CircleGeometry(0.05, 10),
+          new THREE.MeshStandardMaterial({
+            color: colorGray,
+            flatShading: true,
+            roughness: 0.4,
+          })
+        );
+        oMouth.position.x = 0;
+        oMouth.position.y = 1.1;
+        oMouth.position.z = 1.01;
+        oMouth.receiveShadow = true;
 
         orangeCatGeometries.push(oBlushL, oBlushR, oEarPinkL, oEarPinkR);
 
@@ -424,9 +456,10 @@
 
         let indicator = new THREE.Group();
         indicator.add(ind, ind2, ind3);
+        indicator.position.y = -0.15;
 
         orangeKitty = new THREE.Group();
-        orangeKitty.add(orangeCat, leg1, leg2, arm1, arm2);
+        orangeKitty.add(orangeCat, leg1, leg2, arm1, arm2, oMouth);
         scene.add(orangeKitty, gato1, gato2, indicator);
 
         renderer.setAnimationLoop(render);
