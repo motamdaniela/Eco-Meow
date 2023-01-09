@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <script type="module">
+      import { OrbitControls } from "./libs/OrbitControls.js";
+      import * as THREE from "./libs/three.module.js";
+      import * as BufferGeometryUtils from "./libs/BufferGeometryUtils.js";
+
+      // const geometry = new BufferGeometry();
+      let controls;
+
+      let camera, scene, renderer, hello;
+
+      let keyPressed;
+      let started = false;
+
+      let num = 1;
+
+      let orangeKitty;
+      let selectCat = orangeKitty;
+
+      window.onload = function init() {
+        scene = new THREE.Scene();
+
+        const aspect = window.innerWidth / window.innerHeight;
+        camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 100); // perspective camera
+        camera.position.x = 2;
+        camera.position.y = 3;
+        camera.position.z = 15;
+        // camera.position.z = 5;
+        // camera.position.x = 0;
+        // camera.position.y = 2;
+
+        camera.lookAt(scene.position); //point the camera to the center of the scene
+
+        renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight); // set output canvas and viewport size
+
+        controls = new OrbitControls(camera, renderer.domElement);
+
+        // configure renderer clear color
+        renderer.setClearColor("#9BD4C3");
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+        // add the output of the renderer to an HTML element (adds a Canvas element to the body)
+        document.body.appendChild(renderer.domElement);
+
+        const axeHelper = new THREE.AxesHelper(5);
+        // scene.add(axeHelper);
+
+        //----------------------------------------------------------------
+        // lights
+        // let light = new THREE.AmbientLight(0xffffff, 0.7);
+        let light = new THREE.AmbientLight(0xeae178, 0.7);
+        scene.add(light);
+
+        let light2 = new THREE.PointLight(0xeae178, 0.7);
+        light2.position.set(-10, 5, 5);
+        light2.castShadow = true;
+        light2.shadow.camera;
+        scene.add(light2);
+
+        let light3 = new THREE.PointLight(0xeeba77, 0.8);
+        light3.position.set(5, 6, 5);
+        scene.add(light3);
+        // light helper
+        let pointLightHelper = new THREE.PointLightHelper(light2, 0.4);
+        let pointLightHelper1 = new THREE.PointLightHelper(light3, 0.4);
+        // pointLightHelper.name = "helper";
+        scene.add(pointLightHelper);
+        scene.add(pointLightHelper1);
+
+        // ----------
+        // colors
+        const colorGreenShade = new THREE.MeshPhongMaterial({
+          color: 0xa4c263,
+          flatShading: true,
+          shininess: 0,
+        });
+        const colorGreen = new THREE.Color(0xa4c263);
+        const colorBrown = new THREE.Color(0x8c7369);
+        const colorGray = new THREE.Color(0x494949);
+        const colorBlack = new THREE.Color(0x000000);
+        const colorWhite = new THREE.Color(0xf7f7f2);
+        const colorPink = new THREE.Color(0xe8b5ac);
+        const colorPurple = new THREE.Color(0x8f76d4);
+        const colorYellow = new THREE.Color(0xeae178);
+        const colorRocks = new THREE.Color(0x9da89a);
+        const colorOrange = new THREE.Color(0xeaa945);
+
+        //pointer
+        let geometry = new THREE.OctahedronGeometry(1, 0);
+        let pointer = new THREE.Mesh(geometry, colorGreenShade);
+        pointer.position.y = 5;
+        pointer.castShadow = true;
+        // scene.add(pointer);
+
+        // background
+
+        let material = new THREE.MeshBasicMaterial({
+          color: 0x4b4b4b,
+          wireframe: false,
+        });
+
+        // ground
+        geometry = new THREE.BoxGeometry(30, 1.5, 30);
+        let plane = new THREE.Mesh(geometry, colorGreenShade);
+        plane.position.y = -1.5;
+        plane.position.z = -9;
+        plane.receiveShadow = true;
+        scene.add(plane);
+
+        //trees
+        const bgGeometries = [];
+
+        let orangeCatGeometries = [];
+
+        const oHead = new THREE.BoxGeometry(2.2, 1.8, 2);
+        const colorsOrange = [];
+
+        for (let i = 0; i < oHead.attributes.position.count; i++)
+          colorsOrange.push(colorOrange.r, colorOrange.g, colorOrange.b);
+
+        oHead.translate(0, 1.6, 0);
+        oHead.setAttribute(
+          "color",
+          new THREE.BufferAttribute(new Float32Array(colorsOrange), 3)
+        );
+        orangeCatGeometries.push(oHead);
+
+        const oBody = new THREE.BoxGeometry(1.4, 0.85, 1.4);
+        oBody.translate(0, 0.15, 0);
+        oBody.setAttribute(
+          "color",
+          new THREE.BufferAttribute(new Float32Array(colorsOrange), 3)
+        );
+        orangeCatGeometries.push(oBody);
+
+        const oEarL = new THREE.BoxGeometry(0.6, 0.4, 0.4);
+        oEarL.translate(0.7, 2.7, 0.5);
+        oEarL.setAttribute(
+          "color",
+          new THREE.BufferAttribute(new Float32Array(colorsOrange), 3)
+        );
+        const oEarR = oEarL.clone();
+        oEarR.translate(-1.4, 0, 0);
+        orangeCatGeometries.push(oEarL, oEarR);
+
+        const oColar = new THREE.BoxGeometry(1.7, 0.2, 1.8);
+        const colorsGreen = [];
+        for (let i = 0; i < oColar.attributes.position.count; i++)
+          colorsGreen.push(colorGreen.r, colorGreen.g, colorGreen.b);
+        oColar.translate(0, 0.6, 0);
+        oColar.setAttribute(
+          "color",
+          new THREE.BufferAttribute(new Float32Array(colorsGreen), 3)
+        );
+        orangeCatGeometries.push(oColar);
+
+        // arms
+        let oArmL = new THREE.Mesh(
+          new THREE.BoxGeometry(0.3, 0.6, 0.3),
+          new THREE.MeshPhongMaterial({
+            color: colorOrange,
+            flatShading: true,
+            shininess: 0,
+          })
+        );
+        oArmL.position.x = 0.8;
+        oArmL.position.y = 0.1;
+        oArmL.rotation.x = -1.5;
+        oArmL.receiveShadow = oArmL.castShadow = true;
+
+        let oArmR = oArmL.clone();
+        oArmR.position.x = -0.8;
+        oArmR.rotation.x = 0;
+
+        let oArmL2 = new THREE.Mesh(
+          new THREE.BoxGeometry(0.3, 0.3, 0.3),
+          new THREE.MeshPhongMaterial({
+            color: colorWhite,
+            flatShading: true,
+            shininess: 0,
+          })
+        );
+        oArmL2.position.x = 0.8;
+        oArmL2.position.y = 0.07;
+        oArmL2.position.z = 0.44;
+        oArmL2.rotation.x = -1.5;
+        oArmL2.receiveShadow = oArmL2.castShadow = true;
+
+        let oArmR2 = oArmL2.clone();
+        oArmR2.position.x = -0.8;
+        oArmR2.position.y = -0.35;
+        oArmR2.position.z = 0;
+        oArmR2.rotation.x = 0;
+
+        let arm1 = new THREE.Group();
+        arm1.add(oArmL, oArmL2);
+
+        let arm2 = new THREE.Group();
+        arm2.add(oArmR, oArmR2);
+
+        // legs
+        let oLegL = new THREE.Mesh(
+          new THREE.BoxGeometry(0.4, 0.3, 0.4),
+          new THREE.MeshPhongMaterial({
+            color: colorOrange,
+            flatShading: true,
+            shininess: 0,
+          })
+        );
+        oLegL.position.x = 0.5;
+        oLegL.position.y = -0.4;
+        oLegL.receiveShadow = oLegL.castShadow = true;
+
+        let oLegR = oLegL.clone();
+        oLegR.position.x = -0.5;
+
+        let oLegL2 = new THREE.Mesh(
+          new THREE.BoxGeometry(0.4, 0.2, 0.4),
+          new THREE.MeshPhongMaterial({
+            color: colorWhite,
+            flatShading: true,
+            shininess: 0,
+          })
+        );
+        oLegL2.position.x = 0.5;
+        oLegL2.position.y = -0.65;
+        oLegL2.receiveShadow = oLegL2.castShadow = true;
+
+        let oLegR2 = oLegL2.clone();
+        oLegL2.position.x = -0.5;
+
+        let leg1 = new THREE.Group();
+        leg1.add(oLegL, oLegL2);
+
+        let leg2 = new THREE.Group();
+        leg2.add(oLegR, oLegR2);
+
+        // watering pot
+
+        let cyl = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.4, 0.4, 0.6),
+          new THREE.MeshStandardMaterial({
+            color: colorGray,
+            flatShading: true,
+            roughness: 0.4,
+          })
+        );
+        cyl.position.x = 0.8;
+        cyl.position.y = 0;
+        cyl.position.z = 1.2;
+        cyl.receiveShadow = cyl.castShadow = true;
+
+        let cyl2 = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.15, 0.15, 0.6),
+          new THREE.MeshStandardMaterial({
+            color: colorGray,
+            flatShading: true,
+            roughness: 0.4,
+          })
+        );
+        cyl2.position.x = 0.8;
+        cyl2.position.y = 0.1;
+        cyl2.position.z = 1.65;
+        cyl2.rotation.x = 0.7;
+        cyl2.receiveShadow = cyl2.castShadow = true;
+
+        let box = new THREE.Mesh(
+          new THREE.BoxGeometry(0.2, 0.2, 0.3),
+          new THREE.MeshStandardMaterial({
+            color: colorGray,
+            flatShading: true,
+            roughness: 0.4,
+          })
+        );
+        box.position.x = 0.8;
+        box.position.y = 0;
+        box.position.z = 0.7;
+        box.receiveShadow = box.castShadow = true;
+
+        let wateringPot = new THREE.Group();
+        wateringPot.add(cyl, cyl2, box);
+
+        arm1.add(wateringPot);
+
+        // coisas
+
+        orangeCatGeometries =
+          BufferGeometryUtils.mergeBufferGeometries(orangeCatGeometries);
+
+        const orangeCat = new THREE.Mesh(
+          orangeCatGeometries,
+          new THREE.MeshPhongMaterial({
+            vertexColors: true,
+            flatShading: true,
+            shininess: 0,
+          })
+        );
+
+        orangeCat.castShadow = true;
+        orangeCat.receiveShadow = true;
+
+        // other cats
+        let gato1 = new THREE.Mesh(
+          new THREE.BoxGeometry(1, 1, 1),
+          new THREE.MeshStandardMaterial({
+            color: colorGray,
+            flatShading: true,
+            roughness: 0.4,
+          })
+        );
+        gato1.position.x = 5;
+
+        let gato2 = gato1.clone();
+        gato2.position.x = -5;
+
+        // indicador
+
+        let ind = new THREE.Mesh(
+          new THREE.BoxGeometry(0.5, 0.5, 0.5),
+          new THREE.MeshStandardMaterial({
+            color: colorPink,
+            flatShading: true,
+            roughness: 0.4,
+          })
+        );
+        ind.position.y = 3;
+
+        orangeKitty = new THREE.Group();
+        orangeKitty.add(orangeCat, leg1, leg2, arm1, arm2);
+        scene.add(orangeKitty, gato1, gato2, ind);
+
+        renderer.setAnimationLoop(render);
+
+        function handleKeyDown(e) {
+          e.preventDefault();
+          keyPressed = true;
+          started = true;
+          Actions(e);
+        }
+
+        function handleKeyUp(e) {
+          keyPressed = false;
+          leg1.rotation.x = leg2.rotation.x = 0;
+          arm1.rotation.x = 0;
+        }
+
+        function Actions(e) {
+          e.preventDefault();
+
+          if (e.key == "ArrowRight") {
+            selectCat.position.x += 0.22;
+            selectCat.rotation.y = 1.6;
+            ind.position.x = selectCat.position.x;
+            walk();
+          } else if (e.key == "ArrowLeft") {
+            selectCat.position.x -= 0.22;
+            selectCat.rotation.y = -1.6;
+            ind.position.x = selectCat.position.x;
+            walk();
+          } else if (e.key == "ArrowUp") {
+            selectCat.position.z -= 0.22;
+            selectCat.rotation.y = 3.2;
+            ind.position.z = selectCat.position.z;
+            walk();
+          } else if (e.key == "ArrowDown") {
+            selectCat.position.z += 0.22;
+            selectCat.rotation.y = 0;
+            ind.position.z = selectCat.position.z;
+            walk();
+          } else if (e.key == "x" && num == 1) {
+            arm1.rotation.x +=
+              ((Math.sin(Date.now() * 0.01) * Math.PI) / 2) * 0.03;
+          }
+        }
+
+        document.addEventListener("keydown", (event) => {
+          if (event.key == " ") {
+            num += 1;
+            if (num == 4) {
+              num = 1;
+            }
+          }
+          if (num == 1) {
+            selectCat = orangeKitty;
+          } else if (num == 2) {
+            selectCat = gato1;
+          } else {
+            selectCat = gato2;
+          }
+          ind.position.x = selectCat.position.x;
+          ind.position.z = selectCat.position.z;
+        });
+
+        function walk() {
+          if (num == 1) {
+            leg1.rotation.x +=
+              ((Math.sin(Date.now() * 0.01) * Math.PI) / 2) * 0.12;
+            leg2.rotation.x -=
+              ((Math.sin(Date.now() * 0.01) * Math.PI) / 2) * 0.12;
+          }
+        }
+
+        document.onkeydown = handleKeyDown;
+        document.onkeyup = handleKeyUp;
+      };
+
+      function render() {
+        renderer.render(scene, camera);
+      }
+    </script>
+  </body>
+</html>
