@@ -22,21 +22,30 @@
 
         // const geometry = new BufferGeometry();
         let controls;
+        let camera, scene, renderer;
 
-        let camera, scene, renderer, hello;
+        let keyPressed;
+        let started = false;
+
+        let heart, diamond;
+        
+        let legl, legr, armUpl, armUpr, forearml, forearmr, earl, earr, tail;
+        let features, bell, blackKitty, blackKittybody, armsl, armsr;
+        let bg, blackCat;
+        let verts = []
+
+        let initialRot =[]
         
         window.onload = function init() {
             scene = new THREE.Scene();
             
             
             const aspect = window.innerWidth / window.innerHeight;
-            camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 100); // perspective camera
-            camera.position.x = 2;
-            camera.position.y = 3;
+            camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 50); // perspective camera
+            
             camera.position.z = 15;
-            // camera.position.z = 5;
-            // camera.position.x = 0;
-            // camera.position.y = 2;
+            camera.position.x = 1;
+            camera.position.y = 3;
 
             camera.lookAt(scene.position); //point the camera to the center of the scene
             
@@ -62,182 +71,193 @@
             let light = new THREE.AmbientLight(0xEAE178, 0.7);
             scene.add(light);
 
-            let light2 = new THREE.PointLight(0xEAE178, 0.7);
-            light2.position.set(-10, 5, 5);
+            let light2 = new THREE.PointLight(0xEAE178, 0.7, 100 );
+            light2.position.set(-15, 6, 5);
             light2.castShadow = true;
             light2.shadow.camera;
             scene.add(light2);
             
 
-            let light3 = new THREE.PointLight(0xEEBA77, 0.8);
-            light3.position.set(5, 6, 5);
+            let light3 = new THREE.PointLight(0xEEBA77, 0.8,100);
+            light3.position.set(10, 8, 5);
             scene.add(light3);
             // light helper
             let pointLightHelper = new THREE.PointLightHelper(light2, 0.4);
             let pointLightHelper1 = new THREE.PointLightHelper(light3, 0.4);
             // pointLightHelper.name = "helper";
-            scene.add(pointLightHelper);
-            scene.add(pointLightHelper1);
+            // scene.add(pointLightHelper);
+            // scene.add(pointLightHelper1);
 
 // ----------
 // colors
 const colorGreenShade = new THREE.MeshPhongMaterial({color: 0xA4C263, flatShading:true, shininess: 0});
         const colorGreen = new THREE.Color(0xA4C263);
         const colorBrown = new THREE.Color(0x8C7369);
+        const colorRocks = new THREE.Color(0x9DA89A);
         const colorGray = new THREE.Color(0x494949);
         const colorBlack = new THREE.Color(0x000000);
         const colorWhite = new THREE.Color(0xF7F7F2);
         const colorPink = new THREE.Color(0xE8B5AC);
         const colorPurple = new THREE.Color(0x8F76D4);
         const colorYellow = new THREE.Color(0xEAE178);
-        const colorRocks = new THREE.Color(0x9DA89A);
+        const colorRed = new THREE.Color(0xBD757E);
 
 //pointer
-            let geometry = new THREE.OctahedronGeometry( 1, 0)
-            let pointer = new THREE.Mesh(geometry, colorGreenShade);
-            pointer.position.y = 5;
-            pointer.castShadow = true;
-            scene.add(pointer);
 
+            const heartl = new THREE.Mesh(
+                new THREE.SphereGeometry(0.5, 6,6),
+                new THREE.MeshStandardMaterial({ color: colorRed, flatShading: true, roughness: 0.4})
+            );
+            heartl.rotateZ(0.6,0,0);
+            heartl.position.x = -0.35;
+            heartl.position.y = 3.8;
+            const heartr = heartl.clone();
+            heartr.position.x = 0.35;
+            heartr.rotateZ(-1.2,0,0)
+            const heartbase = heartl.clone();
+            heartbase.position.y = 3.45;
+            heartbase.position.x = 0;
+            heartbase.rotateZ(-0.6,0,0)
+
+            const midl = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.499, 0.5, 0.5, 6),
+                new THREE.MeshStandardMaterial({ color: colorRed, flatShading: true, roughness: 0.4})
+            );
+            midl.rotateZ(0.8,0,0);
+            midl.rotateY(1.6,0,0);
+            midl.position.x = -0.2;
+            midl.position.y = 3.65;
+            const midr = midl.clone();
+            midr.rotateZ(-3.2,0,0);
+            midr.rotateX(-1.6,0,0);
+            midr.position.x = 0.2;
+
+            
+            heart = new THREE.Group();
+            heart.add(heartl, heartr,heartbase, midl, midr);
+            // heart.position.y = 1.5;
+            scene.add(heart);
 
 // background
-
-            let material = new THREE.MeshBasicMaterial({ color: 0x4b4b4b, wireframe: false });
             
             // ground
-            geometry = new THREE.BoxGeometry(30, 1.5, 30)
+            let geometry = new THREE.BoxGeometry(30, 1.5, 30)
             let plane = new THREE.Mesh(geometry, colorGreenShade);
             plane.position.y = -1.5;
             plane.position.z = -9;
             plane.receiveShadow = true;
             scene.add(plane);
 
-//trees
-            const bgGeometries = []
 
-            const trunk = new THREE.BoxGeometry(2, 4, 2);
-
-            const colorsTrunk = []; // array of colors for each vertex of the trunk geometry
-            for (let i = 0; i < trunk.attributes.position.count; i++)
-                colorsTrunk.push(colorBrown.r, colorBrown.g, colorBrown.b);
-            // add color attribute to the trunk buffer geometry
-            trunk.setAttribute(
-                'color',
-                new THREE.BufferAttribute(new Float32Array(colorsTrunk), 3));
-            trunk.translate(0,1,0)
-            bgGeometries.push(trunk);
-
-            const level1 = new THREE.BoxGeometry(4, 4, 4);
-            const colorsLevels = []; // array of colors for each vertex of the leaves geometry
-            // Do this ONLY ONCE, since ALL 3 level bgGeometries have the SAME number of vertices
-            for (let i = 0; i < level1.attributes.position.count; i++)
-                colorsLevels.push(colorGreen.r, colorGreen.g, colorGreen.b);
-
-            level1.translate(0, 5, 0)
-            // add color attribute to the level1 buffer geometry
-            level1.setAttribute(
-                'color',
-                new THREE.BufferAttribute(new Float32Array(colorsLevels), 3));
-            bgGeometries.push(level1);
-
-            const level2 = new THREE.BoxGeometry(2, 2, 2);
-            level2.translate(1.5, 4.5, 1.5)
-            // add color attribute to the level2 buffer geometry
-            level2.setAttribute(
-                'color',
-                new THREE.BufferAttribute(new Float32Array(colorsLevels), 3));
-            bgGeometries.push(level2);
-
-            const level3 = new THREE.BoxGeometry(2.5, 2.5, 2.5);
-            level3.translate(-1.3, 6.2, 1.2)
-            // add color attribute to the level3 buffer geometry
-            level3.setAttribute(
-                'color',
-                new THREE.BufferAttribute(new Float32Array(colorsLevels), 3));
-            bgGeometries.push(level3);
-
-//----------------------------------------------------------------
-
+//static bg elements------------
+const staticGeometries = []
             const trunk1 = new THREE.BoxGeometry(3, 5, 3);
 
             const coloroftrunk = []
-            for (let i = 0; i < trunk.attributes.position.count; i++)
+            for (let i = 0; i < trunk1.attributes.position.count; i++)
                 coloroftrunk.push(colorBrown.r, colorBrown.g, colorBrown.b);
             // add color attribute to the trunk buffer geometry
             trunk1.setAttribute(
                 'color',
                 new THREE.BufferAttribute(new Float32Array(coloroftrunk), 3));
-                
+            trunk1.translate(-6,1.5,-10)
+            staticGeometries.push(trunk1);
+
+            let trunk2 = trunk1.clone();
+            let trunk3 = trunk1.clone();
+            let trunk4 = trunk1.clone();
+            
+            trunk2.translate(22,0,-3);
+            trunk3.translate(17,0,-8);
+            trunk4.translate(9,0,-3);
+            staticGeometries.push(trunk2, trunk3, trunk4);
+
+            //boulders
+                        // const rock = new THREE.TetrahedronGeometry(1,2);
+            
+                        // const colorsrock = []; // array of colors for each vertex of the rock geometry
+                        // for (let i = 0; i < rock.attributes.position.count; i++)
+                        //     colorsrock.push(colorRocks.r, colorRocks.g, colorRocks.b);
+                        // // add color attribute to the rock buffer geometry
+                        // rock.setAttribute(
+                        //     'color',
+                        //     new THREE.BufferAttribute(new Float32Array(colorsrock), 3));
+                        // rock.translate(3,1,0);
+                        // staticGeometries.push(rock);
+
+
+            const staticGeometry = BufferGeometryUtils.mergeBufferGeometries(staticGeometries);
+             let staticElements = new THREE.Mesh(
+                staticGeometry,
+                new THREE.MeshPhongMaterial({ vertexColors: true, flatShading: true, shininess: 0})
+            )
+            staticElements.receiveShadow = true;
+            staticElements.castShadow = true;
+            staticElements.position.x = -5;
+            scene.add(staticElements)
+
+//bushes and leaves for trees(that move)
+            const bgGeometries = []                
             const colorleaf = [];
-                const upPart = new THREE.TorusGeometry(1.7,3,8,9);
+                const upPart = new THREE.TorusGeometry(1.7,3,10,15);
                 for (let i = 0; i < upPart.attributes.position.count; i++)
                 colorleaf.push(colorGreen.r, colorGreen.g, colorGreen.b);
                 // add color attribute to the upPart buffer geometry
                 upPart.setAttribute(
                     'color',
                     new THREE.BufferAttribute(new Float32Array(colorleaf), 3));
-                const downPart = new THREE.TorusGeometry(1.7,3,10,9);
+                const downPart = new THREE.TorusGeometry(1.7,3,10,15);
                     downPart.setAttribute(
                         'color',
                         new THREE.BufferAttribute(new Float32Array(colorleaf), 3));
-            const roundPart = new THREE.SphereGeometry(4,10,10);
-                    roundPart.setAttribute(
-                        'color',
-                        new THREE.BufferAttribute(new Float32Array(colorleaf), 3));
-            roundPart.translate(5,6,-5)
 
             upPart.rotateX(1.6,0,0); downPart.rotateX(1.6,0,0);
-            upPart.translate(5,7,-5); downPart.translate(5,5.5,-5);
+            upPart.translate(-6,7,-10); downPart.translate(-6,5.5,-10);
+            let upPart2 = upPart.clone(); let upPart3 = upPart.clone();let upPart4 = upPart.clone();
+            let downPart2 = downPart.clone(); let downPart3 = downPart.clone();let downPart4 = downPart.clone();
             
-            trunk1.translate(5,1.5,-5)
-            bgGeometries.push(trunk1);
-            bgGeometries.push(upPart, downPart, 
-            // roundPart
-            );
-
+            upPart2.translate(22,0,-3); downPart2.translate(22,0,-3);
+            upPart3.translate(17,0,-8); downPart3.translate(17,0,-8);
+            upPart4.translate(9,0,-3);  downPart4.translate(9,0,-3);
+            
+            bgGeometries.push(upPart, downPart, upPart2, downPart2, upPart3, downPart3, upPart4, downPart4);
 //bushes
             const bush = new THREE.SphereGeometry(1, 8, 5);
                     bush.setAttribute(
                         'color',
                         new THREE.BufferAttribute(new Float32Array(colorleaf), 3));
             bush.rotateZ(1.6,0,0);
-            bush.translate(-8,-0.5,5);
+            bush.translate(-9,-0.5,5);
             bgGeometries.push(bush);
 
             const bigBush = new THREE.SphereGeometry(1.7, 8, 5);
                     bigBush.setAttribute(
                         'color',
                         new THREE.BufferAttribute(new Float32Array(colorleaf), 3));
-            bigBush.rotateZ(1.6,0,0);
-            bigBush.translate(-8,-0.5,2);
+            bigBush.rotateX(1.6,0,0);
+            bigBush.translate(-8,-0.5,3);
             bgGeometries.push(bigBush);
 
             const smallBush = new THREE.SphereGeometry(0.8, 8, 5);
                     smallBush.setAttribute(
                         'color',
                         new THREE.BufferAttribute(new Float32Array(colorleaf), 3));
-            smallBush.rotateZ(1.6,0,0);
-            smallBush.translate(-5,-0.5,3);
+            smallBush.rotateZ(1.2,0,0);
+            smallBush.translate(-7,-0.5,5);
             bgGeometries.push(smallBush);
 
-//boulders
+            let bigBush1 = bigBush.clone(), bigBush2 = bigBush.clone();
+            bigBush1.translate(0,0,-10); bigBush2.translate(2,0,-20);
+            bgGeometries.push(bigBush1, bigBush2);
 
-            // const rock = new THREE.TetrahedronGeometry(1,2);
-
-            // const colorsrock = []; // array of colors for each vertex of the rock geometry
-            // for (let i = 0; i < rock.attributes.position.count; i++)
-            //     colorsrock.push(colorRocks.r, colorRocks.g, colorRocks.b);
-            // // add color attribute to the rock buffer geometry
-            // rock.setAttribute(
-            //     'color',
-            //     new THREE.BufferAttribute(new Float32Array(colorsrock), 3));
-            // rock.translate(3,1,0);
-            // bgGeometries.push(rock);
+        // camera.position.y = 10;
+        // camera.position.x = 0;
+        // camera.position.z = 6;
 
 //----------------------------------------------------------------
 
             const bgGeometry = BufferGeometryUtils.mergeBufferGeometries(bgGeometries);
-            const bg = new THREE.Mesh(
+             bg = new THREE.Mesh(
                 bgGeometry,
                 new THREE.MeshPhongMaterial({ vertexColors: true, flatShading: true, shininess: 0})
             )
@@ -254,7 +274,7 @@ const colorGreenShade = new THREE.MeshPhongMaterial({color: 0xA4C263, flatShadin
             const body = new THREE.BoxGeometry(1.5, 1, 1);
             const colorsBody = []; // array of colors for each vertex of the leaves geometry
             // Do this ONLY ONCE, since ALL 3 level catGeometries have the SAME number of vertices
-            for (let i = 0; i < level1.attributes.position.count; i++)
+            for (let i = 0; i < body.attributes.position.count; i++)
                 colorsBody.push(colorGray.r, colorGray.g, colorGray.b);
     //body
             body.translate(0, 0.2, 0)
@@ -278,24 +298,6 @@ const colorGreenShade = new THREE.MeshPhongMaterial({color: 0xA4C263, flatShadin
                 new THREE.BufferAttribute(new Float32Array(colorsBody), 3));
             catGeometries.push(snout);
 
-        //arms
-            const arml = new THREE.BoxGeometry(0.5, 0.5, 0.5);
-            arml.translate(-0.78, 0.6, 0)
-            arml.rotateZ(0.3,0.3,1);
-            // add color attribute to the arml buffer geometry
-            arml.setAttribute(
-                'color',
-                new THREE.BufferAttribute(new Float32Array(colorsBody), 3));
-            catGeometries.push(arml);
-
-            const armr = new THREE.BoxGeometry(0.5, 0.5, 0.5);
-            armr.translate(0.78, 0.6, 0)
-            armr.rotateZ(-0.3,0.3,1);
-            armr.setAttribute(
-                'color',
-                new THREE.BufferAttribute(new Float32Array(colorsBody), 3));
-            catGeometries.push(armr);
-
          //ears
             // const earl = new THREE.ConeGeometry(0.4,0.6,4,1);
             // earl.translate(0.2, 2.6, 0.4);
@@ -316,90 +318,22 @@ const colorGreenShade = new THREE.MeshPhongMaterial({color: 0xA4C263, flatShadin
             // catGeometries.push(earr);
 
 
-            //  ears(rectangular)
-             const earl = new THREE.BoxGeometry(0.7,0.4,0.7);
-            earl.translate(-0.775, 2.6, 0.45);
-            earl.setAttribute(
-                'color',
-                new THREE.BufferAttribute(new Float32Array(colorsBody), 3));
-            catGeometries.push(earl);
-
-            const earr = new THREE.BoxGeometry(0.7,0.4,0.7);
-            earr.translate(0.775, 2.6, 0.45);
-            earr.setAttribute(
-                'color',
-                new THREE.BufferAttribute(new Float32Array(colorsBody), 3));
-            catGeometries.push(earr);
-
-
-//white parts of body
-
-    // legs
-            const legl = new THREE.BoxGeometry(0.5, 0.5, 0.6);
-            const colorsWhite = []; // array of colors for each vertex of the trunk geometry
-            for (let i = 0; i < legl.attributes.position.count; i++)
+//forehead
+            const forehead = new THREE.BoxGeometry(0.84, 0.5, 1.62);
+            const colorsWhite = [];
+            for (let i = 0; i < forehead.attributes.position.count; i++)
                 colorsWhite.push(colorWhite.r, colorWhite.g, colorWhite.b);
-            legl.translate(-0.5, -0.55, 0)
-            // add color attribute to the legl buffer geometry
-            legl.setAttribute(
-                'color',
-                new THREE.BufferAttribute(new Float32Array(colorsWhite), 3));
-            catGeometries.push(legl);
-
-            const legr = new THREE.BoxGeometry(0.5, 0.5, 0.6);
-            legr.translate(0.5, -0.55, 0)
-            // add color attribute to the legl buffer geometry
-            legr.setAttribute(
-                'color',
-                new THREE.BufferAttribute(new Float32Array(colorsWhite), 3));
-            catGeometries.push(legr);
-    //arms
-            const forearml = new THREE.BoxGeometry(0.4, 0.5, 0.5);
-            forearml.translate(-1.23, 0.6, 0);
-            forearml.rotateZ(0.3,0.3,1);
-            // add color attribute to the forearml buffer geometry
-            forearml.setAttribute(
-                'color',
-                new THREE.BufferAttribute(new Float32Array(colorsWhite), 3));
-            catGeometries.push(forearml);
-
-            const forearmr = new THREE.BoxGeometry(0.4, 0.5, 0.5);
-            forearmr.translate(1.23, 0.6, 0);
-            forearmr.rotateZ(-0.3,0.3,1);
-            // add color attribute to the forearmr buffer geometry
-            forearmr.setAttribute(
-                'color',
-                new THREE.BufferAttribute(new Float32Array(colorsWhite), 3));
-            catGeometries.push(forearmr);
-    //details
-            const forehead = new THREE.BoxGeometry(0.5, 0.5, 0.5);
-            forehead.translate(0, 2,3);
-            // add color attribute to the forehead buffer geometry
+            forehead.translate(0, 2.16,0);
             forehead.setAttribute(
                 'color',
                 new THREE.BufferAttribute(new Float32Array(colorsWhite), 3));
-            // catGeometries.push(forehead);
+            catGeometries.push(forehead);
 
-
-    // pink parts --> ear details
-    const earInl = new THREE.BoxGeometry(0.4, 0.4, 0.4);
-            const colorsPink = [];
-            for (let i = 0; i < earInl.attributes.position.count; i++)
-                colorsPink.push(colorPink.r, colorPink.g, colorPink.b);
-            earInl.translate(-0.92, 2.3, 0.61)
-            earInl.setAttribute(
-                'color',
-                new THREE.BufferAttribute(new Float32Array(colorsPink), 3));
-            catGeometries.push(earInl);
-
-            const earInr = new THREE.BoxGeometry(0.4, 0.4, 0.4);
-            earInr.translate(0.92, 2.3, 0.61)
-            earInr.setAttribute(
-                'color',
-                new THREE.BufferAttribute(new Float32Array(colorsPink), 3));
-            catGeometries.push(earInr);
-    //--> cheeks
+//--> cheeks
             const cheekl = new THREE.BoxGeometry(0.4, 0.2, 0.1);
+            const colorsPink = [];
+            for (let i = 0; i < cheekl.attributes.position.count; i++)
+                colorsPink.push(colorPink.r, colorPink.g, colorPink.b);
             cheekl.translate(-0.93, 0.81, 1.1)
             cheekl.setAttribute(
                 'color',
@@ -423,47 +357,12 @@ const colorGreenShade = new THREE.MeshPhongMaterial({color: 0xA4C263, flatShadin
                 'color',
                 new THREE.BufferAttribute(new Float32Array(colorsPurple), 3));
             catGeometries.push(colar);
-
-     const bell = new THREE.SphereGeometry(0.3,8,5);
-            const colorsYellow = [];
-            for (let i = 0; i < bell.attributes.position.count; i++)
-                colorsYellow.push(colorYellow.r, colorYellow.g, colorYellow.b);
-            bell.translate(0, 0.3, 0.7)
-            bell.setAttribute(
-                'color',
-                new THREE.BufferAttribute(new Float32Array(colorsYellow), 3));
-            catGeometries.push(bell);
-
-//black parts of body
-
-    // eyes
-    const eyel = new THREE.BoxGeometry(0.3, 0.3, 0.3);
-            const colorsBlack = [];
-            for (let i = 0; i < eyel.attributes.position.count; i++)
-                colorsBlack.push(colorBlack.r, colorBlack.g, colorBlack.b);
-            eyel.translate(-0.7, 1.35, 0.7)
-            eyel.setAttribute(
-                'color',
-                new THREE.BufferAttribute(new Float32Array(colorsBlack), 3));
-            catGeometries.push(eyel);
-
-            const eyer = new THREE.BoxGeometry(0.3, 0.3, 0.3);
-            eyer.translate(0.7, 1.35, 0.7)
-            eyer.setAttribute(
-                'color',
-                new THREE.BufferAttribute(new Float32Array(colorsBlack), 3));
-            catGeometries.push(eyer);
-
-        //lil nose
-            const nose = new THREE.BoxGeometry(0.3, 0.1, 0.3);
-            nose.translate(0, 1.1, 1)
-            nose.setAttribute(
-                'color',
-                new THREE.BufferAttribute(new Float32Array(colorsBlack), 3));
-            catGeometries.push(nose);
-
-    //whiskers
+                    
+            //whiskers
             const whiskerl = new THREE.CylinderGeometry(0.06, 0.06, 0.5,4,1);
+            const colorsBlack = [];
+            for (let i = 0; i < whiskerl.attributes.position.count; i++)
+                colorsBlack.push(colorBlack.r, colorBlack.g, colorBlack.b);
             whiskerl.setAttribute(
                 'color',
                 new THREE.BufferAttribute(new Float32Array(colorsBlack), 3));
@@ -483,60 +382,270 @@ const colorGreenShade = new THREE.MeshPhongMaterial({color: 0xA4C263, flatShadin
             whiskerr2.translate(0,0.3,0)
             catGeometries.push(whiskerr,whiskerr2);
 
-
 //mesh/adding cat to scene           
             const blackCatGeometry = BufferGeometryUtils.mergeBufferGeometries(catGeometries);
-            // const catMaterials = [
-            //     new THREE.MeshPhongMaterial({ vertexColors: true, flatShading: true, shininess: 0}),
-            //     new THREE.MeshPhysicalMaterial({ vertexColors: true , metalness: 1, shininess: 1, roughness: 0.2})
-            // ];
-            const blackCat = new THREE.Mesh(
-                blackCatGeometry,
-                // catMaterials
-                new THREE.MeshPhongMaterial({ vertexColors: true, flatShading: true, shininess: 0})
+            blackCat = new THREE.Mesh(
+                blackCatGeometry,new THREE.MeshPhongMaterial({ vertexColors: true, flatShading: true, shininess: 0})
             )
-
             blackCat.castShadow = true;
             blackCat.receiveShadow = true;
-            scene.add(blackCat)
 
-//------------------------ eu a tentar descobrir como usar mais de 1 material num objeto
-// var gg=new THREE.BufferGeometry(),vtx=[],fc=[[],[]],mm=[
-//     new THREE.MeshLambertMaterial({ color:0xff0000 }),
-//     new THREE.MeshPhysicalMaterial({ color:0x0000ff , metalness: 1, shininess: 1, roughness: 0.2})
-// ];
-// for(var y=0 ; y<11 ; y++)
-//     for(var x=0 ; x<11 ; x++) {
-//         vtx.push(x-5,0,y-5);
-//         if(x&&y) {
-//             var p=(vtx.length/3)-1;
-//             fc[(x%2)^(y%2)].push(
-//                  p,p-11,p-1,
-//                  p-1,p-11,p-12
-//             );
-//         }
-//     }
-// gg.addAttribute('position',new THREE.Float32BufferAttribute(vtx,3));
-// Array.prototype.push.apply(fc[0],fc[1]); gg.setIndex(fc[0]);
-// gg.computeVertexNormals();
-// gg.addGroup(0,100,0);
-// gg.addGroup(100,100,1);
-// scene.add(new THREE.Mesh(gg,mm));
-//------------------------
+// eyes and nose and bell(shiny parts)
+const shinyGeometries =[];
+    const eyel = new THREE.SphereGeometry(0.25, 4,10);
+    eyel.rotateX(1.6,0,0);
+    eyel.rotateZ(0.8,0,0);
+    eyel.translate(-0.7, 1.35, 0.7)
+    const colorshinyBlack = [];
+    for (let i = 0; i < eyel.attributes.position.count; i++)
+        colorshinyBlack.push(colorBlack.r, colorBlack.g, colorBlack.b);
+            eyel.setAttribute(
+                'color',
+                new THREE.BufferAttribute(new Float32Array(colorshinyBlack), 3));
+            shinyGeometries.push(eyel);
 
-    function handleKeyDown(e) {
-    if (e.key == "f") {
-        scene.traverse(function (child) {
-            if (child instanceof THREE.Mesh && child.name == "") {
-                child.material = new THREE.MeshPhysicalMaterial({
-                        color: 0x2194ce
-                        , flatShading: true, metalness: 1, roughness: 0.5,shininess:1
+            const eyer = new THREE.SphereGeometry(0.25, 4,10);
+            eyer.rotateX(1.6,0,0);
+            eyer.rotateZ(0.8,0,0);
+            eyer.translate(0.7, 1.35, 0.7)
+            eyer.setAttribute(
+                'color',
+                new THREE.BufferAttribute(new Float32Array(colorshinyBlack), 3));
+            shinyGeometries.push(eyer);
+
+        //lil nose
+            const nose = new THREE.BoxGeometry(0.3, 0.1, 0.3);
+            nose.translate(0, 1.1, 1)
+            nose.setAttribute(
+                'color',
+                new THREE.BufferAttribute(new Float32Array(colorshinyBlack), 3));
+            shinyGeometries.push(nose);
+
+            const shinyGeometry = BufferGeometryUtils.mergeBufferGeometries(shinyGeometries);
+            features = new THREE.Mesh(
+                shinyGeometry,new THREE.MeshPhysicalMaterial({ vertexColors: true, metalness:0.2, roughness:0.1, flatShading:true})
+            )
+            features.castShadow = true;
+            features.receiveShadow = true;
+
+// parts that move-----------------------------------------------------------------------------------------------------------------------
+
+    // legs
+    legl = new THREE.Mesh(
+    new THREE.BoxGeometry(0.5, 0.7, 0.6),
+    new THREE.MeshPhongMaterial({ color: colorWhite, flatShading: true, shininess: 0}));
+    legl.position.x = -0.49;
+    legl.position.y = -0.4;
+    legl.receiveShadow = legl.castShadow = true;
+
+    legr = new THREE.Mesh(
+    new THREE.BoxGeometry(0.5, 0.7, 0.6),
+    new THREE.MeshPhongMaterial({ color: colorWhite, flatShading: true, shininess: 0}));
+    legr.position.x = 0.49;
+    legr.position.y = -0.4;
+    legr.receiveShadow = legr.castShadow = true;
+
+//arms
+  armUpl = new THREE.Mesh(
+    new THREE.BoxGeometry(0.5, 0.5, 0.5),
+    new THREE.MeshPhongMaterial({ color: colorGray, flatShading: true, shininess: 0}));
+    armUpl.position.x = -0.98;
+    armUpl.position.y = 0.3;
+    armUpl.rotateZ(0.3,0.3,1);
+    armUpl.receiveShadow = armUpl.castShadow = true;
+
+    armUpr = new THREE.Mesh(
+    new THREE.BoxGeometry(0.5, 0.5, 0.5),
+    new THREE.MeshPhongMaterial({ color: colorGray, flatShading: true, shininess: 0}));
+    armUpr.position.x = 0.98;
+    armUpr.position.y = 0.3;
+    armUpr.rotateZ(-0.3,0.3,1);
+    armUpr.receiveShadow = armUpr.castShadow = true;
+//forearms
+    forearml = new THREE.Mesh(
+    new THREE.BoxGeometry(0.3, 0.5, 0.5),
+    new THREE.MeshPhongMaterial({ color: colorWhite, flatShading: true, shininess: 0}));
+    forearml.position.x = -1.36;
+    forearml.position.y = 0.179;
+    forearml.rotateZ(0.3,0.3,1);
+    forearml.receiveShadow = forearml.castShadow = true;
+
+    forearmr = new THREE.Mesh(
+    new THREE.BoxGeometry(0.3, 0.5, 0.5),
+    new THREE.MeshPhongMaterial({ color: colorWhite, flatShading: true, shininess: 0}));
+    forearmr.position.x = 1.36;
+    forearmr.position.y = 0.179;
+    forearmr.rotateZ(-0.3,0.3,1);
+    forearmr.receiveShadow = forearmr.castShadow = true;
+
+//  ears(rectangular)
+            let leftEarG = [];
+            let rightEarG = [];
+
+            const outEarl = new THREE.BoxGeometry(0.7,0.4,0.7);
+            outEarl.translate(-0.775, 2.6, 0.45)
+            const colorGrayEar = [];
+            for (let i = 0; i < outEarl.attributes.position.count; i++)
+                colorGrayEar.push(colorGray.r, colorGray.g, colorGray.b);
+            outEarl.setAttribute(
+                'color',
+                new THREE.BufferAttribute(new Float32Array(colorGrayEar), 3));
+            leftEarG.push(outEarl);
+
+            const outEarr = new THREE.BoxGeometry(0.7,0.4,0.7);
+            outEarr.translate(0.775, 2.6, 0.45)
+            outEarr.setAttribute(
+                'color',
+                new THREE.BufferAttribute(new Float32Array(colorGrayEar), 3));
+            rightEarG.push(outEarr);
+
+            const inEarl = new THREE.BoxGeometry(0.4, 0.4, 0.4);
+            inEarl.translate(-0.929, 2.3, 0.61)
+            const colorPinkEar = [];
+            for (let i = 0; i < inEarl.attributes.position.count; i++)
+                colorPinkEar.push(colorPink.r, colorPink.g, colorPink.b);
+            inEarl.setAttribute(
+                'color',
+                new THREE.BufferAttribute(new Float32Array(colorPinkEar), 3));
+            leftEarG.push(inEarl);
+
+            const inEarr = new THREE.BoxGeometry(0.4, 0.4, 0.4);
+            inEarr.translate(0.929, 2.3, 0.61)
+            inEarr.setAttribute(
+                'color',
+                new THREE.BufferAttribute(new Float32Array(colorPinkEar), 3));
+            rightEarG.push(inEarr);
+
+
+            earl = new THREE.Mesh(
+                BufferGeometryUtils.mergeBufferGeometries(leftEarG)
+                ,new THREE.MeshPhongMaterial({ vertexColors: true, flatShading: true, shininess: 0})
+            )
+            earl.castShadow = true;
+            earl.receiveShadow = true;
+
+            earr = new THREE.Mesh(
+                BufferGeometryUtils.mergeBufferGeometries(rightEarG)
+                ,new THREE.MeshPhongMaterial({ vertexColors: true, flatShading: true, shininess: 0})
+            )
+            earr.castShadow = true;
+            earr.receiveShadow = true;
+
+//tail
+            tail = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.05,0.4,1,6),
+                new THREE.MeshPhongMaterial({ color: colorGray, flatShading: true, shininess: 0})
+            );
+            tail.rotateX(-1.2,0,0)
+            tail.position. y= 0.3;
+            tail.position.z = -0.7;
+            tail.castShadow = tail.receiveShadow = true;
+
+// bell
+            bell = new THREE.Mesh(
+                new THREE.SphereGeometry(0.3,8,5),
+                new THREE.MeshStandardMaterial({ color: colorYellow, flatShading: true, metalness:0.5, roughness:0.2})
+            );
+            bell.position.y = 0.3;
+            bell.position.z = 0.7;
+            bell.castShadow = true;
+            bell.receiveShadow = true;
+
+//group everything together
+            armsl = new THREE.Group();
+            armsl.add(armUpl, forearml);
+            armsr = new THREE.Group();
+            armsr.add(armUpr, forearmr);
+            blackKittybody = new THREE.Group();
+            blackKittybody.add(blackCat, armsl, armsr, features, legl, legr, earl, earr);
+            blackKitty = new THREE.Group();
+            blackKitty.add(blackKittybody, bell,tail);
+            scene.add(blackKitty);
+
+
+//animations
+            // SAVE initial vertices coordinates and settings for their circular motion
+            for (let i = 0; i < bg.geometry.attributes.position.count; i++) {
+                verts.push({
+                    x: bg.geometry.attributes.position.getX(i),
+                    y: bg.geometry.attributes.position.getY(i),
+
+                    ang: Math.random() * Math.PI * 2,   // initial angle
+                    amp: -0.1 + Math.random() * 0.2,        // radius
+                    speed: 0.02 + Math.random() * 0.02  // angular velocity
                 });
             }
-        });
+
+            // initialRot.push({
+            //     leglRot: leg.atributtes.rotation.getX(),
+            // })
+
+//------------------------
+
+function handleKeyDown(e) {
+    e.preventDefault();
+    keyPressed = true
+    if(!started){
+        if(e.key == "Enter"){
+            started = true;
+            camera.position.x = 1;
+            heart.scale.y = heart.scale.x = heart.scale.z = 0;
+        }else if(e.key == "1"){
+            heart.position.x = -4;
+        }else if(e.key == "2"){
+            heart.position.x = 0;
+        }else if(e.key == "3"){
+            heart.position.x = 4;
+        }
+
+    }
+    else if(started){
+        Actions(e)
     }
 }
+function handleKeyUp(e) {
+    keyPressed = false;
+    legl.rotation.x = legr.rotation.x = armsl.rotation.z = armsr.rotation.z = bell.rotation.x = 0;
+    armsl.position.y = armsr.position.y = 0;
+}
+
+// function for walking
+function Actions(e){
+    e.preventDefault();
+    if (e.key == "ArrowRight" && blackKitty.position.x < 14) {
+        blackKitty.position.x += 0.22;
+        blackKitty.rotation.y = 1.6;
+    }else if (e.key == "ArrowLeft" && blackKitty.position.x > -14) {
+        blackKitty.position.x -= 0.22;
+        blackKitty.rotation.y = -1.6;
+    }else if (e.key == "ArrowUp" && blackKitty.position.z > -20) {
+        blackKitty.position.z -= 0.22;
+        blackKitty.rotation.y = 3.2;
+    }else if (e.key == "ArrowDown" && blackKitty.position.z < 5) {
+        blackKitty.position.z += 0.22;
+        blackKitty.rotation.y = 0;
+    }else if (e.key == "s") {
+            bell.position.y += Math.sin(Date.now() * 0.01) * Math.PI/2 * 0.002;
+            plane.position.y += 1;
+            if(plane.position.y >= 5){
+                plane.position.y = 0; 
+            }
+
+    }
+    blackKittybody.position.y = 0
+    blackKittybody.position.y += (Math.sin(Date.now() * 0.4) * Math.PI/2 * 0.01)*6;
+    armsl.position.y += Math.sin(Date.now() * 0.02) * Math.PI/2 * 0.05;
+    armsr.position.y += Math.sin(Date.now() * 0.02) * Math.PI/2 * 0.05;
+    armsl.rotation.z += Math.sin(Date.now() * 0.01) * Math.PI/2 * 0.005;
+    armsr.rotation.z -= Math.sin(Date.now() * 0.01) * Math.PI/2 * 0.005;
+    bell.rotation.x -= -(Math.sin(Date.now() * 0.02) * Math.PI/2 * 0.06);
+    //leg movements
+    legl.rotation.x += Math.sin(Date.now() * 0.015) * Math.PI/2 * 0.12;
+    legr.rotation.x -= Math.sin(Date.now() * 0.015) * Math.PI/2 * 0.12;
+}
+
 document.onkeydown = handleKeyDown;
+document.onkeyup = handleKeyUp;
 
 
 // ----------------------------           
@@ -544,16 +653,55 @@ document.onkeydown = handleKeyDown;
             }
             
             function render(){
-                // rotate the cube around its axes
-                        // camera.rotation.y += 0.01;
-                // cube.rotation.z += 0.1;
-                // rectangle.position.x = 20;
-                // hello.position.y = 2
-                // hello.position.z = 10;
-                // hello.rotation.x += 0.1;
+
+            //before starting
+            if(!started){
+                // camera.position.x += Math.sin(Date.now() * 0.001) * Math.PI/2 * 0.02;
+            }
+
+            
+            //movimentation of indicator
+            // heart.scale.x = heart.scale.z = heart.scale.y +=  0.02
+            // heart.position.y -= 0.06;
+            // if(heart.scale.x >= 2){
+            //     heart.scale.x = heart.scale.z = heart.scale.y =  1
+            //     heart.position.y = 0
+            // }
+            heart.rotation.y += 0.02;
+
+            if(!keyPressed){
+                legl.rotation.x = legr.rotation.x = 0;
+            }
+
+            //default movimentation
+            
+                blackKittybody.position.y += Math.sin(Date.now() * 0.01) * Math.PI/2 * 0.002;
+                tail.rotation.x -= Math.sin(Date.now() * 0.01) * Math.PI/2 * 0.01;
+                armsl.rotation.z += Math.sin(Date.now() * 0.009) * Math.PI/2 * 0.005;
+                armsr.rotation.z -= Math.sin(Date.now() * 0.009) * Math.PI/2 * 0.005;
+                bell.position.y += Math.sin(Date.now() * 0.01) * Math.PI/2 * 0.0025;
+                bell.position.z -= Math.sin(Date.now() * 0.01) * Math.PI/2 * 0.0025;
+                bell.rotation.x += Math.sin(Date.now() * 0.01) * Math.PI/2 * 0.01;
+                earl.rotation.z += Math.sin(Date.now() * 0.01) * Math.PI/2 * 0.0015;
+                earr.rotation.z -= Math.sin(Date.now() * 0.01) * Math.PI/2 * 0.0015;
+                
+
             renderer.render(scene, camera);
             // controls.update();
 
+
+             // for all vertices of the cloud mesh
+             for (let i = 0; i < bg.geometry.attributes.position.count; i++) {
+                let vprops = verts[i];  // get INITIAL vertices and movement definitions
+                // update X and Y values according to a 2D circular motion
+                let currentXposition = vprops.x + Math.cos(vprops.ang) * vprops.amp;
+                let currentYposition = vprops.y + Math.sin(vprops.ang) * vprops.amp;
+                vprops.ang += vprops.speed +0.02; // update angle for next frame
+                // set new X and Y coordinates for the vertex at the given index i
+                bg.geometry.attributes.position.setXY(i, currentXposition, currentYposition);
+            }
+            // mandatory so that the new position values are rendered again
+            bg.geometry.attributes.position.needsUpdate = true;
 
         }
     </script>
