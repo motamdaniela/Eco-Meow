@@ -24,11 +24,12 @@
         let controls;
         let camera, scene, renderer;
 
-        let keyPressed;
+        let keyPressed, rightKey, leftKey, upKey, downKey, toShake;
         let started = false;
 
         let heart, diamond;
         
+        let shoulderl, elbowl, shoulderr, elbowr;
         let legl, legr, armUpl, armUpr, forearml, forearmr, earl, earr, tail;
         let features, bell, blackKitty, blackKittybody, armsl, armsr;
         let bg, blackCat;
@@ -76,10 +77,11 @@
             light2.castShadow = true;
             light2.shadow.camera;
             scene.add(light2);
+
             
 
             let light3 = new THREE.PointLight(0xEEBA77, 0.8,100);
-            light3.position.set(10, 8, 5);
+            light3.position.set(5, 8, 5);
             scene.add(light3);
             // light helper
             let pointLightHelper = new THREE.PointLightHelper(light2, 0.4);
@@ -135,7 +137,7 @@ const colorGreenShade = new THREE.MeshPhongMaterial({color: 0xA4C263, flatShadin
             
             heart = new THREE.Group();
             heart.add(heartl, heartr,heartbase, midl, midr);
-            // heart.position.y = 1.5;
+            heart.position.y = 1;
             scene.add(heart);
 
 // background
@@ -147,6 +149,30 @@ const colorGreenShade = new THREE.MeshPhongMaterial({color: 0xA4C263, flatShadin
             plane.position.z = -9;
             plane.receiveShadow = true;
             scene.add(plane);
+
+            //rocks
+            const bigRock = new THREE.Mesh(
+                new THREE.TetrahedronGeometry(1,1),
+                new THREE.MeshPhongMaterial({ color: colorRocks, flatShading: true,shininess: 0})
+            );
+            const smallRock = new THREE.Mesh(
+                new THREE.TetrahedronGeometry(0.5,1),
+                new THREE.MeshPhongMaterial({ color: colorRocks, flatShading: true,shininess: 0})
+            );
+            smallRock.rotateX(1.2,0,0)
+            
+            let smallRock1 = smallRock.clone();
+            let bigRock1 = bigRock.clone();
+            smallRock.position.x = 11;smallRock.position.z = -5; smallRock.position.y = smallRock1.position.y = -0.4;
+            bigRock.position.x = 10;bigRock.position.z = -7; bigRock.position.y = bigRock.position.y = -0.3;
+            smallRock1.position.x = -9; smallRock1.position.z = 5
+            bigRock1.position.x = -12; bigRock1.position.z = -7
+
+            let allRocks = new THREE.Group();
+            allRocks.add(bigRock, smallRock, smallRock1, bigRock1);
+            bigRock.castShadow = bigRock1.castShadow = smallRock.castShadow = smallRock1.castShadow = true;
+            bigRock.receiveShadow = bigRock1.receiveShadow = smallRock.receiveShadow = smallRock1.receiveShadow = true;
+            scene.add(allRocks);
 
 
 //static bg elements------------
@@ -194,6 +220,7 @@ const staticGeometries = []
             staticElements.receiveShadow = true;
             staticElements.castShadow = true;
             staticElements.position.x = -5;
+            staticElements.position.z = -4;
             scene.add(staticElements)
 
 //bushes and leaves for trees(that move)
@@ -246,13 +273,31 @@ const staticGeometries = []
             smallBush.translate(-7,-0.5,5);
             bgGeometries.push(smallBush);
 
-            let bigBush1 = bigBush.clone(), bigBush2 = bigBush.clone();
-            bigBush1.translate(0,0,-10); bigBush2.translate(2,0,-20);
-            bgGeometries.push(bigBush1, bigBush2);
+            let bigBush1 = bigBush.clone(), bigBush2 = bigBush.clone(), bigBush3 = bigBush.clone(), bigBush4 = bigBush.clone(), bigBush5 = bigBush.clone(),bigBush6 = bigBush.clone(),bigBush7 = bigBush.clone();
+            bigBush1.translate(0,0,-10); bigBush2.translate(2,0,-20); bigBush3.translate(8,0,-17); bigBush4.translate(21,0,-18); bigBush5.translate(26.5,0,-18); bigBush6.translate(16,0,-21); bigBush7.translate(12,0,-19);
+            bgGeometries.push(bigBush1, bigBush2, bigBush3, bigBush4, bigBush5, bigBush6, bigBush7);
 
-        // camera.position.y = 10;
-        // camera.position.x = 0;
-        // camera.position.z = 6;
+            let bush1 = bush.clone(), bush2 = bush.clone(), bush3 = bush.clone(), bush4 = bush.clone();
+            bush1.translate(5.5,0,-15); bush2.translate(18,0,-21); bush3.translate(14.5,0,-17); bush4.translate(23,0,-18);
+            bgGeometries.push(bush1, bush2, bush3, bush4);
+
+            let smallBush1 = smallBush.clone(), smallBush2 = smallBush.clone(), smallBush3 = smallBush.clone(), smallBush4 = smallBush.clone();
+            smallBush1.translate(11,0,-16); smallBush2.translate(24,0,-16); smallBush3.translate(1,0,-13); smallBush4.translate(23,0,-18);
+            bgGeometries.push(smallBush1, smallBush2, smallBush3, smallBush4);
+            bush.translate(0,0,4); bigBush.translate(0,0,4); smallBush.translate(0,0,4);
+
+
+            let bigBushes1 = bigBush.clone(), bigBushes2 = bigBush.clone();
+            bigBushes1.translate(26,0,1); bigBushes2.translate(26,0,-12);
+            bgGeometries.push(bigBushes1, bigBushes2);
+
+            let Bushes1 = bush.clone(), Bushes2 = bush.clone();
+            Bushes1.translate(28,0,-3); Bushes2.translate(0,0,-11);
+            bgGeometries.push(Bushes1, Bushes2);
+
+            let smallBushes1 = smallBush.clone(), smallBushes2 = smallBush.clone(), smallBushes3 = smallBush.clone();
+            smallBushes1.translate(23,0,0); smallBushes2.translate(5,0,-1); smallBushes3.translate(22,0,-3);
+            bgGeometries.push(smallBushes1, smallBushes2, smallBushes3);
 
 //----------------------------------------------------------------
 
@@ -264,6 +309,7 @@ const staticGeometries = []
             bg.receiveShadow = true;
             bg.castShadow = true;
             bg.position.x = -5;
+            bg.position.z = -4;
             scene.add(bg)
 
 
@@ -446,12 +492,48 @@ const shinyGeometries =[];
     legr.receiveShadow = legr.castShadow = true;
 
 //arms
+            // shoulder = new THREE.Object3D();
+            // shoulder.position.set(-2, 0, 0)
+            // scene.add(shoulder); // place the shoulder aligned with the world CS
+
+            // // // show axes for the SHOULDER CS
+            // let axesShoulder = new THREE.AxesHelper(4);
+            // shoulder.add(axesShoulder);
+
+            // /* ARM */
+            // let arm = new THREE.Mesh(geometry, material);
+            // arm.position.x = 1
+            // // add the ARM to the SHOULDER
+            // shoulder.add(arm);
+            // /* ELBOW */
+            // elbow = new THREE.Object3D();
+            // arm.add(elbow); // add the ELBOW to the ARM
+            // elbow.position.x = 1
+
+            // // // show axes for the SHOULDER CS
+            // let axesElbow = new THREE.AxesHelper(4);
+            // elbow.add(axesElbow);
+
+
+            // /* FOREARM */
+            // let forearm = new THREE.Mesh(geometry, material);
+            // forearm.position.x = 1
+            // // add the FOREARM to the ELBOW
+            // elbow.add(forearm);
+
+            shoulderl = new THREE.Object3D();
+            shoulderl.position.set(-0.75, 0.35, 0);
+            shoulderl.rotateZ(0.3,0.3,1);
+            scene.add(shoulderl);
+            let axesShoulderl = new THREE.AxesHelper(4);
+            shoulderl.add(axesShoulderl);
   armUpl = new THREE.Mesh(
     new THREE.BoxGeometry(0.5, 0.5, 0.5),
     new THREE.MeshPhongMaterial({ color: colorGray, flatShading: true, shininess: 0}));
     armUpl.position.x = -0.98;
     armUpl.position.y = 0.3;
     armUpl.rotateZ(0.3,0.3,1);
+    shoulderl.add(armUpl)
     armUpl.receiveShadow = armUpl.castShadow = true;
 
     armUpr = new THREE.Mesh(
@@ -483,7 +565,7 @@ const shinyGeometries =[];
             let rightEarG = [];
 
             const outEarl = new THREE.BoxGeometry(0.7,0.4,0.7);
-            outEarl.translate(-0.775, 2.6, 0.45)
+            outEarl.translate(-0.77007, 2.6, 0.45)
             const colorGrayEar = [];
             for (let i = 0; i < outEarl.attributes.position.count; i++)
                 colorGrayEar.push(colorGray.r, colorGray.g, colorGray.b);
@@ -493,14 +575,14 @@ const shinyGeometries =[];
             leftEarG.push(outEarl);
 
             const outEarr = new THREE.BoxGeometry(0.7,0.4,0.7);
-            outEarr.translate(0.775, 2.6, 0.45)
+            outEarr.translate(0.7707, 2.6, 0.45)
             outEarr.setAttribute(
                 'color',
                 new THREE.BufferAttribute(new Float32Array(colorGrayEar), 3));
             rightEarG.push(outEarr);
 
             const inEarl = new THREE.BoxGeometry(0.4, 0.4, 0.4);
-            inEarl.translate(-0.929, 2.3, 0.61)
+            inEarl.translate(-0.922, 2.3, 0.61)
             const colorPinkEar = [];
             for (let i = 0; i < inEarl.attributes.position.count; i++)
                 colorPinkEar.push(colorPink.r, colorPink.g, colorPink.b);
@@ -510,7 +592,7 @@ const shinyGeometries =[];
             leftEarG.push(inEarl);
 
             const inEarr = new THREE.BoxGeometry(0.4, 0.4, 0.4);
-            inEarr.translate(0.929, 2.3, 0.61)
+            inEarr.translate(0.922, 2.3, 0.61)
             inEarr.setAttribute(
                 'color',
                 new THREE.BufferAttribute(new Float32Array(colorPinkEar), 3));
@@ -553,7 +635,7 @@ const shinyGeometries =[];
 
 //group everything together
             armsl = new THREE.Group();
-            armsl.add(armUpl, forearml);
+            // armsl.add(armUpl, forearml);
             armsr = new THREE.Group();
             armsr.add(armUpr, forearmr);
             blackKittybody = new THREE.Group();
@@ -600,38 +682,69 @@ function handleKeyDown(e) {
 
     }
     else if(started){
-        Actions(e)
+        if (e.key == "ArrowRight" && blackKitty.position.x < 14) {
+            rightKey = true;
+            Actions(e);
+        }else if (e.key == "ArrowLeft" && blackKitty.position.x > -14) {
+            leftKey = true;
+            Actions(e);
+        }else if (e.key == "ArrowUp" && blackKitty.position.z > -20) {
+            upKey = true;
+            Actions(e);
+        }else if (e.key == "ArrowDown" && blackKitty.position.z < 5) {
+            downKey = true;
+            Actions(e);
+        }else if (e.key == "s") {
+            toShake = true
+            armUpl.rotation.x = 4.6;
+            // armUpl.rotation.z = Math.sin(Date.now() * 0.01) * Math.PI/2 * 0.005
+        }
     }
 }
+
 function handleKeyUp(e) {
-    keyPressed = false;
+    if (e.key == 'ArrowRight'){
+		rightKey = false;
+	}
+	else if (e.key == 'ArrowLeft'){
+		leftKey = false;
+	}
+	else if (e.key == 'ArrowUp'){
+		upKey = false;
+	}
+	else if (e.key == 'ArrowDown'){
+		downKey = false;
+	}
     legl.rotation.x = legr.rotation.x = armsl.rotation.z = armsr.rotation.z = bell.rotation.x = 0;
     armsl.position.y = armsr.position.y = 0;
+    earl.rotation.z = earr.rotation.z = 0;
+    blackKittybody.position.y = 0;
 }
 
 // function for walking
 function Actions(e){
     e.preventDefault();
-    if (e.key == "ArrowRight" && blackKitty.position.x < 14) {
+    if (rightKey && blackKitty.position.x < 14) {
         blackKitty.position.x += 0.22;
         blackKitty.rotation.y = 1.6;
-    }else if (e.key == "ArrowLeft" && blackKitty.position.x > -14) {
+    }else if (leftKey && blackKitty.position.x > -14) {
         blackKitty.position.x -= 0.22;
         blackKitty.rotation.y = -1.6;
-    }else if (e.key == "ArrowUp" && blackKitty.position.z > -20) {
+    }else if (upKey && blackKitty.position.z > -20) {
         blackKitty.position.z -= 0.22;
         blackKitty.rotation.y = 3.2;
-    }else if (e.key == "ArrowDown" && blackKitty.position.z < 5) {
+    }else if (downKey && blackKitty.position.z < 5) {
         blackKitty.position.z += 0.22;
         blackKitty.rotation.y = 0;
-    }else if (e.key == "s") {
-            bell.position.y += Math.sin(Date.now() * 0.01) * Math.PI/2 * 0.002;
-            plane.position.y += 1;
-            if(plane.position.y >= 5){
-                plane.position.y = 0; 
-            }
-
     }
+    // else if(toShake) {
+            // bell.position.y += Math.sin(Date.now() * 0.01) * Math.PI/2 * 0.002;
+            // plane.position.y += 1;
+            // if(plane.position.y >= 5){
+            //     plane.position.y = 0; 
+            // }
+
+    // }
     blackKittybody.position.y = 0
     blackKittybody.position.y += (Math.sin(Date.now() * 0.4) * Math.PI/2 * 0.01)*6;
     armsl.position.y += Math.sin(Date.now() * 0.02) * Math.PI/2 * 0.05;
@@ -639,15 +752,140 @@ function Actions(e){
     armsl.rotation.z += Math.sin(Date.now() * 0.01) * Math.PI/2 * 0.005;
     armsr.rotation.z -= Math.sin(Date.now() * 0.01) * Math.PI/2 * 0.005;
     bell.rotation.x -= -(Math.sin(Date.now() * 0.02) * Math.PI/2 * 0.06);
-    //leg movements
-    legl.rotation.x += Math.sin(Date.now() * 0.015) * Math.PI/2 * 0.12;
-    legr.rotation.x -= Math.sin(Date.now() * 0.015) * Math.PI/2 * 0.12;
+    earl.rotation.z -= 3*(Math.sin(Date.now() * 0.012) * Math.PI/2 * 0.001);
+    earr.rotation.z += 3*(Math.sin(Date.now() * 0.012) * Math.PI/2 * 0.001);
+    //leg movements1
+    legl.rotation.x += Math.sin(Date.now() * 0.014) * Math.PI/2 * 0.12;
+    legr.rotation.x -= Math.sin(Date.now() * 0.014) * Math.PI/2 * 0.12;
 }
 
 document.onkeydown = handleKeyDown;
 document.onkeyup = handleKeyUp;
 
 
+//handler for keydown
+// function ArrowPressed(e) {
+// 			e.preventDefault();
+// 			if (e.key == 'ArrowRight') {
+// 				rightKey = true; //Canvas#2
+// 			}
+// 			else if (e.key == 'ArrowLeft'){
+// 				leftKey = true; //Canvas#
+// 			}
+// 			else if (e.key == 'ArrowUp') {
+// 				upKey = true; //Canvas#2
+// 			}
+// 			else if (e.key == 'ArrowDown'){
+// 				downKey = true; //Canvas#
+// 			}
+// 			else if(e.keyCode==71){
+// 				gKey = true;
+// 			}
+// 			else if(e.keyCode==80){
+// 				sizex = 96/2
+// 				sizey = 576/12
+// 				if (!pKey){
+// 					image.src = src2
+// 				}
+// 				pKey = true;
+// 			}
+// 		}
+		
+// 		//handler for keyup
+// 		function ArrowReleased(e) {
+// 			if (e.key == 'ArrowRight'){
+// 				audio.volume = 0;
+// 				rightKey = false;
+// 				frameCol = 0;
+// 			}
+// 			else if (e.key == 'ArrowLeft'){
+// 				audio.volume = 0;
+// 				leftKey = false;
+// 				frameCol = 0;
+// 			}
+// 			else if (e.key == 'ArrowUp'){
+// 				audio.volume = 0;
+// 				upKey = false;
+// 				frameCol = 0;
+// 			}
+// 			else if (e.key == 'ArrowDown'){
+// 				audio.volume = 0;
+// 				downKey = false;
+// 				frameCol = 0;
+// 			}
+// 		}
+		
+// 		//sets handlers for events keydown & keyup
+// 		window.addEventListener('keydown', ArrowPressed);
+// 		window.addEventListener('keyup', ArrowReleased);
+
+// 		function actions(){
+// 				if (rightKey){
+// 					image.src = src
+// 					audio.volume = 0.3;
+// 					frameRow = 3;
+// 					x+=10;
+// 					frameCol++;	
+// 					if (frameCol == 4)
+// 					frameCol = 2;
+					
+// 				}
+// 				else if (leftKey){
+// 					image.src = src
+// 				audio.volume = 0.3;
+// 				x-=10;
+// 				frameRow = 2;
+// 				frameCol++;	
+// 				if (frameCol == 4)
+// 				frameCol = 0;
+// 			}
+// 			else if (upKey){
+// 				image.src = src
+// 				audio.volume = 0.3;
+// 				y-=10;
+// 				frameRow = 1;
+// 				frameCol++;	
+// 				if (frameCol == 3)
+// 				frameCol = 0;
+// 			}
+// 			else if (downKey){
+// 				image.src = src
+// 				audio.volume = 0.3;
+// 				y+=10;
+// 				frameRow = 0;
+// 				frameCol++;	
+// 				if (frameCol == 4)
+// 				frameCol = 0;
+// 			}
+// 			else if (gKey){
+// 				frameCol++;	
+// 				if (frameCol == 2){
+// 					frameCol = 0;
+// 					gKey = false;
+// 				}
+// 				grab(x,y)
+// 			}
+// 			else if (pKey){
+// 				if (frameRow < 8){
+// 					frameRow += 8
+// 					frameCol = 2
+// 				}
+// 				frameCol--;	
+// 				if (frameCol == -1){
+// 					image.src = src
+// 					pKey = false;
+// 					frameCol = 0;
+// 					sizex = 192/4
+// 					sizey = 192/4
+// 					frameRow -= 8
+// 				}
+// 				if(Math.floor(ecoCounter)/5 > 0){
+// 					Plant();
+// 				}
+// 			}
+// 		}
+
+earl.position.x -= 0.05; earr.position.x += 0.05;
 // ----------------------------           
                 renderer.setAnimationLoop(render);
             }
@@ -657,6 +895,8 @@ document.onkeyup = handleKeyUp;
             //before starting
             if(!started){
                 // camera.position.x += Math.sin(Date.now() * 0.001) * Math.PI/2 * 0.02;
+                heart.rotation.y += 0.02;
+                heart.position.y += Math.sin(Date.now() * 0.0025) * Math.PI/2 * 0.008;
             }
 
             
@@ -667,7 +907,6 @@ document.onkeyup = handleKeyUp;
             //     heart.scale.x = heart.scale.z = heart.scale.y =  1
             //     heart.position.y = 0
             // }
-            heart.rotation.y += 0.02;
 
             if(!keyPressed){
                 legl.rotation.x = legr.rotation.x = 0;
@@ -677,13 +916,13 @@ document.onkeyup = handleKeyUp;
             
                 blackKittybody.position.y += Math.sin(Date.now() * 0.01) * Math.PI/2 * 0.002;
                 tail.rotation.x -= Math.sin(Date.now() * 0.01) * Math.PI/2 * 0.01;
-                armsl.rotation.z += Math.sin(Date.now() * 0.009) * Math.PI/2 * 0.005;
+                shoulderl.rotation.z += Math.sin(Date.now() * 0.009) * Math.PI/2 * 0.005;
                 armsr.rotation.z -= Math.sin(Date.now() * 0.009) * Math.PI/2 * 0.005;
                 bell.position.y += Math.sin(Date.now() * 0.01) * Math.PI/2 * 0.0025;
                 bell.position.z -= Math.sin(Date.now() * 0.01) * Math.PI/2 * 0.0025;
                 bell.rotation.x += Math.sin(Date.now() * 0.01) * Math.PI/2 * 0.01;
-                earl.rotation.z += Math.sin(Date.now() * 0.01) * Math.PI/2 * 0.0015;
-                earr.rotation.z -= Math.sin(Date.now() * 0.01) * Math.PI/2 * 0.0015;
+                earl.rotation.z -= Math.sin(Date.now() * 0.01) * Math.PI/2 * 0.0015;
+                earr.rotation.z += Math.sin(Date.now() * 0.01) * Math.PI/2 * 0.0015;
                 
 
             renderer.render(scene, camera);
