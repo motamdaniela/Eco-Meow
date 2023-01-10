@@ -27,7 +27,7 @@
         let keyPressed, rightKey, leftKey, upKey, downKey, toShake;
         let started = false;
 
-        let heart, diamond;
+        let heart, tree;
         
         let shoulderl, elbowl, shoulderr, elbowr;
         let legl, legr, armUpl, armUpr, forearml, forearmr, earl, earr, tail;
@@ -149,6 +149,46 @@ const colorGreenShade = new THREE.MeshPhongMaterial({color: 0xA4C263, flatShadin
             plane.position.z = -9;
             plane.receiveShadow = true;
             scene.add(plane);
+
+
+            const treeGeometries = []                
+            const colorTree = [];
+                const treeupPart = new THREE.TorusGeometry(2.3,1.5,10,15);
+                for (let i = 0; i < treeupPart.attributes.position.count; i++)
+                colorTree.push(colorGreen.r, colorGreen.g, colorGreen.b);
+                // add color attribute to the upPart buffer geometry
+                treeupPart.setAttribute(
+                    'color',
+                    new THREE.BufferAttribute(new Float32Array(colorTree), 3));
+                const treedownPart = new THREE.TorusGeometry(2.3,1.5,10,15);
+                    treedownPart.setAttribute(
+                        'color',
+                        new THREE.BufferAttribute(new Float32Array(colorTree), 3));
+
+            treeupPart.rotateX(1.6,0,0); treedownPart.rotateX(1.6,0,0);
+            treedownPart.translate(0,4.5,0);treeupPart.translate(0,6,0);
+            treeGeometries.push(treeupPart,treedownPart)
+            
+            const colorTreeTrunk = []
+            const treeTrunk = new THREE.BoxGeometry(2.5, 5.5, 2.5);
+            treeTrunk.translate(0,0.5,0)
+            for (let i = 0; i < treeTrunk.attributes.position.count; i++)
+            colorTreeTrunk.push(colorBrown.r, colorBrown.g, colorBrown.b);
+            treeTrunk.setAttribute(
+                'color',
+                new THREE.BufferAttribute(new Float32Array(colorTreeTrunk), 3));
+            treeGeometries.push(treeTrunk);
+                
+
+                tree = new THREE.Mesh(
+                   BufferGeometryUtils.mergeBufferGeometries(treeGeometries),
+                   new THREE.MeshPhongMaterial({ vertexColors: true, flatShading: true, shininess: 0})
+               )
+                tree.receiveShadow = tree.castShadow = true;
+                tree.position.x = 4;
+                scene.add(tree)
+
+//backgroud--------------------------------------------------
 
             //rocks
             const bigRock = new THREE.Mesh(
@@ -654,7 +694,10 @@ function handleKeyDown(e) {
         }else if (e.key == "ArrowDown" && blackKitty.position.z < 5) {
             downKey = true;
             Actions(e);
-        }else if (e.key == "s") {
+        }else if (e.key == "s" 
+        // && blackKitty.position <= tree.position -(4, 0, 4)
+        ) {
+            console.log(blackKitty.position <= tree.position - blackKitty.position);
             toShake = true
             shoulderl.rotation.y = THREE.Math.degToRad(60);
             shoulderr.rotation.y = THREE.Math.degToRad(-60);
@@ -674,7 +717,6 @@ function handleKeyDown(e) {
 }
 
 function handleKeyUp(e) {
-    console.log('up');
     if (e.key == 'ArrowRight'){
 		rightKey = false;
 	}
@@ -871,9 +913,9 @@ document.onkeyup = handleKeyUp;
 
             //before starting
             if(!started){
-                camera.position.y = 6
-                camera.position.x += 2*(Math.sin(Date.now() * 0.001) * Math.PI/2 * 0.02);
-                camera.lookAt(scene.position);
+                // camera.position.y = 6
+                // camera.position.x += 2*(Math.sin(Date.now() * 0.001) * Math.PI/2 * 0.02);
+                // camera.lookAt(scene.position);
                 heart.rotation.y += 0.02;
                 heart.position.y += Math.sin(Date.now() * 0.0025) * Math.PI/2 * 0.008;
             }
