@@ -145,6 +145,14 @@
         );
         orangeCatGeometries.push(oHead);
 
+        const oHead2 = new THREE.BoxGeometry(0.7, 0.6, 0.2);
+        oHead2.translate(0, 1, 1.1);
+        oHead2.setAttribute(
+          "color",
+          new THREE.BufferAttribute(new Float32Array(colorsOrange), 3)
+        );
+        orangeCatGeometries.push(oHead2);
+
         const oBody = new THREE.BoxGeometry(1.4, 0.85, 1.4);
         oBody.translate(0, 0.15, 0);
         oBody.setAttribute(
@@ -201,7 +209,7 @@
         oEyeR.translate(1.5, 0, 0);
 
         const oNose = new THREE.SphereGeometry(0.1, 7, 5);
-        oNose.translate(0, 1.35, 1);
+        oNose.translate(0, 1.35, 1.2);
         oNose.setAttribute(
           "color",
           new THREE.BufferAttribute(new Float32Array(colorsGray), 3)
@@ -248,7 +256,7 @@
         );
         oMouth.position.x = 0;
         oMouth.position.y = 1.1;
-        oMouth.position.z = 1.01;
+        oMouth.position.z = 1.21;
         oMouth.receiveShadow = true;
 
         orangeCatGeometries.push(oBlushL, oBlushR, oEarPinkL, oEarPinkR);
@@ -473,8 +481,11 @@
 
         function handleKeyUp(e) {
           keyPressed = false;
-          leg1.rotation.x = leg2.rotation.x = 0;
-          arm1.rotation.x = 0;
+          leg1.rotation.x =
+            leg2.rotation.x =
+            arm2.rotation.x =
+            arm1.rotation.x =
+              0;
         }
 
         function Actions(e) {
@@ -529,6 +540,8 @@
             leg1.rotation.x +=
               ((Math.sin(Date.now() * 0.01) * Math.PI) / 2) * 0.12;
             leg2.rotation.x -=
+              ((Math.sin(Date.now() * 0.01) * Math.PI) / 2) * 0.12;
+            arm2.rotation.x -=
               ((Math.sin(Date.now() * 0.01) * Math.PI) / 2) * 0.12;
           }
         }
