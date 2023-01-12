@@ -22,7 +22,7 @@
       // const geometry = new BufferGeometry();
       let controls;
 
-      let camera, scene, renderer, hello;
+      let camera, scene, renderer, hello, heart, treeTop, tree;
 
       let keyPressed;
       let started = false;
@@ -102,6 +102,7 @@
         const colorRocks = new THREE.Color(0x9da89a);
         const colorOrange = new THREE.Color(0xeaa945);
         const colorBlue = new THREE.Color(0x00ffff);
+        const colorRed = new THREE.Color(0xbd757e);
 
         //pointer
         let geometry = new THREE.OctahedronGeometry(1, 0);
@@ -128,6 +129,149 @@
         //trees
         const bgGeometries = [];
 
+        // indicador
+
+        let ind = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.1, 0.1, 0.5),
+          new THREE.MeshPhongMaterial({
+            color: colorGreen,
+            flatShading: true,
+            shininess: 0,
+          })
+        );
+        ind.position.y = 2.7;
+        ind.castShadow = ind.position.receiveShadow = true;
+
+        let ind2 = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.15, 0.1, 0.5),
+          new THREE.MeshPhongMaterial({
+            color: colorGreen,
+            flatShading: true,
+            shininess: 0,
+          })
+        );
+        ind2.position.x = -0.2;
+        ind2.position.y = 3;
+        ind2.rotation.z = 1;
+        ind2.castShadow = ind2.position.receiveShadow = true;
+
+        let ind3 = ind2.clone();
+        ind3.position.x = 0.2;
+        ind3.rotation.z = -1;
+
+        let indicator = new THREE.Group();
+        indicator.add(ind, ind2, ind3);
+        indicator.position.y = -0.15;
+
+        const heartl = new THREE.Mesh(
+          new THREE.SphereGeometry(0.5, 6, 6),
+          new THREE.MeshStandardMaterial({
+            color: colorRed,
+            flatShading: true,
+            roughness: 0.4,
+          })
+        );
+        heartl.rotateZ(0.6, 0, 0);
+        heartl.position.x = -0.35;
+        heartl.position.y = 3.8;
+        const heartr = heartl.clone();
+        heartr.position.x = 0.35;
+        heartr.rotateZ(-1.2, 0, 0);
+        const heartbase = heartl.clone();
+        heartbase.position.y = 3.45;
+        heartbase.position.x = 0;
+        heartbase.rotateZ(-0.6, 0, 0);
+
+        const midl = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.499, 0.5, 0.5, 6),
+          new THREE.MeshStandardMaterial({
+            color: colorRed,
+            flatShading: true,
+            roughness: 0.4,
+          })
+        );
+        midl.rotateZ(0.8, 0, 0);
+        midl.rotateY(1.6, 0, 0);
+        midl.position.x = -0.2;
+        midl.position.y = 3.65;
+        const midr = midl.clone();
+        midr.rotateZ(-3.2, 0, 0);
+        midr.rotateX(-1.6, 0, 0);
+        midr.position.x = 0.2;
+
+        heartl.castShadow = heartl.receiveShadow = true;
+        heartr.castShadow = heartr.receiveShadow = true;
+        midl.castShadow = midl.receiveShadow = true;
+        midr.castShadow = midr.receiveShadow = true;
+
+        let leaf = indicator.clone();
+        leaf.scale.set(0.8, 0.8, 0.8);
+        leaf.position.y = 2;
+        heart = new THREE.Group();
+        heart.add(heartl, heartr, heartbase, midl, midr, leaf);
+        heart.castShadow = heart.receiveShadow = true;
+
+        const treeGeometries = [];
+        const colorTree = [];
+        const treeupPart = new THREE.TorusGeometry(2.3, 1.5, 10, 15);
+        for (let i = 0; i < treeupPart.attributes.position.count; i++)
+          colorTree.push(colorGreen.r, colorGreen.g, colorGreen.b);
+        // add color attribute to the upPart buffer geometry
+        treeupPart.setAttribute(
+          "color",
+          new THREE.BufferAttribute(new Float32Array(colorTree), 3)
+        );
+        const treedownPart = new THREE.TorusGeometry(2.3, 1.5, 10, 15);
+        treedownPart.setAttribute(
+          "color",
+          new THREE.BufferAttribute(new Float32Array(colorTree), 3)
+        );
+
+        treeupPart.rotateX(1.6, 0, 0);
+        treedownPart.rotateX(1.6, 0, 0);
+        treedownPart.translate(0, 4.5, 0);
+        treeupPart.translate(0, 6, 0);
+        treeGeometries.push(treeupPart, treedownPart);
+
+        const colorTreeTrunk = [];
+        const treeTrunk = new THREE.Mesh(
+          new THREE.BoxGeometry(2.5, 5.5, 2.5),
+          new THREE.MeshPhongMaterial({
+            color: colorBrown,
+            flatShading: true,
+            shininess: 0,
+          })
+        );
+
+        treeTrunk.position.y = 0.6;
+
+        treeTop = new THREE.Mesh(
+          BufferGeometryUtils.mergeBufferGeometries(treeGeometries),
+          new THREE.MeshPhongMaterial({
+            vertexColors: true,
+            flatShading: true,
+            shininess: 0,
+          })
+        );
+        treeTop.receiveShadow = treeTop.castShadow = true;
+        treeTrunk.castShadow = treeTrunk.receiveShadow = true;
+
+        let apple1 = heart.clone(),
+          apple2 = heart.clone();
+        apple1.castShadow = apple1.receiveShadow = true;
+        apple2.castShadow = apple2.receiveShadow = true;
+        apple1.position.set(-1.5, 2, 3.5);
+        apple2.position.set(0.8, 2.5, 3.5);
+        heart.position.set(0.2, 0.6, 3.7);
+        tree = new THREE.Group();
+        tree.add(treeTop, treeTrunk, apple1, apple2, heart);
+
+        tree.position.z = -7;
+
+        tree.scale.set(0.2, 0.2, 0.2);
+
+        // scene.add(tree);
+
         // orange cat parts that don't move
 
         let orangeCatGeometries = [];
@@ -144,14 +288,6 @@
           new THREE.BufferAttribute(new Float32Array(colorsOrange), 3)
         );
         orangeCatGeometries.push(oHead);
-
-        const oHead2 = new THREE.BoxGeometry(0.7, 0.6, 0.2);
-        oHead2.translate(0, 1, 1.1);
-        oHead2.setAttribute(
-          "color",
-          new THREE.BufferAttribute(new Float32Array(colorsOrange), 3)
-        );
-        orangeCatGeometries.push(oHead2);
 
         const oBody = new THREE.BoxGeometry(1.4, 0.85, 1.4);
         oBody.translate(0, 0.15, 0);
@@ -181,6 +317,32 @@
           new THREE.BufferAttribute(new Float32Array(colorsGreen), 3)
         );
         orangeCatGeometries.push(oColar);
+
+        let oWhiskers = new THREE.Mesh(
+          new THREE.BoxGeometry(0.3, 0.07, 0.05),
+          new THREE.MeshStandardMaterial({
+            color: colorGray,
+            flatShading: true,
+            roughness: 0.4,
+          })
+        );
+        oWhiskers.position.x = 0.5;
+        oWhiskers.position.y = 1.1;
+        oWhiskers.position.z = 1;
+        oWhiskers.rotation.z = 0.2;
+        oWhiskers.receiveShadow = oWhiskers.castShadow = true;
+
+        let oWhiskers2 = oWhiskers.clone();
+        oWhiskers2.position.y = 0.9;
+        oWhiskers2.rotation.z = -0.2;
+
+        let oWhiskers3 = oWhiskers.clone();
+        oWhiskers3.position.x = -0.5;
+        oWhiskers3.rotation.z = -0.2;
+
+        let oWhiskers4 = oWhiskers.clone();
+        oWhiskers4.position.x = -0.5;
+        oWhiskers4.position.y = 0.9;
 
         // spheres
 
@@ -225,7 +387,30 @@
           new THREE.BufferAttribute(new Float32Array(colorsWhite), 3)
         );
 
-        orangeCatGeometries.push(oEyeL, oEyeR, oNose, oTail);
+        const oHeadSpot = new THREE.BoxGeometry(0.8, 0.5, 2.1);
+        oHeadSpot.translate(0, 2.1, 0);
+        oHeadSpot.setAttribute(
+          "color",
+          new THREE.BufferAttribute(new Float32Array(colorsWhite), 3)
+        );
+
+        orangeCatGeometries.push(oEyeL, oEyeR, oNose, oTail, oHeadSpot);
+
+        const oHead2 = new THREE.BoxGeometry(0.7, 0.6, 0.2);
+        oHead2.translate(0, 1, 1.1);
+        oHead2.setAttribute(
+          "color",
+          new THREE.BufferAttribute(new Float32Array(colorsWhite), 3)
+        );
+        orangeCatGeometries.push(oHead2);
+
+        const oBody2 = new THREE.BoxGeometry(0.7, 0.65, 1);
+        oBody2.translate(0, 0.03, 0.25);
+        oBody2.setAttribute(
+          "color",
+          new THREE.BufferAttribute(new Float32Array(colorsWhite), 3)
+        );
+        orangeCatGeometries.push(oBody2);
 
         const oBlushL = new THREE.PlaneGeometry(0.4, 0.2);
         oBlushL.translate(0.75, 1.25, 1.01);
@@ -331,7 +516,7 @@
             shininess: 0,
           })
         );
-        oLegL2.position.y = -0.3;
+        oLegL2.position.y = -0.25;
         oLegL2.receiveShadow = oLegL2.castShadow = true;
 
         let oLegR2 = oLegL2.clone();
@@ -445,56 +630,30 @@
         dirt.position.set(0, -0.7, -7);
         dirt.receiveShadow = true;
 
-        // indicador
-
-        let ind = new THREE.Mesh(
-          new THREE.CylinderGeometry(0.1, 0.1, 0.5),
-          new THREE.MeshPhongMaterial({
-            color: colorGreen,
-            flatShading: true,
-            shininess: 0,
-          })
-        );
-        ind.position.y = 2.7;
-        ind.castShadow = ind.position.receiveShadow = true;
-
-        let ind2 = new THREE.Mesh(
-          new THREE.CylinderGeometry(0.15, 0.1, 0.5),
-          new THREE.MeshPhongMaterial({
-            color: colorGreen,
-            flatShading: true,
-            shininess: 0,
-          })
-        );
-        ind2.position.x = -0.2;
-        ind2.position.y = 3;
-        ind2.rotation.z = 1;
-        ind2.castShadow = ind2.position.receiveShadow = true;
-
-        let ind3 = ind2.clone();
-        ind3.position.x = 0.2;
-        ind3.rotation.z = -1;
-
-        let indicator = new THREE.Group();
-        indicator.add(ind, ind2, ind3);
-        indicator.position.y = -0.15;
-
         orangeKitty = new THREE.Group();
-        orangeKitty.add(orangeCat, oLegL, oLegR, arm1, arm2, oMouth);
+        orangeKitty.add(
+          orangeCat,
+          oLegL,
+          oLegR,
+          arm1,
+          arm2,
+          oMouth,
+          oWhiskers,
+          oWhiskers2,
+          oWhiskers3,
+          oWhiskers4
+        );
         scene.add(orangeKitty, gato1, gato2, indicator, dirt);
 
         renderer.setAnimationLoop(render);
 
         let i = 0;
         function grow() {
-          let tree = gato1.clone();
-          tree.position.z = -7;
-          tree.position.x = 0;
           if (i == 0) {
             scene.add(tree);
             i++;
           } else if (i < 4 && i != 0) {
-            tree.scale.set(i + 1, i + 1, i + 1);
+            tree.scale.set(i / 3, i / 3, i / 3);
             scene.add(tree);
             i++;
           }
