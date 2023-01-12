@@ -305,7 +305,9 @@
         let arm2 = new THREE.Group();
         arm2.add(oArmR, oArmR2);
 
-        // legs
+        // // legs
+        // let hip=new THREE.Object3D();
+        // shoulder.position.set(-2, 0, 0)
         let oLegL = new THREE.Mesh(
           new THREE.BoxGeometry(0.4, 0.3, 0.4),
           new THREE.MeshPhongMaterial({
@@ -329,18 +331,14 @@
             shininess: 0,
           })
         );
-        oLegL2.position.x = 0.5;
-        oLegL2.position.y = -0.65;
+        oLegL2.position.y = -0.3;
         oLegL2.receiveShadow = oLegL2.castShadow = true;
 
         let oLegR2 = oLegL2.clone();
-        oLegL2.position.x = -0.5;
 
-        let leg1 = new THREE.Group();
-        leg1.add(oLegL, oLegL2);
+        oLegL.add(oLegL2);
 
-        let leg2 = new THREE.Group();
-        leg2.add(oLegR, oLegR2);
+        oLegR.add(oLegR2);
 
         // watering pot
 
@@ -434,6 +432,19 @@
         let gato2 = gato1.clone();
         gato2.position.x = -5;
 
+        let dirt = new THREE.Mesh(
+          new THREE.PlaneGeometry(4, 4),
+          new THREE.MeshPhongMaterial({
+            color: colorYellow,
+            flatShading: true,
+            shininess: 0,
+          })
+        );
+
+        dirt.rotation.x = THREE.Math.degToRad(-90);
+        dirt.position.set(0, -0.7, -7);
+        dirt.receiveShadow = true;
+
         // indicador
 
         let ind = new THREE.Mesh(
@@ -445,6 +456,7 @@
           })
         );
         ind.position.y = 2.7;
+        ind.castShadow = ind.position.receiveShadow = true;
 
         let ind2 = new THREE.Mesh(
           new THREE.CylinderGeometry(0.15, 0.1, 0.5),
@@ -457,6 +469,7 @@
         ind2.position.x = -0.2;
         ind2.position.y = 3;
         ind2.rotation.z = 1;
+        ind2.castShadow = ind2.position.receiveShadow = true;
 
         let ind3 = ind2.clone();
         ind3.position.x = 0.2;
@@ -467,10 +480,25 @@
         indicator.position.y = -0.15;
 
         orangeKitty = new THREE.Group();
-        orangeKitty.add(orangeCat, leg1, leg2, arm1, arm2, oMouth);
-        scene.add(orangeKitty, gato1, gato2, indicator);
+        orangeKitty.add(orangeCat, oLegL, oLegR, arm1, arm2, oMouth);
+        scene.add(orangeKitty, gato1, gato2, indicator, dirt);
 
         renderer.setAnimationLoop(render);
+
+        let i = 0;
+        function grow() {
+          let tree = gato1.clone();
+          tree.position.z = -7;
+          tree.position.x = 0;
+          if (i == 0) {
+            scene.add(tree);
+            i++;
+          } else if (i < 4 && i != 0) {
+            tree.scale.set(i + 1, i + 1, i + 1);
+            scene.add(tree);
+            i++;
+          }
+        }
 
         function handleKeyDown(e) {
           e.preventDefault();
@@ -481,8 +509,8 @@
 
         function handleKeyUp(e) {
           keyPressed = false;
-          leg1.rotation.x =
-            leg2.rotation.x =
+          oLegL.rotation.x =
+            oLegR.rotation.x =
             arm2.rotation.x =
             arm1.rotation.x =
               0;
@@ -523,6 +551,15 @@
             if (num == 4) {
               num = 1;
             }
+          } else if (event.key == "x") {
+            if (
+              dirt.position.z + 2 > orangeKitty.position.z &&
+              orangeKitty.position.z > dirt.position.z - 2 &&
+              dirt.position.x + 2 > orangeKitty.position.x &&
+              orangeKitty.position.x > dirt.position.x - 2
+            ) {
+              grow();
+            }
           }
           if (num == 1) {
             selectCat = orangeKitty;
@@ -537,9 +574,9 @@
 
         function walk() {
           if (num == 1) {
-            leg1.rotation.x +=
+            oLegL.rotation.x +=
               ((Math.sin(Date.now() * 0.01) * Math.PI) / 2) * 0.12;
-            leg2.rotation.x -=
+            oLegR.rotation.x -=
               ((Math.sin(Date.now() * 0.01) * Math.PI) / 2) * 0.12;
             arm2.rotation.x -=
               ((Math.sin(Date.now() * 0.01) * Math.PI) / 2) * 0.12;
