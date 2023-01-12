@@ -144,12 +144,34 @@
             wBody.setAttribute(
                 'color',
                 new THREE.BufferAttribute(new Float32Array(colorsBege), 3));
-                whiteCatGeometries.push(wBody);
-                
+            whiteCatGeometries.push(wBody);
+
+            // ears
+            const wEarOutL = new THREE.BoxGeometry(0.5,0.35,0.2);
+            wEarOutL.setAttribute(
+                'color',
+                new THREE.BufferAttribute(new Float32Array(colorsBege), 3));
+            wEarOutL.translate(-0.85,2.55,0.7);
+            const wEarOutR = wEarOutL.clone();
+            wEarOutR.translate(1.7, 0,0);
+
+            const wEarInL = new THREE.BoxGeometry(0.35,0.2,0.1);
+            const colorsPink = []; 
+            for (let i = 0; i < wEarInL.attributes.position.count; i++)
+                colorsPink.push(colorPink.r, colorPink.g, colorPink.b);
+            wEarInL.setAttribute(
+                'color',
+                new THREE.BufferAttribute(new Float32Array(colorsPink), 3));
+            wEarInL.translate(-0.88,2.5,0.77);
+            const wEarInR = wEarInL.clone();
+            wEarInR.translate(1.75,0,0);
+
+            whiteCatGeometries.push(wEarOutL,wEarOutR, wEarInL, wEarInR);
+
             // forehead
             const wForehead = new THREE.BoxGeometry(0.85, 0.5, 1.62);
             const colorsLightPurple = []; 
-            for (let i = 0; i < wBody.attributes.position.count; i++)
+            for (let i = 0; i < wForehead.attributes.position.count; i++)
                 colorsLightPurple.push(colorLightPurple.r, colorLightPurple.g, colorLightPurple.b);
             wForehead.translate(0, 2.16,0);
             wForehead.setAttribute(
@@ -160,7 +182,7 @@
             // colar
             const wColar = new THREE.BoxGeometry(1.7, 0.5, 1.2);
             const colorsDarkPurple = [];
-            for (let i = 0; i < wBody.attributes.position.count; i++)
+            for (let i = 0; i < wColar.attributes.position.count; i++)
                 colorsDarkPurple.push(colorDarkPurple.r, colorDarkPurple.g, colorDarkPurple.b);
             wColar.translate(0, 0.7, 0);
             wColar.setAttribute(
@@ -171,7 +193,7 @@
             // blush
             const wBlushL = new THREE.BoxGeometry(0.3, 0.18, 0.05);
             const colorsBlush = [];
-            for (let i = 0; i < wBody.attributes.position.count; i++)
+            for (let i = 0; i < wBlushL.attributes.position.count; i++)
                 colorsBlush.push(colorBlush.r, colorBlush.g, colorBlush.b);
             wBlushL.setAttribute(
                 'color',
@@ -181,15 +203,10 @@
             wBlushR.translate(-1.685,0,0)
             whiteCatGeometries.push(wBlushL, wBlushR);
 
-            // mouth
-            
-            // ears
-            const wEarL = new THREE.BoxGeometry();
-
             // bell
             const wBell = new THREE.SphereGeometry(0.2, 10, 10);
             const colorsYellow = [];
-            for (let i = 0; i < wBody.attributes.position.count; i++)
+            for (let i = 0; i < wBell.attributes.position.count; i++)
                 colorsYellow.push(colorYellow.r, colorYellow.g, colorYellow.b);
             wBell.translate(0, 0.4, 0.7);
             wBell.setAttribute(
@@ -197,13 +214,10 @@
                 new THREE.BufferAttribute(new Float32Array(colorsYellow), 3));
             whiteCatGeometries.push(wBell);
 
-            
-            
-
             // whiskers left
             const wWhiskersL = new THREE.CylinderGeometry(0.03, 0.03, 0.5,20,1);
             const colorsBlack = [];
-            for (let i = 0; i < wBody.attributes.position.count; i++)
+            for (let i = 0; i < wWhiskersL.attributes.position.count; i++)
                 colorsBlack.push(colorBlack.r, colorBlack.g, colorBlack.b);
             wWhiskersL.setAttribute(
                 'color',
@@ -235,7 +249,29 @@
             wEyeR.translate(1.2,0,0);
             whiteCatGeometries.push(wEyeL, wEyeR);
 
-                
+            // mouth
+            class CustomSinCurve extends THREE.Curve {
+                constructor( scale = 1 ) {
+                    super();
+                    this.scale = scale;
+                }
+
+                getPoint( t, optionalTarget = new THREE.Vector3() ) {
+                    const tx = t * 3 - 1.5;
+                    const ty = Math.sin(-3.05 * Math.PI * t )*0.35;
+                    const tz = 0;
+                    return optionalTarget.set( tx, ty, tz ).multiplyScalar( this.scale );
+                }
+            }
+
+            const path = new CustomSinCurve( 0.15);
+            const wMouth = new THREE.TubeGeometry( path, 20, 0.03, 20, false );
+            wMouth.setAttribute(
+                'color',
+                new THREE.BufferAttribute(new Float32Array(colorsBlack), 3));
+            wMouth.translate(0,1,1);
+            whiteCatGeometries.push(wMouth);
+
 
             
 
@@ -244,6 +280,8 @@
 
 
 
+
+            // show cat 
 
             whiteCatGeometries = BufferGeometryUtils.mergeBufferGeometries(whiteCatGeometries);
             
