@@ -73,7 +73,7 @@
             scene.add(light);
 
             let light2 = new THREE.PointLight(0xEAE178, 0.7, 100 );
-            light2.position.set(-15, 6, 5);
+            light2.position.set(-15, 6.5, 7);
             light2.castShadow = true;
             light2.shadow.camera;
             scene.add(light2);
@@ -183,7 +183,7 @@ let ind = new THREE.Mesh(
 // background
             
             // ground
-            let geometry = new THREE.BoxGeometry(30, 1.5, 30)
+            let geometry = new THREE.BoxGeometry(35, 1.5, 35)
             let plane = new THREE.Mesh(geometry, colorGreenShade);
             plane.position.y = -1.5;
             plane.position.z = -9;
@@ -222,21 +222,27 @@ let ind = new THREE.Mesh(
             treeupPart.rotateX(1.6,0,0); treedownPart.rotateX(1.6,0,0);
             treedownPart.translate(0,4.5,0);treeupPart.translate(0,6,0);
             treeGeometries.push(treeupPart,treedownPart)
-            
-            const colorTreeTrunk = []
+
+            treeTop = new THREE.Mesh(
+               BufferGeometryUtils.mergeBufferGeometries(treeGeometries),
+               new THREE.MeshPhongMaterial({ vertexColors: true, flatShading: true, shininess: 0})
+           )
+
             const treeTrunk = new THREE.Mesh(
                 new THREE.BoxGeometry(2.5, 5.5, 2.5),
                 new THREE.MeshPhongMaterial({ color: colorBrown, flatShading: true, shininess: 0}))
 
             treeTrunk.position.y = 0.6;
                 
-
-                treeTop = new THREE.Mesh(
-                   BufferGeometryUtils.mergeBufferGeometries(treeGeometries),
-                   new THREE.MeshPhongMaterial({ vertexColors: true, flatShading: true, shininess: 0})
-               )
                 treeTop.receiveShadow = treeTop.castShadow = true;
                 treeTrunk.castShadow = treeTrunk.receiveShadow = true;
+
+                const insidePart = new THREE.Mesh(
+                new THREE.BoxGeometry(6, 3.5, 3),
+                new THREE.MeshPhongMaterial({ color: colorGreen, flatShading: true, shininess: 0}))
+                // insidePart.position.z = -2;
+                insidePart.position.y = 5.2;
+
 
                 let apple1 = heart.clone(), apple2 = heart.clone();
                 apple1.castShadow = apple1.receiveShadow = true;
@@ -245,11 +251,48 @@ let ind = new THREE.Mesh(
                 apple2.position.set(0.8,2.5, 3.5);
                 heart.position.set(0.2,0.6, 3.7);
                 tree = new THREE.Group();
-                tree.add(treeTop,treeTrunk, apple1, apple2, heart)
+                tree.add(treeTop,treeTrunk, apple1, apple2, heart, insidePart)
 
                 tree.position.z =-7;
                 
                 scene.add(tree)
+
+//board with instructions----------------------------------------------------
+
+const boardGeometries = [];
+
+            const colorboard = [];
+                const boardbase = new THREE.CylinderGeometry(0.2,0.2,3,6);
+                for (let i = 0; i < boardbase.attributes.position.count; i++)
+                colorboard.push(colorBrown.r, colorBrown.g, colorBrown.b);
+                boardbase.setAttribute(
+                    'color',
+                    new THREE.BufferAttribute(new Float32Array(colorboard), 3));
+                boardGeometries.push(boardbase)
+
+                const boardplack = new THREE.BoxGeometry(5,4,0.3);
+                    boardplack.setAttribute(
+                        'color',
+                        new THREE.BufferAttribute(new Float32Array(colorboard), 3));
+                boardGeometries.push(boardplack)
+
+                const colorWhitePart = [];
+                const WhitePart = new THREE.BoxGeometry(4.5,3.5,0.3);
+                for (let i = 0; i < WhitePart.attributes.position.count; i++)
+                colorWhitePart.push(colorWhite.r, colorWhite.g, colorWhite.b);
+                    WhitePart.setAttribute(
+                        'color',
+                        new THREE.BufferAttribute(new Float32Array(colorWhitePart), 3));
+                boardGeometries.push(WhitePart)
+                
+
+            boardbase.translate(-12,0,5);boardplack.translate(-12,3.5,5);WhitePart.translate(-12,3.5,5.1);
+            
+            const board = new THREE.Mesh(
+                BufferGeometryUtils.mergeBufferGeometries(boardGeometries),
+                new THREE.MeshPhongMaterial({ vertexColors: true, flatShading: true, shininess: 0}))
+
+                scene.add(board)
 
 //backgroud--------------------------------------------------
 
@@ -289,16 +332,16 @@ const staticGeometries = []
             trunk1.setAttribute(
                 'color',
                 new THREE.BufferAttribute(new Float32Array(coloroftrunk), 3));
-            trunk1.translate(-6,1.5,-10)
+            trunk1.translate(-6.5,1.5,-11)
             staticGeometries.push(trunk1);
 
             let trunk2 = trunk1.clone();
             let trunk3 = trunk1.clone();
             let trunk4 = trunk1.clone();
             
-            trunk2.translate(22,0,-3);
-            trunk3.translate(17,0,-8);
-            trunk4.translate(9,0,-3);
+            trunk2.translate(23.8,0,-2.5);
+            trunk3.translate(18.5,0,-8);
+            trunk4.translate(9.5,0,-4.5);
             staticGeometries.push(trunk2, trunk3, trunk4);
 
             //boulders
@@ -368,7 +411,7 @@ const staticGeometries = []
             bigBush.translate(-8,-0.5,3);
             bgGeometries.push(bigBush);
 
-            const smallBush = new THREE.SphereGeometry(0.8, 8, 5);
+            const smallBush = new THREE.SphereGeometry(0.8, 6, 4);
                     smallBush.setAttribute(
                         'color',
                         new THREE.BufferAttribute(new Float32Array(colorleaf), 3));
@@ -413,6 +456,9 @@ const staticGeometries = []
             bg.castShadow = true;
             bg.position.x = -5;
             bg.position.z = -4;
+            bg.scale.x = 1.1;
+            bg.scale.z = 1.1;
+            bg.scale.y = 1.1;
             scene.add(bg)
 
 
@@ -787,33 +833,25 @@ function handleKeyDown(e) {
             Actions(e);
         }else if (e.key == "s" 
            && (
-            blackKitty.position.x <= tree.position.x + 3 && blackKitty.position.x >= tree.position.x - 3
-            && blackKitty.position.z <= tree.position.z + 3 && blackKitty.position.z >= tree.position.z - 3
+            blackKitty.position.x <= tree.position.x + 3.5 && blackKitty.position.x >= tree.position.x - 3.5
+            && blackKitty.position.z <= tree.position.z + 3.5 && blackKitty.position.z >= tree.position.z - 3.5
            )
         ) {
-            console.log(blackKitty.position <= tree.position - blackKitty.position);
-            toShake = true
-            shoulderl.rotation.y = THREE.Math.degToRad(60);
-            shoulderr.rotation.y = THREE.Math.degToRad(-60);
-            elbowl.rotation.z = -THREE.Math.degToRad(20);
-            elbowr.rotation.z = THREE.Math.degToRad(20);
-            earl.rotation.x += 6*(Math.sin(Date.now() * 0.015) * Math.PI/2 * 0.001);
-            earr.rotation.x += 6*(Math.sin(Date.now() * 0.015) * Math.PI/2 * 0.001);
-            blackKittybody.position.z += (Math.sin(Date.now() * 0.4) * Math.PI/2 * 0.01)*3
-            tail.position.z += (Math.sin(Date.now() * 0.4) * Math.PI/2 * 0.01)*3;
-            bell.position.z += (Math.sin(Date.now() * 0.4) * Math.PI/2 * 0.01)*3;
-            bell.rotation.x -= -2*(Math.sin(Date.now() * 0.02) * Math.PI/2 * 0.06);
-            tail.rotation.x = THREE.Math.degToRad(-90);
 
-            treeTop.rotation.z = 20*(Math.sin(Date.now() * 0.015) * Math.PI/2 * 0.001);
+            toShake = true;
+            // shoulderl.rotation.y = THREE.Math.degToRad(60);
+            // shoulderr.rotation.y = THREE.Math.degToRad(-60);
+            // elbowl.rotation.z = -THREE.Math.degToRad(20);
+            // elbowr.rotation.z = THREE.Math.degToRad(20);
+            // earl.rotation.x += 6*(Math.sin(Date.now() * 0.015) * Math.PI/2 * 0.001);
+            // earr.rotation.x += 6*(Math.sin(Date.now() * 0.015) * Math.PI/2 * 0.001);
+            // blackKittybody.position.z += (Math.sin(Date.now() * 0.4) * Math.PI/2 * 0.01)*3
+            // tail.position.z += (Math.sin(Date.now() * 0.4) * Math.PI/2 * 0.01)*3;
+            // bell.position.z += (Math.sin(Date.now() * 0.4) * Math.PI/2 * 0.01)*3;
+            // bell.rotation.x -= -2*(Math.sin(Date.now() * 0.02) * Math.PI/2 * 0.06);
+            // tail.rotation.x = THREE.Math.degToRad(-90);
 
-            setTimeout(function() {
-                heart.position.y = -0.35;
-                heart.rotation.x = THREE.Math.degToRad(90);
-                heart.rotation.z = THREE.Math.degToRad(40);
-
-                toFall = true
-            },500)
+            // treeTop.rotation.z = 20*(Math.sin(Date.now() * 0.015) * Math.PI/2 * 0.001);
         }
     }
 }
@@ -830,20 +868,7 @@ function handleKeyUp(e) {
 	}
 	else if (e.key == 'ArrowDown'){
 		downKey = false;
-	}else if(e.key == 's'){
-        // setTimeout(function() {
-        //         // heart.position.y -= 0.1
-        //         // if(heart.position.y <= -4){
-        //         //     heart.position.y = -4
-        //         // }
-        //         heart.position.y = -0.35;
-        //         heart.position.z -= 1;
-        //         heart.rotation.x = THREE.Math.degToRad(90);
-        //         heart.rotation.z = THREE.Math.degToRad(40);
-
-        //         toFall = true
-        //     },500)
-    }
+	}
     legl.rotation.x = legr.rotation.x = bell.rotation.x = 0;
     shoulderl.rotation.z = THREE.Math.degToRad(20);
     shoulderr.rotation.z = THREE.Math.degToRad(-20);
@@ -893,129 +918,6 @@ function Actions(e){
 document.onkeydown = handleKeyDown;
 document.onkeyup = handleKeyUp;
 
-
-//handler for keydown
-// function ArrowPressed(e) {
-// 			e.preventDefault();
-// 			if (e.key == 'ArrowRight') {
-// 				rightKey = true; //Canvas#2
-// 			}
-// 			else if (e.key == 'ArrowLeft'){
-// 				leftKey = true; //Canvas#
-// 			}
-// 			else if (e.key == 'ArrowUp') {
-// 				upKey = true; //Canvas#2
-// 			}
-// 			else if (e.key == 'ArrowDown'){
-// 				downKey = true; //Canvas#
-// 			}
-// 			else if(e.keyCode==71){
-// 				gKey = true;
-// 			}
-// 			else if(e.keyCode==80){
-// 				sizex = 96/2
-// 				sizey = 576/12
-// 				if (!pKey){
-// 					image.src = src2
-// 				}
-// 				pKey = true;
-// 			}
-// 		}
-		
-// 		//handler for keyup
-// 		function ArrowReleased(e) {
-// 			if (e.key == 'ArrowRight'){
-// 				audio.volume = 0;
-// 				rightKey = false;
-// 				frameCol = 0;
-// 			}
-// 			else if (e.key == 'ArrowLeft'){
-// 				audio.volume = 0;
-// 				leftKey = false;
-// 				frameCol = 0;
-// 			}
-// 			else if (e.key == 'ArrowUp'){
-// 				audio.volume = 0;
-// 				upKey = false;
-// 				frameCol = 0;
-// 			}
-// 			else if (e.key == 'ArrowDown'){
-// 				audio.volume = 0;
-// 				downKey = false;
-// 				frameCol = 0;
-// 			}
-// 		}
-		
-// 		//sets handlers for events keydown & keyup
-// 		window.addEventListener('keydown', ArrowPressed);
-// 		window.addEventListener('keyup', ArrowReleased);
-
-// 		function actions(){
-// 				if (rightKey){
-// 					image.src = src
-// 					audio.volume = 0.3;
-// 					frameRow = 3;
-// 					x+=10;
-// 					frameCol++;	
-// 					if (frameCol == 4)
-// 					frameCol = 2;
-					
-// 				}
-// 				else if (leftKey){
-// 					image.src = src
-// 				audio.volume = 0.3;
-// 				x-=10;
-// 				frameRow = 2;
-// 				frameCol++;	
-// 				if (frameCol == 4)
-// 				frameCol = 0;
-// 			}
-// 			else if (upKey){
-// 				image.src = src
-// 				audio.volume = 0.3;
-// 				y-=10;
-// 				frameRow = 1;
-// 				frameCol++;	
-// 				if (frameCol == 3)
-// 				frameCol = 0;
-// 			}
-// 			else if (downKey){
-// 				image.src = src
-// 				audio.volume = 0.3;
-// 				y+=10;
-// 				frameRow = 0;
-// 				frameCol++;	
-// 				if (frameCol == 4)
-// 				frameCol = 0;
-// 			}
-// 			else if (gKey){
-// 				frameCol++;	
-// 				if (frameCol == 2){
-// 					frameCol = 0;
-// 					gKey = false;
-// 				}
-// 				grab(x,y)
-// 			}
-// 			else if (pKey){
-// 				if (frameRow < 8){
-// 					frameRow += 8
-// 					frameCol = 2
-// 				}
-// 				frameCol--;	
-// 				if (frameCol == -1){
-// 					image.src = src
-// 					pKey = false;
-// 					frameCol = 0;
-// 					sizex = 192/4
-// 					sizey = 192/4
-// 					frameRow -= 8
-// 				}
-// 				if(Math.floor(ecoCounter)/5 > 0){
-// 					Plant();
-// 				}
-// 			}
-// 		}
-
 // ----------------------------           
                 renderer.setAnimationLoop(render);
             }
@@ -1040,18 +942,55 @@ document.onkeyup = handleKeyUp;
             //     heart.position.y = 0
             // }
 
-            // if(!keyPressed){
-            //     legl.rotation.x = legr.rotation.x = 0;
-            // }
+            if(toShake){
+                shoulderl.rotation.y = THREE.Math.degToRad(60);
+                shoulderr.rotation.y = THREE.Math.degToRad(-60);
+                elbowl.rotation.z = -THREE.Math.degToRad(20);
+                elbowr.rotation.z = THREE.Math.degToRad(20);
+                earl.rotation.x += 6*(Math.sin(Date.now() * 0.015) * Math.PI/2 * 0.001);
+                earr.rotation.x += 6*(Math.sin(Date.now() * 0.015) * Math.PI/2 * 0.001);
+                blackKittybody.position.z += (Math.sin(Date.now() * 0.4) * Math.PI/2 * 0.01)*3
+                tail.position.z += (Math.sin(Date.now() * 0.4) * Math.PI/2 * 0.01)*3;
+                bell.position.z += (Math.sin(Date.now() * 0.4) * Math.PI/2 * 0.01)*3;
+                bell.rotation.x -= -2*(Math.sin(Date.now() * 0.02) * Math.PI/2 * 0.06);
+                tail.rotation.x = THREE.Math.degToRad(-90);
+                treeTop.rotation.z = 20*(Math.sin(Date.now() * 0.015) * Math.PI/2 * 0.001);
+                
+                setInterval(function() {
+
+                    shoulderl.rotation.z = THREE.Math.degToRad(20);
+                    shoulderr.rotation.z = THREE.Math.degToRad(-20);
+                    earl.rotation.z = earr.rotation.z = 0;
+
+                    tail.position.z = -0.7;
+                    bell.position.z = 0.7;
+                    blackKittybody.position.z = 0;
+                    tail.rotation.x = THREE.Math.degToRad(-70);
+                    earl.rotation.x = earr.rotation.x = 0;
+                    shoulderl.rotation.y = shoulderr.rotation.y = 0;
+                    elbowl.rotation.z = elbowr.rotation.z = 0;
+
+                    treeTop.rotation.z = 0;
+
+                    toShake = false;
+                    toFall = true;
+                },1000)
+            }
 
             if(toFall){
-                for(let i = 0; i <= -0.35; i -= 0.01){
-                    heart.position.y -= i
+                heart.rotation.x += THREE.Math.degToRad(5)
+                if(heart.rotation.x >= THREE.Math.degToRad(90)){
+                    heart.rotation.x = THREE.Math.degToRad(90);
                 }
-                // heart.position.y = -0.35;
-                // heart.position.z -= 1;
-                // heart.rotation.x = THREE.Math.degToRad(90);
-                // heart.rotation.z = THREE.Math.degToRad(40);
+                heart.rotation.z += THREE.Math.degToRad(5)
+                if(heart.rotation.z >= THREE.Math.degToRad(40)){
+                    heart.rotation.z = THREE.Math.degToRad(40);
+                }
+                heart.position.y -= 0.1;
+                if(heart.position.y <= -0.35){
+                    heart.position.y = -0.35;
+                }
+                toFall = false;
             }
 
             //default movimentation
