@@ -24,18 +24,18 @@
         let controls;
         let camera, scene, renderer;
 
-        let keyPressed, rightKey, leftKey, upKey, downKey, toShake;
+        let keyPressed, rightKey, leftKey, upKey, downKey, toShake, toFall;
         let started = false;
 
-        let heart, diamond;
+        let heart, tree, treeTop, indicator, spot;
         
         let shoulderl, elbowl, shoulderr, elbowr;
         let legl, legr, armUpl, armUpr, forearml, forearmr, earl, earr, tail;
         let features, bell, blackKitty, blackKittybody, armsl, armsr;
         let bg, blackCat;
-        let verts = []
+        let verts = []; let vertsTree = [];
 
-        let initialRot =[]
+        // let initialRot =[]
         
         window.onload = function init() {
             scene = new THREE.Scene();
@@ -105,6 +105,40 @@ const colorGreenShade = new THREE.MeshPhongMaterial({color: 0xA4C263, flatShadin
         const colorRed = new THREE.Color(0xBD757E);
 
 //pointer
+let ind = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.1, 0.1, 0.5),
+          new THREE.MeshPhongMaterial({
+            color: colorGreen,
+            flatShading: true,
+            shininess: 0,
+          })
+        );
+        ind.position.y = 2.7;
+
+        let ind2 = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.15, 0.1, 0.5),
+          new THREE.MeshPhongMaterial({
+            color: colorGreen,
+            flatShading: true,
+            shininess: 0,
+          })
+        );
+        ind2.position.x = -0.2;
+        ind2.position.y = 3;
+        ind2.rotation.z = 1;
+
+        let ind3 = ind2.clone();
+        ind3.position.x = 0.2;
+        ind3.rotation.z = -1;
+
+        indicator = new THREE.Group();
+        indicator.add(ind, ind2, ind3);
+        indicator.position.y = -0.15;
+        indicator.position.y = 1;
+        scene.add(indicator);
+
+
+        //-------------
 
             const heartl = new THREE.Mesh(
                 new THREE.SphereGeometry(0.5, 6,6),
@@ -120,7 +154,7 @@ const colorGreenShade = new THREE.MeshPhongMaterial({color: 0xA4C263, flatShadin
             heartbase.position.y = 3.45;
             heartbase.position.x = 0;
             heartbase.rotateZ(-0.6,0,0)
-
+            
             const midl = new THREE.Mesh(
                 new THREE.CylinderGeometry(0.499, 0.5, 0.5, 6),
                 new THREE.MeshStandardMaterial({ color: colorRed, flatShading: true, roughness: 0.4})
@@ -133,12 +167,18 @@ const colorGreenShade = new THREE.MeshPhongMaterial({color: 0xA4C263, flatShadin
             midr.rotateZ(-3.2,0,0);
             midr.rotateX(-1.6,0,0);
             midr.position.x = 0.2;
-
             
+            heartl.castShadow = heartl.receiveShadow = true;
+            heartr.castShadow = heartr.receiveShadow = true;
+            midl.castShadow = midl.receiveShadow = true;
+            midr.castShadow = midr.receiveShadow = true;
+            
+            let leaf = indicator.clone();
+            leaf.scale.set(0.8,0.8,0.8)
+            leaf.position.y = 2;
             heart = new THREE.Group();
-            heart.add(heartl, heartr,heartbase, midl, midr);
-            heart.position.y = 1;
-            scene.add(heart);
+            heart.add(heartl, heartr,heartbase, midl, midr, leaf);
+            heart.castShadow = heart.receiveShadow = true;
 
 // background
             
@@ -149,6 +189,69 @@ const colorGreenShade = new THREE.MeshPhongMaterial({color: 0xA4C263, flatShadin
             plane.position.z = -9;
             plane.receiveShadow = true;
             scene.add(plane);
+
+//spot to plant the tree
+            let texture = new THREE.TextureLoader().load ('./libs/spot.png');
+            let material = new THREE.MeshPhongMaterial({ map: texture, shininess: 0});
+
+            spot = new THREE.Mesh(
+                new THREE.PlaneGeometry(9,9),
+                material
+            )
+            spot.rotation.x = THREE.Math.degToRad(-90);
+            spot.position.set(0,-0.7,-7);
+            spot.receiveShadow = true;
+            scene.add(spot);
+
+
+// tree thats gonna get planted
+            const treeGeometries = []                
+            const colorTree = [];
+                const treeupPart = new THREE.TorusGeometry(2.3,1.5,10,15);
+                for (let i = 0; i < treeupPart.attributes.position.count; i++)
+                colorTree.push(colorGreen.r, colorGreen.g, colorGreen.b);
+                // add color attribute to the upPart buffer geometry
+                treeupPart.setAttribute(
+                    'color',
+                    new THREE.BufferAttribute(new Float32Array(colorTree), 3));
+                const treedownPart = new THREE.TorusGeometry(2.3,1.5,10,15);
+                    treedownPart.setAttribute(
+                        'color',
+                        new THREE.BufferAttribute(new Float32Array(colorTree), 3));
+
+            treeupPart.rotateX(1.6,0,0); treedownPart.rotateX(1.6,0,0);
+            treedownPart.translate(0,4.5,0);treeupPart.translate(0,6,0);
+            treeGeometries.push(treeupPart,treedownPart)
+            
+            const colorTreeTrunk = []
+            const treeTrunk = new THREE.Mesh(
+                new THREE.BoxGeometry(2.5, 5.5, 2.5),
+                new THREE.MeshPhongMaterial({ color: colorBrown, flatShading: true, shininess: 0}))
+
+            treeTrunk.position.y = 0.6;
+                
+
+                treeTop = new THREE.Mesh(
+                   BufferGeometryUtils.mergeBufferGeometries(treeGeometries),
+                   new THREE.MeshPhongMaterial({ vertexColors: true, flatShading: true, shininess: 0})
+               )
+                treeTop.receiveShadow = treeTop.castShadow = true;
+                treeTrunk.castShadow = treeTrunk.receiveShadow = true;
+
+                let apple1 = heart.clone(), apple2 = heart.clone();
+                apple1.castShadow = apple1.receiveShadow = true;
+                apple2.castShadow = apple2.receiveShadow = true;
+                apple1.position.set(-1.5,2, 3.5);
+                apple2.position.set(0.8,2.5, 3.5);
+                heart.position.set(0.2,0.6, 3.7);
+                tree = new THREE.Group();
+                tree.add(treeTop,treeTrunk, apple1, apple2, heart)
+
+                tree.position.z =-7;
+                
+                scene.add(tree)
+
+//backgroud--------------------------------------------------
 
             //rocks
             const bigRock = new THREE.Mesh(
@@ -617,9 +720,16 @@ const shinyGeometries =[];
                 });
             }
 
-            // initialRot.push({
-            //     leglRot: leg.atributtes.rotation.getX(),
-            // })
+            for (let i = 0; i < treeTop.geometry.attributes.position.count; i++) {
+                vertsTree.push({
+                    x: treeTop.geometry.attributes.position.getX(i),
+                    y: treeTop.geometry.attributes.position.getY(i),
+
+                    ang: Math.random() * Math.PI * 2,   // initial angle
+                    amp: -0.1 + Math.random() * 0.2,        // radius
+                    speed: 0.02 + Math.random() * 0.02  // angular velocity
+                });
+            }
 
 //------------------------
 
@@ -631,7 +741,8 @@ function handleKeyDown(e) {
             started = true;
             camera.position.set(1,3,13);
             camera.rotation.x = 0;
-            heart.scale.y = heart.scale.x = heart.scale.z = 0;
+            indicator.position.y = 0;
+            indicator.rotation.y = 0;
         }else if(e.key == "1"){
             heart.position.x = -4;
         }else if(e.key == "2"){
@@ -642,26 +753,50 @@ function handleKeyDown(e) {
 
     }
     else if(started){
-        if (e.key == "ArrowRight" && blackKitty.position.x < 14) {
+        if (e.key == "ArrowRight" && blackKitty.position.x < 14
+        // && !(
+        //     blackKitty.position.x >= tree.position.x - 2
+        //     && blackKitty.position.z <= tree.position.z + 2 && blackKitty.position.z >= tree.position.z - 2
+        //    )
+        ) {
             rightKey = true;
             Actions(e);
-        }else if (e.key == "ArrowLeft" && blackKitty.position.x > -14) {
+        }else if (e.key == "ArrowLeft" && blackKitty.position.x > -14
+        // && !(
+        //     blackKitty.position.x <= tree.position.x + 2
+        //     && blackKitty.position.z <= tree.position.z + 2 && blackKitty.position.z >= tree.position.z - 2
+        //    )
+        ) {
             leftKey = true;
             Actions(e);
-        }else if (e.key == "ArrowUp" && blackKitty.position.z > -20) {
+        }else if (e.key == "ArrowUp" && blackKitty.position.z > -20
+        // && !(
+        //     blackKitty.position.x <= tree.position.x + 2 && blackKitty.position.x >= tree.position.x - 2
+        //     && blackKitty.position.z <= tree.position.z + 2
+        //    )
+        ) {
             upKey = true;
             Actions(e);
-        }else if (e.key == "ArrowDown" && blackKitty.position.z < 5) {
+        }else if (e.key == "ArrowDown" && blackKitty.position.z < 5
+        // && !(
+        //     blackKitty.position.x <= tree.position.x + 2 && blackKitty.position.x >= tree.position.x - 2
+        //     && blackKitty.position.z >= tree.position.z - 2
+        //    )
+        ) {
             downKey = true;
             Actions(e);
-        }else if (e.key == "s") {
+        }else if (e.key == "s" 
+           && (
+            blackKitty.position.x <= tree.position.x + 3 && blackKitty.position.x >= tree.position.x - 3
+            && blackKitty.position.z <= tree.position.z + 3 && blackKitty.position.z >= tree.position.z - 3
+           )
+        ) {
+            console.log(blackKitty.position <= tree.position - blackKitty.position);
             toShake = true
             shoulderl.rotation.y = THREE.Math.degToRad(60);
             shoulderr.rotation.y = THREE.Math.degToRad(-60);
             elbowl.rotation.z = -THREE.Math.degToRad(20);
             elbowr.rotation.z = THREE.Math.degToRad(20);
-
-
             earl.rotation.x += 6*(Math.sin(Date.now() * 0.015) * Math.PI/2 * 0.001);
             earr.rotation.x += 6*(Math.sin(Date.now() * 0.015) * Math.PI/2 * 0.001);
             blackKittybody.position.z += (Math.sin(Date.now() * 0.4) * Math.PI/2 * 0.01)*3
@@ -669,12 +804,21 @@ function handleKeyDown(e) {
             bell.position.z += (Math.sin(Date.now() * 0.4) * Math.PI/2 * 0.01)*3;
             bell.rotation.x -= -2*(Math.sin(Date.now() * 0.02) * Math.PI/2 * 0.06);
             tail.rotation.x = THREE.Math.degToRad(-90);
+
+            treeTop.rotation.z = 20*(Math.sin(Date.now() * 0.015) * Math.PI/2 * 0.001);
+
+            setTimeout(function() {
+                heart.position.y = -0.35;
+                heart.rotation.x = THREE.Math.degToRad(90);
+                heart.rotation.z = THREE.Math.degToRad(40);
+
+                toFall = true
+            },500)
         }
     }
 }
 
 function handleKeyUp(e) {
-    console.log('up');
     if (e.key == 'ArrowRight'){
 		rightKey = false;
 	}
@@ -686,7 +830,20 @@ function handleKeyUp(e) {
 	}
 	else if (e.key == 'ArrowDown'){
 		downKey = false;
-	}
+	}else if(e.key == 's'){
+        // setTimeout(function() {
+        //         // heart.position.y -= 0.1
+        //         // if(heart.position.y <= -4){
+        //         //     heart.position.y = -4
+        //         // }
+        //         heart.position.y = -0.35;
+        //         heart.position.z -= 1;
+        //         heart.rotation.x = THREE.Math.degToRad(90);
+        //         heart.rotation.z = THREE.Math.degToRad(40);
+
+        //         toFall = true
+        //     },500)
+    }
     legl.rotation.x = legr.rotation.x = bell.rotation.x = 0;
     shoulderl.rotation.z = THREE.Math.degToRad(20);
     shoulderr.rotation.z = THREE.Math.degToRad(-20);
@@ -701,6 +858,8 @@ function handleKeyUp(e) {
     earl.rotation.x = earr.rotation.x = 0;
     shoulderl.rotation.y = shoulderr.rotation.y = 0;
     elbowl.rotation.z = elbowr.rotation.z = 0;
+
+    treeTop.rotation.z = 0;
 }
 
 // function for walking
@@ -719,11 +878,6 @@ function Actions(e){
         blackKitty.position.z += 0.22;
         blackKitty.rotation.y = 0;
     }
-    // else if(toShake) {
-    //     earl.rotation.x += 6*(Math.sin(Date.now() * 0.015) * Math.PI/2 * 0.001);
-    //     earr.rotation.x += 6*(Math.sin(Date.now() * 0.015) * Math.PI/2 * 0.001);
-    //     shoulderl.rotateX(1.6,0,0)
-    // }
     blackKittybody.position.y = 0
     blackKittybody.position.y += (Math.sin(Date.now() * 0.4) * Math.PI/2 * 0.01)*6;
     shoulderl.rotation.z += -2*(Math.sin(Date.now() * 0.01) * Math.PI/2 * 0.03);
@@ -866,16 +1020,15 @@ document.onkeyup = handleKeyUp;
                 renderer.setAnimationLoop(render);
             }
 
-            
             function render(){
 
             //before starting
             if(!started){
-                camera.position.y = 6
-                camera.position.x += 2*(Math.sin(Date.now() * 0.001) * Math.PI/2 * 0.02);
-                camera.lookAt(scene.position);
-                heart.rotation.y += 0.02;
-                heart.position.y += Math.sin(Date.now() * 0.0025) * Math.PI/2 * 0.008;
+                // camera.position.y = 6
+                // camera.position.x += 2*(Math.sin(Date.now() * 0.001) * Math.PI/2 * 0.02);
+                // camera.lookAt(scene.position);
+                indicator.rotation.y += 0.02;
+                indicator.position.y += Math.sin(Date.now() * 0.0025) * Math.PI/2 * 0.008;
             }
 
             
@@ -887,8 +1040,18 @@ document.onkeyup = handleKeyUp;
             //     heart.position.y = 0
             // }
 
-            if(!keyPressed){
-                legl.rotation.x = legr.rotation.x = 0;
+            // if(!keyPressed){
+            //     legl.rotation.x = legr.rotation.x = 0;
+            // }
+
+            if(toFall){
+                for(let i = 0; i <= -0.35; i -= 0.01){
+                    heart.position.y -= i
+                }
+                // heart.position.y = -0.35;
+                // heart.position.z -= 1;
+                // heart.rotation.x = THREE.Math.degToRad(90);
+                // heart.rotation.z = THREE.Math.degToRad(40);
             }
 
             //default movimentation
@@ -908,18 +1071,23 @@ document.onkeyup = handleKeyUp;
             // controls.update();
 
 
-             // for all vertices of the cloud mesh
              for (let i = 0; i < bg.geometry.attributes.position.count; i++) {
-                let vprops = verts[i];  // get INITIAL vertices and movement definitions
-                // update X and Y values according to a 2D circular motion
+                let vprops = verts[i];
                 let currentXposition = vprops.x + Math.cos(vprops.ang) * vprops.amp;
                 let currentYposition = vprops.y + Math.sin(vprops.ang) * vprops.amp;
-                vprops.ang += vprops.speed +0.02; // update angle for next frame
-                // set new X and Y coordinates for the vertex at the given index i
+                vprops.ang += vprops.speed +0.02;
                 bg.geometry.attributes.position.setXY(i, currentXposition, currentYposition);
             }
-            // mandatory so that the new position values are rendered again
             bg.geometry.attributes.position.needsUpdate = true;
+
+            for (let i = 0; i < treeTop.geometry.attributes.position.count; i++) {
+                let vpropsTree = vertsTree[i];
+                let currentXpositionTree = vpropsTree.x + Math.cos(vpropsTree.ang) * vpropsTree.amp;
+                let currentYpositionTree = vpropsTree.y + Math.sin(vpropsTree.ang) * vpropsTree.amp;
+                vpropsTree.ang += vpropsTree.speed - 0.05;
+                treeTop.geometry.attributes.position.setXY(i, currentXpositionTree, currentYpositionTree);
+            }
+            treeTop.geometry.attributes.position.needsUpdate = true;
 
         }
     </script>
