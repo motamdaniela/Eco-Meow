@@ -165,8 +165,15 @@
             wEarInL.translate(-0.88,2.5,0.77);
             const wEarInR = wEarInL.clone();
             wEarInR.translate(1.75,0,0);
-
             whiteCatGeometries.push(wEarOutL,wEarOutR, wEarInL, wEarInR);
+
+            // nose
+            const wNose = new THREE.BoxGeometry(0.2,0.1,0.02);
+            wNose.setAttribute(
+                'color',
+                new THREE.BufferAttribute(new Float32Array(colorsPink), 3));
+            wNose.translate(0,1.2,1);
+            whiteCatGeometries.push(wNose);
 
             // forehead
             const wForehead = new THREE.BoxGeometry(0.85, 0.5, 1.62);
@@ -203,17 +210,7 @@
             wBlushR.translate(-1.685,0,0)
             whiteCatGeometries.push(wBlushL, wBlushR);
 
-            // bell
-            const wBell = new THREE.SphereGeometry(0.2, 10, 10);
-            const colorsYellow = [];
-            for (let i = 0; i < wBell.attributes.position.count; i++)
-                colorsYellow.push(colorYellow.r, colorYellow.g, colorYellow.b);
-            wBell.translate(0, 0.4, 0.7);
-            wBell.setAttribute(
-                'color',
-                new THREE.BufferAttribute(new Float32Array(colorsYellow), 3));
-            whiteCatGeometries.push(wBell);
-
+            
             // whiskers left
             const wWhiskersL = new THREE.CylinderGeometry(0.03, 0.03, 0.5,20,1);
             const colorsBlack = [];
@@ -239,15 +236,7 @@
             wWhiskersR2.translate(0, 0.25,0);
             whiteCatGeometries.push(wWhiskersR, wWhiskersR2);
 
-            // eyes 
-            const wEyeL = new THREE.SphereGeometry(0.13,10,10);
-            wEyeL.setAttribute(
-                'color',
-                new THREE.BufferAttribute(new Float32Array(colorsBlack), 3));
-            wEyeL.translate(-0.6, 1.45, 0.8);
-            const wEyeR = wEyeL.clone();
-            wEyeR.translate(1.2,0,0);
-            whiteCatGeometries.push(wEyeL, wEyeR);
+            
 
             // mouth
             class CustomSinCurve extends THREE.Curve {
@@ -273,8 +262,42 @@
             whiteCatGeometries.push(wMouth);
 
 
-            
+            const wShinnyGeometries = [];
+            // bell
+            const wBell = new THREE.SphereGeometry(0.2, 10, 10);
+            const colorsYellow = [];
+            for (let i = 0; i < wBell.attributes.position.count; i++)
+                colorsYellow.push(colorYellow.r, colorYellow.g, colorYellow.b);
+            wBell.translate(0, 0.4, 0.7);
+            wBell.setAttribute(
+                'color',
+                new THREE.BufferAttribute(new Float32Array(colorsYellow), 3));
+            wShinnyGeometries.push(wBell);
 
+            // eyes 
+            const wEyeL = new THREE.SphereGeometry(0.13,10,10);
+            wEyeL.setAttribute(
+                'color',
+                new THREE.BufferAttribute(new Float32Array(colorsBlack), 3));
+            wEyeL.translate(-0.6, 1.45, 0.8);
+            const wEyeR = wEyeL.clone();
+            wEyeR.translate(1.2,0,0);
+            wShinnyGeometries.push(wEyeL, wEyeR);
+
+
+            const wShinny = new THREE.Mesh(
+                BufferGeometryUtils.mergeBufferGeometries(wShinnyGeometries),
+                new THREE.MeshPhysicalMaterial({
+                    vertexColors: true,
+                    flatShading: true,
+                    metalness: 0.2,
+                    roughness: 0.2,
+                    // shininess: 0,
+                })
+            );
+
+
+            scene.add(wShinny)
 
             
 
