@@ -272,58 +272,34 @@
 
         // scene.add(tree);
 
-        // orange cat parts that don't move
-
-        let orangeCatGeometries = [];
-
-        const oHead = new THREE.BoxGeometry(2.2, 1.6, 2);
-        const colorsOrange = [];
-
-        for (let i = 0; i < oHead.attributes.position.count; i++)
-          colorsOrange.push(colorOrange.r, colorOrange.g, colorOrange.b);
-
-        oHead.translate(0, 1.5, 0);
-        oHead.setAttribute(
-          "color",
-          new THREE.BufferAttribute(new Float32Array(colorsOrange), 3)
+        // orange cat head
+        const oHead = new THREE.Mesh(
+          new THREE.BoxGeometry(2.2, 1.6, 2),
+          new THREE.MeshStandardMaterial({
+            color: colorOrange,
+          })
         );
-        orangeCatGeometries.push(oHead);
+        oHead.position.y = 1.5;
+        oHead.receiveShadow = oHead.castShadow = true;
 
-        const oBody = new THREE.BoxGeometry(1.4, 0.85, 1.4);
-        oBody.translate(0, 0.15, 0);
-        oBody.setAttribute(
-          "color",
-          new THREE.BufferAttribute(new Float32Array(colorsOrange), 3)
+        let oEarL = new THREE.Mesh(
+          new THREE.BoxGeometry(0.6, 0.4, 0.4),
+          new THREE.MeshStandardMaterial({
+            color: colorOrange,
+          })
         );
-        orangeCatGeometries.push(oBody);
+        oEarL.position.x = 0.7;
+        oEarL.position.y = 2.5;
+        oEarL.position.z = 0.5;
+        oEarL.receiveShadow = oEarL.castShadow = true;
 
-        const oEarL = new THREE.BoxGeometry(0.6, 0.4, 0.4);
-        oEarL.translate(0.7, 2.5, 0.5);
-        oEarL.setAttribute(
-          "color",
-          new THREE.BufferAttribute(new Float32Array(colorsOrange), 3)
-        );
-        const oEarR = oEarL.clone();
-        oEarR.translate(-1.4, 0, 0);
-        orangeCatGeometries.push(oEarL, oEarR);
-
-        const oColar = new THREE.BoxGeometry(1.7, 0.2, 1.8);
-        const colorsGreen = [];
-        for (let i = 0; i < oColar.attributes.position.count; i++)
-          colorsGreen.push(colorGreen.r, colorGreen.g, colorGreen.b);
-        oColar.translate(0, 0.6, 0);
-        oColar.setAttribute(
-          "color",
-          new THREE.BufferAttribute(new Float32Array(colorsGreen), 3)
-        );
-        orangeCatGeometries.push(oColar);
+        let oEarR = oEarL.clone();
+        oEarR.position.x = -0.7;
 
         let oWhiskers = new THREE.Mesh(
           new THREE.BoxGeometry(0.3, 0.07, 0.05),
           new THREE.MeshStandardMaterial({
             color: colorGray,
-            flatShading: true,
-            roughness: 0.4,
           })
         );
         oWhiskers.position.x = 0.5;
@@ -344,115 +320,167 @@
         oWhiskers4.position.x = -0.5;
         oWhiskers4.position.y = 0.9;
 
-        // spheres
-
-        const oBell = new THREE.SphereGeometry(0.2, 7, 7);
-        const colorsYellow = [];
-        for (let i = 0; i < oBell.attributes.position.count; i++)
-          colorsYellow.push(colorYellow.r, colorYellow.g, colorYellow.b);
-        oBell.translate(0, 0.4, 0.9);
-        oBell.setAttribute(
-          "color",
-          new THREE.BufferAttribute(new Float32Array(colorsYellow), 3)
-        );
-        orangeCatGeometries.push(oBell);
-
-        const oEyeL = new THREE.SphereGeometry(0.2, 7, 5);
-        const colorsGray = [];
-        for (let i = 0; i < oEyeL.attributes.position.count; i++)
-          colorsGray.push(colorGray.r, colorGray.g, colorGray.b);
-        oEyeL.translate(-0.75, 1.7, 0.9);
-        oEyeL.setAttribute(
-          "color",
-          new THREE.BufferAttribute(new Float32Array(colorsGray), 3)
-        );
-
-        const oEyeR = oEyeL.clone();
-        oEyeR.translate(1.5, 0, 0);
-
-        const oNose = new THREE.SphereGeometry(0.1, 7, 5);
-        oNose.translate(0, 1.35, 1.2);
-        oNose.setAttribute(
-          "color",
-          new THREE.BufferAttribute(new Float32Array(colorsGray), 3)
-        );
-
-        const oTail = new THREE.SphereGeometry(0.2, 5, 3);
-        const colorsWhite = [];
-        for (let i = 0; i < oTail.attributes.position.count; i++)
-          colorsWhite.push(colorWhite.r, colorWhite.g, colorWhite.b);
-        oTail.translate(0, 0, -0.8);
-        oTail.setAttribute(
-          "color",
-          new THREE.BufferAttribute(new Float32Array(colorsWhite), 3)
-        );
-
-        const oHeadSpot = new THREE.BoxGeometry(0.8, 0.5, 2.1);
-        oHeadSpot.translate(0, 2.1, 0);
-        oHeadSpot.setAttribute(
-          "color",
-          new THREE.BufferAttribute(new Float32Array(colorsWhite), 3)
-        );
-
-        orangeCatGeometries.push(oEyeL, oEyeR, oNose, oTail, oHeadSpot);
-
-        const oHead2 = new THREE.BoxGeometry(0.7, 0.6, 0.2);
-        oHead2.translate(0, 1, 1.1);
-        oHead2.setAttribute(
-          "color",
-          new THREE.BufferAttribute(new Float32Array(colorsWhite), 3)
-        );
-        orangeCatGeometries.push(oHead2);
-
-        const oBody2 = new THREE.BoxGeometry(0.7, 0.65, 1);
-        oBody2.translate(0, 0.03, 0.25);
-        oBody2.setAttribute(
-          "color",
-          new THREE.BufferAttribute(new Float32Array(colorsWhite), 3)
-        );
-        orangeCatGeometries.push(oBody2);
-
-        const oBlushL = new THREE.PlaneGeometry(0.4, 0.2);
-        oBlushL.translate(0.75, 1.25, 1.01);
-        const colorsPink = [];
-        for (let i = 0; i < oBell.attributes.position.count; i++)
-          colorsPink.push(colorPink.r, colorPink.g, colorPink.b);
-        oBlushL.setAttribute(
-          "color",
-          new THREE.BufferAttribute(new Float32Array(colorsPink), 3)
-        );
-
-        const oBlushR = oBlushL.clone();
-        oBlushR.translate(-1.5, 0, 0);
-
-        const oEarPinkL = oBlushL.clone();
-        oEarPinkL.translate(-0.05, 1.25, -0.3);
-
-        const oEarPinkR = oEarPinkL.clone();
-        oEarPinkR.translate(-1.4, 0, 0);
-
-        let oMouth = new THREE.Mesh(
-          new THREE.CircleGeometry(0.05, 10),
+        const oEyeL = new THREE.Mesh(
+          new THREE.SphereGeometry(0.2, 7, 5),
           new THREE.MeshStandardMaterial({
             color: colorGray,
-            flatShading: true,
             roughness: 0.4,
           })
         );
-        oMouth.position.x = 0;
+        oEyeL.position.x = 0.75;
+        oEyeL.position.y = 1.7;
+        oEyeL.position.z = 0.9;
+        oEyeL.receiveShadow = oEyeL.castShadow = true;
+
+        const oEyeR = oEyeL.clone();
+        oEyeR.position.x = -0.75;
+
+        const oNose = new THREE.Mesh(
+          new THREE.SphereGeometry(0.1, 7, 5),
+          new THREE.MeshStandardMaterial({
+            color: colorGray,
+            roughness: 0.4,
+          })
+        );
+        oNose.position.y = 1.35;
+        oNose.position.z = 1.2;
+        oNose.receiveShadow = oNose.castShadow = true;
+
+        const oHeadSpot = new THREE.Mesh(
+          new THREE.BoxGeometry(0.8, 0.5, 2.1),
+          new THREE.MeshStandardMaterial({
+            color: colorWhite,
+          })
+        );
+        oHeadSpot.position.y = 2.1;
+        oHeadSpot.receiveShadow = oHeadSpot.castShadow = true;
+
+        const oHead2 = new THREE.Mesh(
+          new THREE.BoxGeometry(0.7, 0.6, 0.2),
+          new THREE.MeshStandardMaterial({
+            color: colorWhite,
+          })
+        );
+        oHead2.position.y = 1;
+        oHead2.position.z = 1.1;
+        oHead2.receiveShadow = oHead2.castShadow = true;
+
+        const oMouth = new THREE.Mesh(
+          new THREE.CircleGeometry(0.05, 10),
+          new THREE.MeshStandardMaterial({
+            color: colorGray,
+            roughness: 0.4,
+          })
+        );
         oMouth.position.y = 1.1;
         oMouth.position.z = 1.21;
         oMouth.receiveShadow = true;
 
-        orangeCatGeometries.push(oBlushL, oBlushR, oEarPinkL, oEarPinkR);
+        const oBlushL = new THREE.Mesh(
+          new THREE.PlaneGeometry(0.4, 0.2),
+          new THREE.MeshStandardMaterial({
+            color: colorPink,
+          })
+        );
+        oBlushL.position.x = 0.75;
+        oBlushL.position.y = -0.2;
+        oBlushL.position.z = 1.01;
+        oBlushL.receiveShadow = true;
+
+        const oBlushR = oBlushL.clone();
+        oBlushR.position.x = -0.75;
+
+        oHead.add(oBlushL, oBlushR);
+
+        const oEarPinkL = oBlushL.clone();
+        oEarPinkL.position.x = -0.05;
+        oEarPinkL.position.y = 0.8;
+        oEarPinkL.position.z = -0.19;
+
+        const oEarPinkR = oEarPinkL.clone();
+        oEarPinkR.position.x = 0.05;
+
+        oEyeL.add(oEarPinkL);
+        oEyeR.add(oEarPinkR);
+
+        let headGroup = new THREE.Group();
+        headGroup.add(
+          oHead,
+          oEarL,
+          oEarR,
+          oWhiskers,
+          oWhiskers2,
+          oWhiskers3,
+          oWhiskers4,
+          oEyeL,
+          oEyeR,
+          oNose,
+          oHeadSpot,
+          oHead2,
+          oMouth
+        );
+
+        // orange cat body
+        let oBody = new THREE.Mesh(
+          new THREE.BoxGeometry(1.4, 0.85, 1.4),
+          new THREE.MeshStandardMaterial({
+            color: colorOrange,
+          })
+        );
+        oBody.position.y = 0.15;
+        oBody.receiveShadow = oBody.castShadow = true;
+
+        let oTail = new THREE.Mesh(
+          new THREE.SphereGeometry(0.2, 5, 3),
+          new THREE.MeshStandardMaterial({
+            color: colorWhite,
+          })
+        );
+        oTail.position.z = -0.8;
+        oTail.receiveShadow = oTail.castShadow = true;
+
+        let oBody2 = new THREE.Mesh(
+          new THREE.BoxGeometry(0.7, 0.65, 1),
+          new THREE.MeshStandardMaterial({
+            color: colorWhite,
+          })
+        );
+        oBody2.position.y = 0.03;
+        oBody2.position.z = 0.25;
+        oBody2.receiveShadow = oBody2.castShadow = true;
+
+        let bodyGroup = new THREE.Group();
+        bodyGroup.add(oBody, oTail, oBody2);
+
+        // orange cat collar
+        let oCollar = new THREE.Mesh(
+          new THREE.BoxGeometry(1.7, 0.2, 1.8),
+          new THREE.MeshStandardMaterial({
+            color: colorGreen,
+          })
+        );
+        oCollar.position.y = 0.6;
+        oCollar.receiveShadow = oCollar.castShadow = true;
+
+        let oBell = new THREE.Mesh(
+          new THREE.SphereGeometry(0.2, 7, 5),
+          new THREE.MeshStandardMaterial({
+            color: colorYellow,
+            roughness: 0.4,
+          })
+        );
+        oBell.position.y = 0.4;
+        oBell.position.z = 0.9;
+        oBell.receiveShadow = oBell.castShadow = true;
+
+        let collarGroup = new THREE.Group();
+        collarGroup.add(oCollar, oBell);
 
         // arms
         let oArmL = new THREE.Mesh(
           new THREE.BoxGeometry(0.3, 0.6, 0.3),
           new THREE.MeshPhongMaterial({
             color: colorOrange,
-            flatShading: true,
-            shininess: 0,
           })
         );
         oArmL.position.x = 0.8;
@@ -468,8 +496,6 @@
           new THREE.BoxGeometry(0.3, 0.3, 0.3),
           new THREE.MeshPhongMaterial({
             color: colorWhite,
-            flatShading: true,
-            shininess: 0,
           })
         );
         oArmL2.position.x = 0.8;
@@ -490,15 +516,11 @@
         let arm2 = new THREE.Group();
         arm2.add(oArmR, oArmR2);
 
-        // // legs
-        // let hip=new THREE.Object3D();
-        // shoulder.position.set(-2, 0, 0)
+        // legs
         let oLegL = new THREE.Mesh(
           new THREE.BoxGeometry(0.4, 0.3, 0.4),
           new THREE.MeshPhongMaterial({
             color: colorOrange,
-            flatShading: true,
-            shininess: 0,
           })
         );
         oLegL.position.x = 0.5;
@@ -512,8 +534,6 @@
           new THREE.BoxGeometry(0.4, 0.2, 0.4),
           new THREE.MeshPhongMaterial({
             color: colorWhite,
-            flatShading: true,
-            shininess: 0,
           })
         );
         oLegL2.position.y = -0.25;
@@ -526,12 +546,10 @@
         oLegR.add(oLegR2);
 
         // watering pot
-
         let cyl = new THREE.Mesh(
           new THREE.CylinderGeometry(0.4, 0.4, 0.6),
           new THREE.MeshStandardMaterial({
             color: colorGray,
-            flatShading: true,
             roughness: 0.4,
           })
         );
@@ -544,7 +562,6 @@
           new THREE.CylinderGeometry(0.15, 0.15, 0.6),
           new THREE.MeshStandardMaterial({
             color: colorGray,
-            flatShading: true,
             roughness: 0.4,
           })
         );
@@ -558,7 +575,6 @@
           new THREE.BoxGeometry(0.2, 0.2, 0.3),
           new THREE.MeshStandardMaterial({
             color: colorGray,
-            flatShading: true,
             roughness: 0.4,
           })
         );
@@ -571,7 +587,6 @@
           new THREE.CircleGeometry(0.3, 10),
           new THREE.MeshStandardMaterial({
             color: colorBlue,
-            flatShading: true,
             roughness: 0.4,
           })
         );
@@ -585,23 +600,6 @@
         wateringPot.add(cyl, cyl2, box, circ);
 
         arm1.add(wateringPot);
-
-        // coisas
-
-        orangeCatGeometries =
-          BufferGeometryUtils.mergeBufferGeometries(orangeCatGeometries);
-
-        const orangeCat = new THREE.Mesh(
-          orangeCatGeometries,
-          new THREE.MeshPhongMaterial({
-            vertexColors: true,
-            flatShading: true,
-            shininess: 0,
-          })
-        );
-
-        orangeCat.castShadow = true;
-        orangeCat.receiveShadow = true;
 
         // other cats
         let gato1 = new THREE.Mesh(
@@ -621,8 +619,6 @@
           new THREE.PlaneGeometry(4, 4),
           new THREE.MeshPhongMaterial({
             color: colorYellow,
-            flatShading: true,
-            shininess: 0,
           })
         );
 
@@ -632,16 +628,13 @@
 
         orangeKitty = new THREE.Group();
         orangeKitty.add(
-          orangeCat,
+          headGroup,
+          bodyGroup,
+          collarGroup,
           oLegL,
           oLegR,
           arm1,
-          arm2,
-          oMouth,
-          oWhiskers,
-          oWhiskers2,
-          oWhiskers3,
-          oWhiskers4
+          arm2
         );
         scene.add(orangeKitty, gato1, gato2, indicator, dirt);
 
@@ -681,27 +674,28 @@
           if (e.key == "ArrowRight") {
             selectCat.position.x += 0.22;
             selectCat.rotation.y = 1.6;
-            indicator.position.x = selectCat.position.x;
             walk();
           } else if (e.key == "ArrowLeft") {
             selectCat.position.x -= 0.22;
             selectCat.rotation.y = -1.6;
-            indicator.position.x = selectCat.position.x;
             walk();
           } else if (e.key == "ArrowUp") {
             selectCat.position.z -= 0.22;
             selectCat.rotation.y = 3.2;
-            indicator.position.z = selectCat.position.z;
             walk();
           } else if (e.key == "ArrowDown") {
             selectCat.position.z += 0.22;
             selectCat.rotation.y = 0;
-            indicator.position.z = selectCat.position.z;
             walk();
           } else if (e.key == "x" && num == 1) {
             arm1.rotation.x +=
               ((Math.sin(Date.now() * 0.01) * Math.PI) / 2) * 0.03;
           }
+          indicator.rotation.x = selectCat.rotation.x;
+          indicator.rotation.y = selectCat.rotation.y;
+          indicator.rotation.z = selectCat.rotation.z;
+          indicator.position.x = selectCat.position.x;
+          indicator.position.z = selectCat.position.z;
         }
 
         document.addEventListener("keydown", (event) => {
