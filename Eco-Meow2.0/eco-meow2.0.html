@@ -31,10 +31,11 @@
         
         let shoulderl, elbowl, shoulderr, elbowr;
         let legl, legr, armUpl, armUpr, forearml, forearmr, earl, earr, tail;
-        let features, bell, blackKitty, blackKittybody, armsl, armsr;
-        let whiteKitty, orangeKitty;
-        let bg, blackCat;
+        let features, bell, blackCat, blackKittybody, armsl, armsr;
+        let whiteKitty, orangeKitty, blackKitty;
+        let bg;
         let verts = []; let vertsTree = [];
+        let obstcls = [];
 
         let num = 2;
         let selectCat = blackKitty;
@@ -288,14 +289,6 @@ const boardGeometries = [];
 
                 const colorWhitePart = [];
 
-                
-                // const WhitePart = new THREE.BoxGeometry(4.5,3.5,0.3);
-                // for (let i = 0; i < WhitePart.attributes.position.count; i++)
-                // colorWhitePart.push(colorWhite.r, colorWhite.g, colorWhite.b);
-                //     WhitePart.setAttribute(
-                    //         'color',
-                    //         new THREE.BufferAttribute(new Float32Array(colorWhitePart), 3));
-                    // boardGeometries.push(WhitePart)
                     let texturei = new THREE.TextureLoader().load ('./libs/instrucoes.png');
                     let materiali = new THREE.MeshPhongMaterial({ map: texturei, shininess: 0});
 
@@ -305,18 +298,25 @@ const boardGeometries = [];
                     )
                     scene.add(info)
 
-            boardbase.translate(-12,0,5);boardplack.translate(-12,3.5,5);
-            info.position.y = 3.5; info.position.z = 5.1; info.position.x = -12
-            
-            const board = new THREE.Mesh(
-                BufferGeometryUtils.mergeBufferGeometries(boardGeometries),
-                new THREE.MeshPhongMaterial({ vertexColors: true, flatShading: true, shininess: 0}))
+                    
+                    boardbase.translate(-12,0,5);boardplack.translate(-12,3.5,5);
+                    info.position.y = 3.5; info.position.z = 5.1; info.position.x = -12
+                    
+                    const board = new THREE.Mesh(
+                        BufferGeometryUtils.mergeBufferGeometries(boardGeometries),
+                        new THREE.MeshPhongMaterial({ vertexColors: true, flatShading: true, shininess: 0}))
+                        
+                        info.castShadow = info.receiveShadow = board.castShadow = board.receiveShadow = true;
+                        scene.add(board)
 
-                info.castShadow = info.receiveShadow = board.castShadow = board.receiveShadow = true;
-                scene.add(board)
+                        let infoPos = info.position.clone()
+                        obstcls.push(infoPos)
 
 //backgroud--------------------------------------------------
 
+
+
+//static bg elements------------
             //rocks
             const bigRock = new THREE.Mesh(
                 new THREE.TetrahedronGeometry(1,1),
@@ -327,7 +327,7 @@ const boardGeometries = [];
                 new THREE.MeshPhongMaterial({ color: colorRocks, flatShading: true,shininess: 0})
             );
             smallRock.rotateX(1.2,0,0)
-            
+
             let smallRock1 = smallRock.clone();
             let bigRock1 = bigRock.clone();
             smallRock.position.x = 11;smallRock.position.z = -5; smallRock.position.y = smallRock1.position.y = -0.4;
@@ -335,60 +335,37 @@ const boardGeometries = [];
             smallRock1.position.x = -9; smallRock1.position.z = 5
             bigRock1.position.x = -12; bigRock1.position.z = -7
 
-            let allRocks = new THREE.Group();
-            allRocks.add(bigRock, smallRock, smallRock1, bigRock1);
             bigRock.castShadow = bigRock1.castShadow = smallRock.castShadow = smallRock1.castShadow = true;
             bigRock.receiveShadow = bigRock1.receiveShadow = smallRock.receiveShadow = smallRock1.receiveShadow = true;
-            scene.add(allRocks);
 
-
-//static bg elements------------
-const staticGeometries = []
-            const trunk1 = new THREE.BoxGeometry(3, 5, 3);
-
-            const coloroftrunk = []
-            for (let i = 0; i < trunk1.attributes.position.count; i++)
-                coloroftrunk.push(colorBrown.r, colorBrown.g, colorBrown.b);
-            // add color attribute to the trunk buffer geometry
-            trunk1.setAttribute(
-                'color',
-                new THREE.BufferAttribute(new Float32Array(coloroftrunk), 3));
-            trunk1.translate(-6.5,1.5,-11)
-            staticGeometries.push(trunk1);
-
-            let trunk2 = trunk1.clone();
+            
+            //tree trunks
+            
+            let trunk1 = new THREE.Mesh(
+                new THREE.BoxGeometry(3, 5, 3),
+                new THREE.MeshPhongMaterial({ color: colorBrown, flatShading: true, shininess: 0})
+                )
+            
+                let trunk2 = trunk1.clone();
             let trunk3 = trunk1.clone();
             let trunk4 = trunk1.clone();
             
-            trunk2.translate(23.8,0,-2.5);
-            trunk3.translate(18.5,0,-8);
-            trunk4.translate(9.5,0,-4.5);
-            staticGeometries.push(trunk2, trunk3, trunk4);
-
-            //boulders
-                        // const rock = new THREE.TetrahedronGeometry(1,2);
+            trunk1.position.set(-11.5,1.5,-15);
+            trunk2.position.set(-2,1.5,-18);
+            trunk3.position.set(7,1.5,-23);
+            trunk4.position.set(12.5,1.5,-18.5);
             
-                        // const colorsrock = []; // array of colors for each vertex of the rock geometry
-                        // for (let i = 0; i < rock.attributes.position.count; i++)
-                        //     colorsrock.push(colorRocks.r, colorRocks.g, colorRocks.b);
-                        // // add color attribute to the rock buffer geometry
-                        // rock.setAttribute(
-                        //     'color',
-                        //     new THREE.BufferAttribute(new Float32Array(colorsrock), 3));
-                        // rock.translate(3,1,0);
-                        // staticGeometries.push(rock);
-
-
-            const staticGeometry = BufferGeometryUtils.mergeBufferGeometries(staticGeometries);
-             let staticElements = new THREE.Mesh(
-                staticGeometry,
-                new THREE.MeshPhongMaterial({ vertexColors: true, flatShading: true, shininess: 0})
-            )
-            staticElements.receiveShadow = true;
-            staticElements.castShadow = true;
-            staticElements.position.x = -5;
-            staticElements.position.z = -4;
+            
+            trunk1.receiveShadow = trunk1.castShadow = trunk2.receiveShadow = trunk2.castShadow = trunk3.receiveShadow = trunk3.castShadow = trunk4.receiveShadow = trunk4.castShadow = true;
+            let staticElements = new THREE.Group();
+            staticElements.add(trunk1, trunk2, trunk3, trunk4, bigRock, smallRock, smallRock1, bigRock1);
             scene.add(staticElements)
+            
+            //add elements' positions to the list of obstacles
+            let bigRockPos = bigRock.position.clone(); let smallRockPos = smallRock.position.clone();let bigRock1Pos = bigRock1.position.clone(); let smallRock1Pos = smallRock1.position.clone();
+            obstcls.push(bigRockPos, smallRockPos, bigRock1Pos, smallRock1Pos)
+            let trunk1Pos = trunk1.position.clone(); let trunk2Pos = trunk2.position.clone();let trunk3Pos = trunk3.position.clone(); let trunk4Pos = trunk4.position.clone();
+            obstcls.push(trunk1Pos, trunk2Pos, trunk3Pos, trunk4Pos)
 
 //bushes and leaves for trees(that move)
             const bgGeometries = []                
@@ -466,6 +443,10 @@ const staticGeometries = []
             smallBushes1.translate(23,0,0); smallBushes2.translate(5,0,-1); smallBushes3.translate(22,0,-3);
             bgGeometries.push(smallBushes1, smallBushes2, smallBushes3);
 
+            // let bushPos = bush.position.clone();
+            // let bigBushPos = bigBush.position.clone(); let smallBushPos = smallBush.position.clone();
+            // obstcls.push(bushPos, bigBushPos, smallBushPos)
+            // obstcls.push(bush, bigBush, smallBush, bigBush1, bigBush2, bigBush3, bigBush4, bigBush5, bigBush6, bigBush7,bush1, bush2, bush3, bush4, smallBush1, smallBush2, smallBush3, smallBush4, bigBushes1, bigBushes2,Bushes1, Bushes2)
 //----------------------------------------------------------------
 
             const bgGeometry = BufferGeometryUtils.mergeBufferGeometries(bgGeometries);
@@ -833,27 +814,26 @@ function handleKeyDown(e) {
         if(e.key == "Enter"){
             started = true;
             camera.position.x= 0;
-            // camera.rotation.x = 0;
             indicator.position.y = 0;
             indicator.rotation.y = 0;
         }
 
     }
     else if(started){
-        if (e.key == "ArrowRight" && blackKitty.position.x < 14) {
+        if (e.key == "ArrowRight") {
             rightKey = true;
             if(selectCat)
             Actions(e);
             Walk(e);
-        }else if (e.key == "ArrowLeft" && selectCat.position.x > -14) {
+        }else if (e.key == "ArrowLeft") {
             leftKey = true;
             Actions(e);
             Walk(e);
-        }else if (e.key == "ArrowUp" && selectCat.position.z > -20) {
+        }else if (e.key == "ArrowUp") {
             upKey = true;
             Actions(e);
             Walk(e);
-        }else if (e.key == "ArrowDown" && selectCat.position.z < 8) {
+        }else if (e.key == "ArrowDown") {
             downKey = true;
             Actions(e);
             Walk(e);
@@ -907,18 +887,23 @@ function handleKeyUp(e) {
 // function for walking
 function Walk(e){
     e.preventDefault();
-    if (rightKey && selectCat.position.x < 16) {
+    let oldPos = selectCat.position.clone();
+    if (rightKey && selectCat.position.x < 16.5) {
         selectCat.position.x += 0.22;
         selectCat.rotation.y = 1.6;
-    }else if (leftKey && selectCat.position.x > -16) {
+        Collisions(oldPos)
+    }else if (leftKey && selectCat.position.x > -16.5) {
         selectCat.position.x -= 0.22;
         selectCat.rotation.y = -1.6;
-    }else if (upKey && selectCat.position.z > -17) {
+        Collisions(oldPos)
+    }else if (upKey && selectCat.position.z > -26) {
         selectCat.position.z -= 0.22;
         selectCat.rotation.y = 3.2;
-    }else if (downKey && selectCat.position.z < 7) {
+        Collisions(oldPos)
+    }else if (downKey && selectCat.position.z < 7.5) {
         selectCat.position.z += 0.22;
         selectCat.rotation.y = 0;
+        Collisions(oldPos)
     }
 }
 function Actions(e){
@@ -932,7 +917,7 @@ function Actions(e){
         bell.rotation.x -= -(Math.sin(Date.now() * 0.02) * Math.PI/2 * 0.06);
         earl.rotation.z -= 3*(Math.sin(Date.now() * 0.012) * Math.PI/2 * 0.001);
         earr.rotation.z += 3*(Math.sin(Date.now() * 0.012) * Math.PI/2 * 0.001);
-        //leg movements1
+        //leg movements
         legl.rotation.x += Math.sin(Date.now() * 0.014) * Math.PI/2 * 0.12;
         legr.rotation.x -= Math.sin(Date.now() * 0.014) * Math.PI/2 * 0.12;
     }
@@ -941,27 +926,53 @@ function Actions(e){
 document.onkeydown = handleKeyDown;
 document.onkeyup = handleKeyUp;
 
-
-function checkCollisions() {
-			let selectCatColision = new THREE.Box3().setFromObject(blackKitty);
-			for (let i = 0; i < bg.length; i++) {
-				let obstBox = new THREE.Box3().setFromObject(bg[i]);
-				let collision = selectCatColision.intersectsBox(obstBox);
-				if (collision) {
-					console.log("HIT")
-					return true;
-				}
-			}
-			return false;
-		}
-        checkCollisions()
+function Collisions(oldPos){
+    let otherKitty1, otherKitty2
+    if(num == 1){
+        otherKitty1 = blackKitty;
+        otherKitty2 = whiteKitty;
+    }else if(num == 2){
+        otherKitty1 = orangeKitty;
+        otherKitty2 = whiteKitty;
+    }else if(num == 3){
+        otherKitty1 = orangeKitty;
+        otherKitty2 = blackKitty;
+    }
+    //for the background
+    obstcls.forEach(function(obstcl) {
+        if(selectCat.position.x <= obstcl.x + 2 && selectCat.position.x >= obstcl.x - 2
+        && selectCat.position.z <= obstcl.z + 2&& selectCat.position.z >= obstcl.z - 2){
+            selectCat.position.x = oldPos.x;
+            selectCat.position.z = oldPos.z;
+        }
+    })
+    //for the tree and the other 2 cats
+    if(
+        (selectCat.position.x <= tree.position.x + 2.5 && selectCat.position.x >= tree.position.x - 2.5
+        && selectCat.position.z <= tree.position.z + 2.5&& selectCat.position.z >= tree.position.z - 2.5)
+        || (selectCat.position.x <= otherKitty1.position.x + 2 && selectCat.position.x >= otherKitty1.position.x - 2
+        && selectCat.position.z <= otherKitty1.position.z + 2&& selectCat.position.z >= otherKitty1.position.z - 2)
+        || (selectCat.position.x <= otherKitty2.position.x + 2 && selectCat.position.x >= otherKitty2.position.x - 2
+        && selectCat.position.z <= otherKitty2.position.z + 2&& selectCat.position.z >= otherKitty2.position.z - 2)
+    ){
+        selectCat.position.x = oldPos.x;
+        selectCat.position.z = oldPos.z;
+    //fot the apple
+    }if(heart.position.y == -0.35){
+        if(selectCat.position.x <= (heart.position.x-2.5) + 1.2 && selectCat.position.x >= (heart.position.x-2.5) - 1.2
+        && selectCat.position.z <= (heart.position.z-4) + 1.2&& selectCat.position.z >= (heart.position.z-4) - 1.2){
+            selectCat.position.x = oldPos.x;
+            selectCat.position.z = oldPos.z;
+        }
+    }
+    
+}
 
 // ----------------------------           
                 renderer.setAnimationLoop(render);
             }
 
-            function render(){
-                
+            function render(){                
 
             //before starting
             if(!started){
@@ -1033,7 +1044,6 @@ function checkCollisions() {
                 earl.rotation.z -= Math.sin(Date.now() * 0.01) * Math.PI/2 * 0.0015;
                 earr.rotation.z += Math.sin(Date.now() * 0.01) * Math.PI/2 * 0.0015;
                 
-
             renderer.render(scene, camera);
             // controls.update();
 
@@ -1057,6 +1067,7 @@ function checkCollisions() {
             treeTop.geometry.attributes.position.needsUpdate = true;
 
         }
+
     </script>
 </body>
 </html>
