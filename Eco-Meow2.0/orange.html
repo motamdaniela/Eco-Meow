@@ -22,7 +22,7 @@
       // const geometry = new BufferGeometry();
       let controls;
 
-      let camera, scene, renderer, hello, heart, treeTop, tree;
+      let camera, scene, renderer, hello, heart, treeTop, tree, oEarL, oEarR;
 
       let keyPressed;
       let started = false;
@@ -282,7 +282,7 @@
         oHead.position.y = 1.5;
         oHead.receiveShadow = oHead.castShadow = true;
 
-        let oEarL = new THREE.Mesh(
+        oEarL = new THREE.Mesh(
           new THREE.BoxGeometry(0.6, 0.4, 0.4),
           new THREE.MeshStandardMaterial({
             color: colorOrange,
@@ -293,7 +293,7 @@
         oEarL.position.z = 0.5;
         oEarL.receiveShadow = oEarL.castShadow = true;
 
-        let oEarR = oEarL.clone();
+        oEarR = oEarL.clone();
         oEarR.position.x = -0.7;
 
         let oWhiskers = new THREE.Mesh(
@@ -393,15 +393,14 @@
         oHead.add(oBlushL, oBlushR);
 
         const oEarPinkL = oBlushL.clone();
-        oEarPinkL.position.x = -0.05;
-        oEarPinkL.position.y = 0.8;
-        oEarPinkL.position.z = -0.19;
+        oEarPinkL.position.x = 0;
+        oEarPinkL.position.y = 0;
+        oEarPinkL.position.z = 0.21;
 
         const oEarPinkR = oEarPinkL.clone();
-        oEarPinkR.position.x = 0.05;
 
-        oEyeL.add(oEarPinkL);
-        oEyeR.add(oEarPinkR);
+        oEarL.add(oEarPinkL);
+        oEarR.add(oEarPinkR);
 
         let headGroup = new THREE.Group();
         headGroup.add(
@@ -644,10 +643,12 @@
         function grow() {
           if (i == 0) {
             scene.add(tree);
+            tree.position.y = -0.5;
             i++;
           } else if (i < 4 && i != 0) {
             tree.scale.set(i / 3, i / 3, i / 3);
             scene.add(tree);
+            tree.position.y += 0.5;
             i++;
           }
         }
@@ -667,6 +668,16 @@
             arm1.rotation.x =
               0;
         }
+
+        // function intersect() {
+        //   if (
+        //     orangeKitty.position.x < dirt.position.x - 2.5 &&
+        //     orangeKitty.position.x > dirt.position.x + 2.5 &&
+        //     orangeKitty.position.z > dirt.position.z + 2.5 &&
+        //     orangeKitty.position.z < dirt.position.z - 2.5
+        //   ) {
+        //   }
+        // }
 
         function Actions(e) {
           e.preventDefault();
@@ -732,7 +743,7 @@
             oLegR.rotation.x -=
               ((Math.sin(Date.now() * 0.01) * Math.PI) / 2) * 0.12;
             arm2.rotation.x -=
-              ((Math.sin(Date.now() * 0.01) * Math.PI) / 2) * 0.12;
+              ((Math.sin(Date.now() * 0.01) * Math.PI) / 2) * 0.1;
           }
         }
 
@@ -742,6 +753,11 @@
 
       function render() {
         renderer.render(scene, camera);
+
+        oEarL.rotation.x +=
+          ((Math.sin(Date.now() * 0.01) * Math.PI) / 2) * 0.01;
+        oEarR.rotation.x +=
+          ((Math.sin(Date.now() * 0.01) * Math.PI) / 2) * 0.01;
       }
     </script>
   </body>
