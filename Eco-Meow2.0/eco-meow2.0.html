@@ -1384,7 +1384,7 @@
           } else if (i < 4 && i != 0) {
             tree.scale.set(i / 3, i / 3, i / 3);
             scene.add(tree);
-            tree.position.y += 0.5;
+            tree.position.y += 0.3;
             i++;
           }
         }
@@ -1429,7 +1429,7 @@
               Actions(e);
               Walk(e);
             } else if (
-              e.key == "s" &&
+              e.key == "x" && num == 2 &&
               blackKitty.position.x <= tree.position.x + 3.5 &&
               blackKitty.position.x >= tree.position.x - 3.5 &&
               blackKitty.position.z <= tree.position.z + 3.5 &&
@@ -1591,7 +1591,7 @@
             selectCat.position.z = oldPos.z;
             //fot the apple
           }
-          if (heart.position.y == -0.35) {
+          if (heart.position.y == -0.75) {
             if (
               selectCat.position.x <= heart.position.x - 2.5 + 1.2 &&
               selectCat.position.x >= heart.position.x - 2.5 - 1.2 &&
@@ -1673,8 +1673,8 @@
             heart.rotation.z = THREE.Math.degToRad(40);
           }
           heart.position.y -= 0.1;
-          if (heart.position.y <= -0.35) {
-            heart.position.y = -0.35;
+          if (heart.position.y <= -0.75) {
+            heart.position.y = -0.75;
           }
           toFall = false;
         }
