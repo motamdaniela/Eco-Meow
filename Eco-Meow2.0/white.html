@@ -24,10 +24,10 @@
 
         let keyPressed, rightKey, leftKey, upKey, downKey;
         let started = false;
-
+        let toBend = false;
         let wShoulderL, wElbowL;
 
-        let whiteKitty, whiteKittybody;
+        let whiteKitty, whiteKittybody, heart;
         let wLegL, wLegR, wShiny;
         let bg, whiteCat;
         // let shoulderl, elbowl, shoulderr, elbowr;
@@ -98,6 +98,7 @@
             const colorDarkPurple = new THREE.Color(0x766DAA);
             const colorYellow = new THREE.Color(0xECE26B);
             const colorBlack = new THREE.Color(0x000000);
+            const colorRed = new THREE.Color(0xbd757e);
             // const colorGreen = new THREE.Color(0xA4C263);
             // const colorRocks = new THREE.Color(0x9DA89A);
             // const colorGray = new THREE.Color(0x494949);
@@ -347,27 +348,72 @@
             wLegR.position.y = -0.4;
             wLegR.receiveShadow = wLegR.castShadow = true;
 
-
-            //left shoulder
+            // his left arm 
+            // shoulder
             let wShoulderL = new THREE.Object3D();
-            wShoulderL.position.set(-0.65, 0.35, 0);
-            wShoulderL.rotation.z = THREE.Math.degToRad(45);
-            scene.add(wShoulderL); 
-            // show axes for the SHOULDER CS
+            wShoulderL.position.set(0.65,0.35,0);
+            wShoulderL.rotation.z = THREE.Math.degToRad(135);
+            scene.add(wShoulderL);
+
             // x=red, y=green, z=blue
-            let axesShoulder = new THREE.AxesHelper(4);
-            wShoulderL.add(axesShoulder);
+            // let axesShoulderL = new THREE.AxesHelper(4);
+            // wShoulderL.add(axesShoulderL);
+
+            // arm
+            let wArmL = new THREE.Mesh(
+            new THREE.BoxGeometry(1.2, 0.4, 0.4),
+            new THREE.MeshPhongMaterial({ color: colorBege, flatShading: true, shininess: 0}));
+            wArmL.position.set(-0.25, 0, 0);
+            wShoulderL.add(wArmL);
+            wArmL.receiveShadow = wArmL.castShadow = true;
+
+            // his right arm 
+            // shoulder
+            let wShoulderR = new THREE.Object3D();
+            wShoulderR.position.set(-0.65, 0.35, 0);
+            wShoulderR.rotation.z = THREE.Math.degToRad(45);
+            scene.add(wShoulderR); 
+
+            // let axesShoulder = new THREE.AxesHelper(4);
+            // wShoulderR.add(axesShoulder);
             
-            // arms
-            // left arm 
-            let wArmUpL = new THREE.Mesh(
+            // arm
+            let wArmUpR = new THREE.Mesh(
             new THREE.BoxGeometry(0.8, 0.4, 0.4),
             new THREE.MeshPhongMaterial({ color: colorBege, flatShading: true, shininess: 0}));
-            wArmUpL.position.set(-0.25, 0, 0);
-            // wArmUpL.rotateZ(0.3,0.3,1);
-            wShoulderL.add(wArmUpL);
-            wArmUpL.receiveShadow = wArmUpL.castShadow = true;
+            wArmUpR.position.set(-0.25, 0, 0);
+            wShoulderR.add(wArmUpR);
+            wArmUpR.receiveShadow = wArmUpR.castShadow = true;
 
+            // elbow 
+            let wElbowR = new THREE.Object3D();
+            wElbowR.position.set(-0.2, 0, 0);
+            wArmUpR.add(wElbowR); 
+
+            // let axesElbow = new THREE.AxesHelper(4);
+            // wElbowR.add(axesElbow);
+
+            // forearm 
+            let wArmDownR = new THREE.Mesh(
+            new THREE.BoxGeometry(0.4, 0.4, 0.4),
+            new THREE.MeshPhongMaterial({ color: colorBege, flatShading: true, shininess: 0}));
+            wArmDownR.position.set(-0.25, 0, 0);
+            wElbowR.add(wArmDownR);
+            wArmDownR.receiveShadow = wArmDownR.castShadow = true;
+
+
+            // apple
+            const heart = new THREE.Mesh(
+            new THREE.SphereGeometry(0.5, 6, 6),
+            new THREE.MeshStandardMaterial({
+                color: colorRed,
+                flatShading: true,
+                roughness: 0.4,
+            })
+            );
+            heart.position.set(2,-0.3,0)
+            scene.add(heart);
+            
 
             // show cat 
             whiteCatGeometries = BufferGeometryUtils.mergeBufferGeometries(whiteCatGeometries);
@@ -386,9 +432,11 @@
 
             let whiteKittybody = new THREE.Group();
             // whiteKittybody.add(whiteCat, shoulderl, shoulderr, features, legl, legr, earl, earr);
-            whiteKittybody.add(whiteCat, wLegL, wLegR, wShiny);
+            whiteKittybody.add(whiteCat, wShiny, wShoulderR, wShoulderL);
+            // let axesbody = new THREE.AxesHelper(4);
+            // whiteKittybody.add(axesbody);
             whiteKitty = new THREE.Group();
-            whiteKitty.add(whiteKittybody);
+            whiteKitty.add(whiteKittybody, wLegL, wLegR); 
             // whiteKitty.add(whiteCat, leg1, leg2, arm1, arm2, oMouth);
             scene.add(whiteKitty);
 
@@ -407,7 +455,9 @@
             function handleKeyUp(e) {
                 keyPressed = false;
                 wLegL.rotation.x = wLegR.rotation.x = 0;
+                
             } 
+
 
             // function cat walk
             function Actions(e){
@@ -415,20 +465,81 @@
                 if (e.key == "ArrowRight") {
                     whiteKitty.position.x += 0.22;
                     whiteKitty.rotation.y = 1.6;
+                    // body
+                    whiteKittybody.position.y = 0;
+                    whiteKittybody.position.y += (Math.sin(Date.now() * 0.4) * Math.PI/2 * 0.01)*6;
+                    // legs
+                    wLegL.rotation.x += Math.sin(Date.now() * 0.014) * Math.PI/2 * 0.12;
+                    wLegR.rotation.x -= Math.sin(Date.now() * 0.014) * Math.PI/2 * 0.12;
+                    // arms 
+                    wShoulderL.rotation.z = THREE.Math.degToRad(135);
+                    wShoulderR.rotation.z = THREE.Math.degToRad(45);
+                    wShoulderL.rotation.z += -3*(Math.sin(Date.now() * 0.01) * Math.PI/2 * 0.03);
+                    wShoulderR.rotation.z -= -3*(Math.sin(Date.now() * 0.01) * Math.PI/2 * 0.03);
                 }else if (e.key == "ArrowLeft") {
                     whiteKitty.position.x -= 0.22;
                     whiteKitty.rotation.y = -1.6;
+                    // body
+                    whiteKittybody.position.y = 0;
+                    whiteKittybody.position.y += (Math.sin(Date.now() * 0.4) * Math.PI/2 * 0.01)*6;
+                    // legs
+                    wLegL.rotation.x += Math.sin(Date.now() * 0.014) * Math.PI/2 * 0.12;
+                    wLegR.rotation.x -= Math.sin(Date.now() * 0.014) * Math.PI/2 * 0.12;
+                    // arms
+                    wShoulderL.rotation.z = THREE.Math.degToRad(135);
+                    wShoulderR.rotation.z = THREE.Math.degToRad(45);
+                    wShoulderL.rotation.z += -3*(Math.sin(Date.now() * 0.01) * Math.PI/2 * 0.03);
+                    wShoulderR.rotation.z -= -3*(Math.sin(Date.now() * 0.01) * Math.PI/2 * 0.03);
                 }else if (e.key == "ArrowUp") {
                     whiteKitty.position.z -= 0.22;
                     whiteKitty.rotation.y = 3.2;
+                    // body
+                    whiteKittybody.position.y = 0;
+                    whiteKittybody.position.y += (Math.sin(Date.now() * 0.4) * Math.PI/2 * 0.01)*6;
+                    // legs
+                    wLegL.rotation.x += Math.sin(Date.now() * 0.014) * Math.PI/2 * 0.12;
+                    wLegR.rotation.x -= Math.sin(Date.now() * 0.014) * Math.PI/2 * 0.12;
+                    // arms
+                    wShoulderL.rotation.z = THREE.Math.degToRad(135);
+                    wShoulderR.rotation.z = THREE.Math.degToRad(45);
+                    wShoulderL.rotation.z += -3*(Math.sin(Date.now() * 0.01) * Math.PI/2 * 0.03);
+                    wShoulderR.rotation.z -= -3*(Math.sin(Date.now() * 0.01) * Math.PI/2 * 0.03);
                 }else if (e.key == "ArrowDown") {
                     whiteKitty.position.z += 0.22;
                     whiteKitty.rotation.y = 0;
+                    // body
+                    whiteKittybody.position.y = 0;
+                    whiteKittybody.position.y += (Math.sin(Date.now() * 0.4) * Math.PI/2 * 0.01)*6;
+                    // legs
+                    wLegL.rotation.x += Math.sin(Date.now() * 0.014) * Math.PI/2 * 0.12;
+                    wLegR.rotation.x -= Math.sin(Date.now() * 0.014) * Math.PI/2 * 0.12;
+                    // arms
+                    wShoulderL.rotation.z = THREE.Math.degToRad(135);
+                    wShoulderR.rotation.z = THREE.Math.degToRad(45);
+                    wShoulderL.rotation.z += -3*(Math.sin(Date.now() * 0.01) * Math.PI/2 * 0.03);
+                    wShoulderR.rotation.z -= -3*(Math.sin(Date.now() * 0.01) * Math.PI/2 * 0.03);
+                } else if (e.key == "b") {
+                    if (whiteKittybody.rotation.x < THREE.Math.degToRad(30)){
+                        whiteKittybody.rotation.x += 0.02;
+                        wShoulderR.rotation.x -= 0.03;
+                        wShoulderR.rotation.y += 0.03;
+                    }
+                } else if (e.key == "c") {
+                    whiteKittybody.rotation.x = THREE.Math.degToRad(0);
+                    wArmDownR.add(heart);
+                    heart.position.set(-0.7,0,0);
+                } else if (e.key == "e") {
+                    if (wElbowR.rotation.y < THREE.Math.degToRad(60)){
+                        wElbowR.rotation.y += 0.1;
+                        setTimeout(function(){
+                            heart.scale.set(0,0,0);
+                            wShoulderR.rotation.y = THREE.Math.degToRad(0); 
+                            wShoulderR.rotation.x = THREE.Math.degToRad(0); 
+                            wElbowR.rotation.y = THREE.Math.degToRad(0);
+                        },2000);
+                        
+                    }
                 }
-                whiteKittybody.position.y = 0;
-                whiteKittybody.position.y += (Math.sin(Date.now() * 0.4) * Math.PI/2 * 0.01)*6;
-                wLegL.rotation.x += Math.sin(Date.now() * 0.014) * Math.PI/2 * 0.12;
-                wLegR.rotation.x -= Math.sin(Date.now() * 0.014) * Math.PI/2 * 0.12;
             }
 
             document.onkeydown = handleKeyDown;
@@ -439,7 +550,17 @@
         };
 
         function render() {
+            
+            // if (toBend) {
+            //     if (whiteKittybody.rotation.x < THREE.Math.degToRad(45)){
+            //         whiteKittybody.rotation.x += 0.01;
+            //     }
+            // }
+
+
+
             renderer.render(scene, camera);
         }
+
     </script>
 </body>
