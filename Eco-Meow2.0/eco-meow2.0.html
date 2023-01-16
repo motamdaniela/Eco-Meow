@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Eco-Meow 2.0</title>
 
     <style>
       body {
@@ -30,6 +30,8 @@
         downKey,
         toShake,
         toFall,
+        toBend,
+        toGrab,
         oEarL,
         oEarR;
       let started = false;
@@ -40,6 +42,8 @@
       let legl, legr, armUpl, armUpr, forearml, forearmr, earl, earr, tail;
       let features, bell, blackCat, blackKittybody, armsl, armsr;
       let whiteKitty, orangeKitty, blackKitty;
+      let whiteKittybody, whiteCat, wLegL, wLegR, wShiny, wShoulderL, wShoulderR;
+
       let bg;
       let verts = [];
       let vertsTree = [];
@@ -120,7 +124,10 @@
         const colorOrange = new THREE.Color(0xeaa945);
         const colorBlue = new THREE.Color(0x00ffff);
         const colorBege = new THREE.Color(0xf3f2c0);
+        const colorTail = new THREE.Color(0xF3F2C0);
         const colorBlush = new THREE.Color(0xefc5de);
+        const colorPinkw = new THREE.Color(0xE8B5AC);
+        const colorTongue = new THREE.Color(0xEBA598);
         const colorLightPurple = new THREE.Color(0xdaccff);
         const colorDarkPurple = new THREE.Color(0x766daa);
 
@@ -1016,13 +1023,13 @@
 
         //--> cheeks
         const cheekl = new THREE.BoxGeometry(0.4, 0.2, 0.1);
-        const colorsPink = [];
+        const colorsPinkw = [];
         for (let i = 0; i < cheekl.attributes.position.count; i++)
-          colorsPink.push(colorPink.r, colorPink.g, colorPink.b);
+          colorsPinkw.push(colorPink.r, colorPink.g, colorPink.b);
         cheekl.translate(-0.93, 0.81, 1.1);
         cheekl.setAttribute(
           "color",
-          new THREE.BufferAttribute(new Float32Array(colorsPink), 3)
+          new THREE.BufferAttribute(new Float32Array(colorsPinkw), 3)
         );
         catGeometries.push(cheekl);
 
@@ -1030,7 +1037,7 @@
         cheekr.translate(0.93, 0.81, 1.1);
         cheekr.setAttribute(
           "color",
-          new THREE.BufferAttribute(new Float32Array(colorsPink), 3)
+          new THREE.BufferAttribute(new Float32Array(colorsPinkw), 3)
         );
         catGeometries.push(cheekr);
 
@@ -1352,6 +1359,281 @@
           });
         }
 
+        // ---------------------------------------------------------------------
+        // white cat
+
+        let whiteCatGeometries = [];
+
+        // body
+        const wBody = new THREE.BoxGeometry(1.5, 1, 1);
+        const colorsBege = []; 
+        for (let i = 0; i < wBody.attributes.position.count; i++)
+            colorsBege.push(colorBege.r, colorBege.g, colorBege.b);
+        wBody.translate(0, 0.2, 0)
+        wBody.setAttribute(
+            'color',
+            new THREE.BufferAttribute(new Float32Array(colorsBege), 3));
+        whiteCatGeometries.push(wBody);
+
+        // head
+        const wHead = new THREE.BoxGeometry(2.25, 1.7, 1.6);
+        wHead.translate(0, 1.55, 0)
+        wHead.setAttribute(
+            'color',
+            new THREE.BufferAttribute(new Float32Array(colorsBege), 3));
+        whiteCatGeometries.push(wHead);
+
+        // snout
+        const wSnout = new THREE.BoxGeometry(2, 0.65, 0.25);
+        wSnout.translate(0, 1.02, 0.87)
+        wSnout.setAttribute(
+            'color',
+            new THREE.BufferAttribute(new Float32Array(colorsBege), 3));
+        whiteCatGeometries.push(wSnout);
+
+        // ears
+        const wEarOutL = new THREE.BoxGeometry(0.5,0.35,0.2);
+        wEarOutL.setAttribute(
+            'color',
+            new THREE.BufferAttribute(new Float32Array(colorsBege), 3));
+        wEarOutL.translate(-0.85,2.55,0.7);
+        const wEarOutR = wEarOutL.clone();
+        wEarOutR.translate(1.7, 0,0);
+
+        const wEarInL = new THREE.BoxGeometry(0.35,0.2,0.1);
+        const colorswPink = []; 
+        for (let i = 0; i < wEarInL.attributes.position.count; i++)
+            colorswPink.push(colorPinkw.r, colorPinkw.g, colorPinkw.b);
+        wEarInL.setAttribute(
+            'color',
+            new THREE.BufferAttribute(new Float32Array(colorswPink), 3));
+        wEarInL.translate(-0.88,2.5,0.77);
+        const wEarInR = wEarInL.clone();
+        wEarInR.translate(1.75,0,0);
+        whiteCatGeometries.push(wEarOutL,wEarOutR, wEarInL, wEarInR);
+
+        // nose
+        const wNose = new THREE.BoxGeometry(0.2,0.1,0.02);
+        wNose.setAttribute(
+            'color',
+            new THREE.BufferAttribute(new Float32Array(colorswPink), 3));
+        wNose.translate(0,1.2,1);
+        whiteCatGeometries.push(wNose);
+
+        // forehead
+        const wForehead = new THREE.BoxGeometry(0.85, 0.5, 1.62);
+        const colorsLightPurple = []; 
+        for (let i = 0; i < wForehead.attributes.position.count; i++)
+            colorsLightPurple.push(colorLightPurple.r, colorLightPurple.g, colorLightPurple.b);
+        wForehead.translate(0, 2.16,0);
+        wForehead.setAttribute(
+            'color',
+            new THREE.BufferAttribute(new Float32Array(colorsLightPurple), 3));
+        whiteCatGeometries.push(wForehead);
+
+        // colar
+        const wColar = new THREE.BoxGeometry(1.7, 0.5, 1.2);
+        const colorsDarkPurple = [];
+        for (let i = 0; i < wColar.attributes.position.count; i++)
+            colorsDarkPurple.push(colorDarkPurple.r, colorDarkPurple.g, colorDarkPurple.b);
+        wColar.translate(0, 0.7, 0);
+        wColar.setAttribute(
+            'color',
+            new THREE.BufferAttribute(new Float32Array(colorsDarkPurple), 3));
+        whiteCatGeometries.push(wColar); 
+
+        // blush
+        const wBlushL = new THREE.BoxGeometry(0.3, 0.18, 0.05);
+        const colorsBlush = [];
+        for (let i = 0; i < wBlushL.attributes.position.count; i++)
+            colorsBlush.push(colorBlush.r, colorBlush.g, colorBlush.b);
+        wBlushL.setAttribute(
+            'color',
+            new THREE.BufferAttribute(new Float32Array(colorsBlush), 3));
+        wBlushL.translate(0.845, 0.79, 1);
+        const wBlushR = wBlushL.clone();
+        wBlushR.translate(-1.685,0,0)
+        whiteCatGeometries.push(wBlushL, wBlushR);
+
+        // tail
+        const wTail = new THREE.SphereGeometry(0.1, 20, 20);
+        const colorsTail = []; 
+        for (let i = 0; i < wTail.attributes.position.count; i++)
+            colorsTail.push(colorTail.r, colorTail.g, colorTail.b);
+        wTail.translate(0,0,-0.55);
+        wTail.setAttribute(
+            'color',
+            new THREE.BufferAttribute(new Float32Array(colorsTail), 3));
+        whiteCatGeometries.push(wTail);
+
+        // whiskers left
+        const wWhiskersL = new THREE.CylinderGeometry(0.03, 0.03, 0.5,20,1);
+        const colorswBlack = [];
+        for (let i = 0; i < wWhiskersL.attributes.position.count; i++)
+            colorswBlack.push(colorBlack.r, colorBlack.g, colorBlack.b);
+        wWhiskersL.setAttribute(
+            'color',
+            new THREE.BufferAttribute(new Float32Array(colorswBlack), 3));
+        wWhiskersL.translate(0.9, 1.2, 0.7);
+        wWhiskersL.rotateZ(1.6,0,0);
+        const wWhiskersL2 = wWhiskersL.clone();
+        wWhiskersL2.translate(0, 0.25,0);
+        whiteCatGeometries.push(wWhiskersL, wWhiskersL2);
+
+        // whiskers right
+        const wWhiskersR = new THREE.CylinderGeometry(0.03, 0.03, 0.5,20,1);
+        wWhiskersR.setAttribute(
+            'color',
+            new THREE.BufferAttribute(new Float32Array(colorswBlack), 3));
+        wWhiskersR.translate(0.9, -1.2, 0.7);
+        wWhiskersR.rotateZ(1.6,0,0);
+        const wWhiskersR2 = wWhiskersR.clone();
+        wWhiskersR2.translate(0, 0.25,0);
+        whiteCatGeometries.push(wWhiskersR, wWhiskersR2);
+
+        // mouth
+        class CustomSinCurve extends THREE.Curve {
+          constructor( scale = 1 ) {
+              super();
+              this.scale = scale;
+          }
+
+          getPoint( t, optionalTarget = new THREE.Vector3() ) {
+              const tx = t * 3 - 1.5;
+              const ty = Math.sin(-3.05 * Math.PI * t )*0.35;
+              const tz = 0;
+              return optionalTarget.set( tx, ty, tz ).multiplyScalar( this.scale );
+          }
+        }
+        const path = new CustomSinCurve( 0.15);
+        const wMouth = new THREE.TubeGeometry( path, 20, 0.03, 20, false );
+        wMouth.setAttribute(
+            'color',
+            new THREE.BufferAttribute(new Float32Array(colorswBlack), 3));
+        wMouth.translate(0,1,1);
+        whiteCatGeometries.push(wMouth);
+
+        // shiny geometries
+        const wShinyGeometries = [];
+        // bell
+        const wBell = new THREE.SphereGeometry(0.2, 10, 10);
+        const colorsYellow = [];
+        for (let i = 0; i < wBell.attributes.position.count; i++)
+            colorsYellow.push(colorYellow.r, colorYellow.g, colorYellow.b);
+        wBell.translate(0, 0.4, 0.7);
+        wBell.setAttribute(
+            'color',
+            new THREE.BufferAttribute(new Float32Array(colorsYellow), 3));
+        wShinyGeometries.push(wBell);
+
+        // eyes 
+        const wEyeL = new THREE.SphereGeometry(0.13,10,10);
+        wEyeL.setAttribute(
+            'color',
+            new THREE.BufferAttribute(new Float32Array(colorswBlack), 3));
+        wEyeL.translate(-0.6, 1.45, 0.8);
+        const wEyeR = wEyeL.clone();
+        wEyeR.translate(1.2,0,0);
+        wShinyGeometries.push(wEyeL, wEyeR);
+
+        const wShiny = new THREE.Mesh(
+          BufferGeometryUtils.mergeBufferGeometries(wShinyGeometries),
+          new THREE.MeshPhysicalMaterial({
+              vertexColors: true,
+              flatShading: true,
+              metalness: 0.1,
+              roughness: 0.2,
+              // shininess: 0,
+          })
+        );
+
+        wShiny.castShadow = true;
+        wShiny.receiveShadow = true;
+
+        // move it move it
+        // legs
+        let wLegL = new THREE.Mesh(
+        new THREE.BoxGeometry(0.5, 0.75, 0.6),
+        new THREE.MeshPhongMaterial({ color: colorBege, flatShading: true, shininess: 0}));
+        wLegL.position.x = -0.49;
+        wLegL.position.y = -0.4;
+        wLegL.receiveShadow = wLegL.castShadow = true;
+
+        let wLegR = new THREE.Mesh(
+        new THREE.BoxGeometry(0.5, 0.75, 0.6),
+        new THREE.MeshPhongMaterial({ color: colorBege, flatShading: true, shininess: 0}));
+        wLegR.position.x = 0.49;
+        wLegR.position.y = -0.4;
+        wLegR.receiveShadow = wLegR.castShadow = true;
+
+        // his left arm 
+        // shoulder
+        let wShoulderL = new THREE.Object3D();
+        wShoulderL.position.set(0.65,0.35,0);
+        wShoulderL.rotation.z = THREE.Math.degToRad(135);
+        scene.add(wShoulderL);
+
+        // arm
+        let wArmL = new THREE.Mesh(
+        new THREE.BoxGeometry(1.2, 0.4, 0.4),
+        new THREE.MeshPhongMaterial({ color: colorBege, flatShading: true, shininess: 0}));
+        wArmL.position.set(-0.25, 0, 0);
+        wShoulderL.add(wArmL);
+        wArmL.receiveShadow = wArmL.castShadow = true;
+
+        // his right arm 
+        // shoulder
+        let wShoulderR = new THREE.Object3D();
+        wShoulderR.position.set(-0.65, 0.35, 0);
+        wShoulderR.rotation.z = THREE.Math.degToRad(45);
+        scene.add(wShoulderR); 
+
+        // arm
+        let wArmUpR = new THREE.Mesh(
+        new THREE.BoxGeometry(0.8, 0.4, 0.4),
+        new THREE.MeshPhongMaterial({ color: colorBege, flatShading: true, shininess: 0}));
+        wArmUpR.position.set(-0.25, 0, 0);
+        wShoulderR.add(wArmUpR);
+        wArmUpR.receiveShadow = wArmUpR.castShadow = true;
+
+        // elbow 
+        let wElbowR = new THREE.Object3D();
+        wElbowR.position.set(-0.2, 0, 0);
+        wArmUpR.add(wElbowR); 
+
+        // forearm 
+        let wArmDownR = new THREE.Mesh(
+        new THREE.BoxGeometry(0.4, 0.4, 0.4),
+        new THREE.MeshPhongMaterial({ color: colorBege, flatShading: true, shininess: 0}));
+        wArmDownR.position.set(-0.25, 0, 0);
+        wElbowR.add(wArmDownR);
+        wArmDownR.receiveShadow = wArmDownR.castShadow = true;
+
+        // show cat
+        whiteCatGeometries = BufferGeometryUtils.mergeBufferGeometries(whiteCatGeometries);
+            
+        const whiteCat = new THREE.Mesh(
+            whiteCatGeometries,
+            new THREE.MeshPhongMaterial({
+                vertexColors: true,
+                flatShading: true,
+                shininess: 0,
+            })
+        );
+
+        whiteCat.castShadow = true;
+        whiteCat.receiveShadow = true;
+
+        let whiteKittybody = new THREE.Group();
+        whiteKittybody.add(whiteCat, wShiny, wShoulderR, wShoulderL);
+        whiteKitty = new THREE.Group();
+        whiteKitty.add(whiteKittybody, wLegL, wLegR); 
+       
+        whiteKitty.position.x = 4;
+        scene.add(whiteKitty);
+
+        // ------------------------------------------------------------
+
         for (let i = 0; i < treeTop.geometry.attributes.position.count; i++) {
           vertsTree.push({
             x: treeTop.geometry.attributes.position.getX(i),
@@ -1363,17 +1645,9 @@
           });
         }
 
-        whiteKitty = new THREE.Mesh(
-          new THREE.BoxGeometry(2, 5, 2),
-          new THREE.MeshPhongMaterial({
-            color: colorWhite,
-            flatShading: true,
-            shininess: 0,
-          })
-        );
-        whiteKitty.position.x = 4;
-        scene.add(whiteKitty);
-        //------------------------
+        
+        //----------------------------------------------------------------
+        // functions
 
         let i = 0;
         function grow() {
@@ -1386,6 +1660,29 @@
             scene.add(tree);
             tree.position.y += 0.3;
             i++;
+          }
+        }
+
+        function grab() {
+          // tree.remove(heart);
+          new THREE.Box3().setFromObject( heart ).getCenter( heart.position ).multiplyScalar( - 1 );
+          whiteKittybody.rotation.x = THREE.Math.degToRad(0);
+          wArmDownR.add(heart);
+          let axesheart = new THREE.AxesHelper(4);
+          heart.add(axesheart);
+          heart.position.set(0.5,0,0);
+
+        }
+
+        function eat() {
+          if (wElbowR.rotation.y < THREE.Math.degToRad(60)){
+            wElbowR.rotation.y += 0.1;
+            setTimeout(function(){
+                heart.scale.set(0,0,0);
+                wShoulderR.rotation.y = THREE.Math.degToRad(0); 
+                wShoulderR.rotation.x = THREE.Math.degToRad(0); 
+                wElbowR.rotation.y = THREE.Math.degToRad(0);
+            },1500); 
           }
         }
 
@@ -1447,6 +1744,25 @@
               ) {
                 grow();
               }
+            } else if (e.key == "x" && num == 3){
+              // toBend = true;
+              if (whiteKittybody.rotation.x <= THREE.Math.degToRad(30)){
+                whiteKittybody.rotation.x += 0.02;
+                wShoulderR.rotation.x -= 0.03;
+                wShoulderR.rotation.y += 0.02;
+              }
+              
+            } else if (e.key == "g" && num == 3 && heart.position.y == -0.75) {     
+              // if (
+              //   whiteKitty.position.x <= heart.position.x - 3.5 + 1.2 &&
+              //   whiteKitty.position.x >= heart.position.x - 3.5 - 1.2 &&
+              //   whiteKitty.position.z <= heart.position.z - 5 + 1.2 &&
+              //   whiteKitty.position.z >= heart.position.z - 5 - 1.2 
+              // ){
+                grab();
+              // }
+            } else if (e.key == "e" && num == 3) {
+              eat();
             }
           }
           indicator.position.x = selectCat.position.x;
@@ -1488,6 +1804,10 @@
             arm2.rotation.x =
             arm1.rotation.x =
               0;
+
+          wLegL.rotation.x = wLegR.rotation.x = 0;
+          // wShoulderL.rotation.z = wShoulderR.rotation.z = 0;
+          
         }
 
         // function for walking
@@ -1542,6 +1862,18 @@
               ((Math.sin(Date.now() * 0.014) * Math.PI) / 2) * 0.12;
             legr.rotation.x -=
               ((Math.sin(Date.now() * 0.014) * Math.PI) / 2) * 0.12;
+          } else if (num == 3) {
+            // body
+            whiteKittybody.position.y = 0;
+            whiteKittybody.position.y += (Math.sin(Date.now() * 0.4) * Math.PI/2 * 0.01)*4;
+            // legs
+            wLegL.rotation.x += Math.sin(Date.now() * 0.014) * Math.PI/2 * 0.12;
+            wLegR.rotation.x -= Math.sin(Date.now() * 0.014) * Math.PI/2 * 0.12;
+            // arms 
+            wShoulderL.rotation.z = THREE.Math.degToRad(135);
+            wShoulderR.rotation.z = THREE.Math.degToRad(45);
+            wShoulderL.rotation.z += -3*(Math.sin(Date.now() * 0.01) * Math.PI/2 * 0.03);
+            wShoulderR.rotation.z -= -3*(Math.sin(Date.now() * 0.01) * Math.PI/2 * 0.03);
           }
         }
 
@@ -1589,14 +1921,14 @@
           ) {
             selectCat.position.x = oldPos.x;
             selectCat.position.z = oldPos.z;
-            //fot the apple
+            //for the apple
           }
           if (heart.position.y == -0.75) {
             if (
               selectCat.position.x <= heart.position.x - 2.5 + 1.2 &&
               selectCat.position.x >= heart.position.x - 2.5 - 1.2 &&
               selectCat.position.z <= heart.position.z - 4 + 1.2 &&
-              selectCat.position.z >= heart.position.z - 4 - 1.2
+              selectCat.position.z >= heart.position.z - 4 - 1.2 
             ) {
               selectCat.position.x = oldPos.x;
               selectCat.position.z = oldPos.z;
@@ -1612,7 +1944,8 @@
         oEarL.rotation.x +=
           ((Math.sin(Date.now() * 0.01) * Math.PI) / 2) * 0.01;
         oEarR.rotation.x +=
-          ((Math.sin(Date.now() * 0.01) * Math.PI) / 2) * 0.01;
+          ((Math.sin(Date.now() * 0.01) * Math.PI) / 2) * 0.01; 
+    
         //before starting
         if (!started) {
           camera.position.x -=
@@ -1677,7 +2010,32 @@
             heart.position.y = -0.75;
           }
           toFall = false;
+          // let axesheart = new THREE.AxesHelper(4);
+          // heart.add(axesheart);
         }
+
+        // actions white
+        // if(toBend) {
+        //   if (whiteKittybody.rotation.x <= THREE.Math.degToRad(30)){
+        //     whiteKittybody.rotation.x += 0.02;
+        //     wShoulderR.rotation.x -= 0.03;
+        //     wShoulderR.rotation.y += 0.02;
+        //   }
+        //   toBend = false;
+        //   toGrab = true;
+        // }
+        // if(toGrab) {
+        //     if (selectCat.position.x <= heart.position.x - 2.5 + 1.2 &&
+        //       selectCat.position.x >= heart.position.x - 2.5 - 1.2 &&
+        //       selectCat.position.z <= heart.position.z - 4 + 1.2 &&
+        //       selectCat.position.z >= heart.position.z - 4 - 1.2){
+
+        //      whiteKittybody.rotation.x = THREE.Math.degToRad(0);
+        //      wArmDownR.add(heart);
+        //      heart.position.set(-0.7,0,0);
+        //      toGrab = false;
+        //      }
+        // }
 
         //default movimentation
 
@@ -1697,6 +2055,11 @@
           ((Math.sin(Date.now() * 0.01) * Math.PI) / 2) * 0.0015;
         earr.rotation.z +=
           ((Math.sin(Date.now() * 0.01) * Math.PI) / 2) * 0.0015;
+          
+        // wShoulderL.rotation.z +=
+        //   ((Math.sin(Date.now() * 0.009) * Math.PI) / 2) * 0.005;
+        // wShoulderR.rotation.z -=
+        //   ((Math.sin(Date.now() * 0.009) * Math.PI) / 2) * 0.005;
 
         renderer.render(scene, camera);
         // controls.update();

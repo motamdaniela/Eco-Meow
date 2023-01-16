@@ -92,7 +92,7 @@
             const colorBege = new THREE.Color(0xF3F2C0);
             const colorTail = new THREE.Color(0xF3F2C0);
             const colorBlush = new THREE.Color(0xEFC5DE);
-            const colorPink = new THREE.Color(0xE8B5AC);
+            const colorPinkw = new THREE.Color(0xE8B5AC);
             const colorTongue = new THREE.Color(0xEBA598);
             const colorLightPurple = new THREE.Color(0xdaccff);
             const colorDarkPurple = new THREE.Color(0x766DAA);
@@ -164,7 +164,7 @@
             const wEarInL = new THREE.BoxGeometry(0.35,0.2,0.1);
             const colorsPink = []; 
             for (let i = 0; i < wEarInL.attributes.position.count; i++)
-                colorsPink.push(colorPink.r, colorPink.g, colorPink.b);
+                colorsPink.push(colorPinkw.r, colorPinkw.g, colorPinkw.b);
             wEarInL.setAttribute(
                 'color',
                 new THREE.BufferAttribute(new Float32Array(colorsPink), 3));
@@ -348,7 +348,7 @@
             wLegR.position.y = -0.4;
             wLegR.receiveShadow = wLegR.castShadow = true;
 
-            // his left arm 
+            // left arm 
             // shoulder
             let wShoulderL = new THREE.Object3D();
             wShoulderL.position.set(0.65,0.35,0);
@@ -367,7 +367,7 @@
             wShoulderL.add(wArmL);
             wArmL.receiveShadow = wArmL.castShadow = true;
 
-            // his right arm 
+            // right arm 
             // shoulder
             let wShoulderR = new THREE.Object3D();
             wShoulderR.position.set(-0.65, 0.35, 0);
@@ -431,13 +431,10 @@
             whiteCat.receiveShadow = true;
 
             let whiteKittybody = new THREE.Group();
-            // whiteKittybody.add(whiteCat, shoulderl, shoulderr, features, legl, legr, earl, earr);
             whiteKittybody.add(whiteCat, wShiny, wShoulderR, wShoulderL);
-            // let axesbody = new THREE.AxesHelper(4);
-            // whiteKittybody.add(axesbody);
             whiteKitty = new THREE.Group();
             whiteKitty.add(whiteKittybody, wLegL, wLegR); 
-            // whiteKitty.add(whiteCat, leg1, leg2, arm1, arm2, oMouth);
+            
             scene.add(whiteKitty);
 
             // ----------------------------------------------
@@ -522,11 +519,13 @@
                     if (whiteKittybody.rotation.x < THREE.Math.degToRad(30)){
                         whiteKittybody.rotation.x += 0.02;
                         wShoulderR.rotation.x -= 0.03;
-                        wShoulderR.rotation.y += 0.03;
+                        wShoulderR.rotation.y += 0.02;
                     }
                 } else if (e.key == "c") {
                     whiteKittybody.rotation.x = THREE.Math.degToRad(0);
                     wArmDownR.add(heart);
+                    let axesheart = new THREE.AxesHelper(4);
+                    heart.add(axesheart);
                     heart.position.set(-0.7,0,0);
                 } else if (e.key == "e") {
                     if (wElbowR.rotation.y < THREE.Math.degToRad(60)){
@@ -536,7 +535,7 @@
                             wShoulderR.rotation.y = THREE.Math.degToRad(0); 
                             wShoulderR.rotation.x = THREE.Math.degToRad(0); 
                             wElbowR.rotation.y = THREE.Math.degToRad(0);
-                        },2000);
+                        },1500);
                         
                     }
                 }
