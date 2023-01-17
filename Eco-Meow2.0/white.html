@@ -25,7 +25,7 @@
         let keyPressed, rightKey, leftKey, upKey, downKey;
         let started = false;
         let toBend = false;
-        let wShoulderL, wElbowL;
+        let wShoulderL, wShoulderR, wElbowR;
 
         let whiteKitty, whiteKittybody, heart;
         let wLegL, wLegR, wShiny;
@@ -452,6 +452,9 @@
             function handleKeyUp(e) {
                 keyPressed = false;
                 wLegL.rotation.x = wLegR.rotation.x = 0;
+                wShoulderL.rotation.z = THREE.Math.degToRad(135);
+                wShoulderR.rotation.z = THREE.Math.degToRad(45);
+                wShoulderL.rotation.y = wShoulderR.rotation.y = 0;
                 
             } 
 
@@ -555,10 +558,17 @@
             //         whiteKittybody.rotation.x += 0.01;
             //     }
             // }
-
-
-
+            
             renderer.render(scene, camera);
+            if(wLegL, wLegR){
+                // if(wShoulderL.rotation.z = THREE.Math.degToRad(135))
+            wLegL.rotation.z += ((Math.sin(Date.now() * 0.009) * Math.PI) / 2) * 0.005;
+                   
+            // if(wShoulderR.rotation.z = THREE.Math.degToRad(45))
+             wLegR.rotation.z -= ((Math.sin(Date.now() * 0.009) * Math.PI) / 2) * 0.005;
+            
+            }
+            
         }
 
     </script>

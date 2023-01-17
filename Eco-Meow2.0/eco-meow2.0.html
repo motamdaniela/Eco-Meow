@@ -32,23 +32,23 @@
         toFall,
         toBend,
         toGrab,
+        toEat,
         oEarL,
         oEarR;
       let started = false;
 
-      let heart, tree, treeTop, indicator, spot;
+      let heart, tree, treeTop, indicator, spot, bbHelper;
 
       let shoulderl, elbowl, shoulderr, elbowr;
       let legl, legr, armUpl, armUpr, forearml, forearmr, earl, earr, tail;
       let features, bell, blackCat, blackKittybody, armsl, armsr;
       let whiteKitty, orangeKitty, blackKitty;
-      let whiteKittybody, whiteCat, wLegL, wLegR, wShiny, wShoulderL, wShoulderR;
+      let whiteKittybody, whiteCat, wLegL, wLegR, wShiny, wShoulderL, wShoulderR, wArmDownR, wElbowR, wBell;
 
       let bg;
       let verts = [];
       let vertsTree = [];
       let obstcls = [];
-
       let num = 2;
       let selectCat = blackKitty;
 
@@ -300,9 +300,14 @@
         apple2.castShadow = apple2.receiveShadow = true;
         apple1.position.set(-1.5, 2, 3.5);
         apple2.position.set(0.8, 2.5, 3.5);
-        heart.position.set(0.2, 0.6, 3.7);
+        
         tree = new THREE.Group();
-        tree.add(treeTop, treeTrunk, apple1, apple2, heart, insidePart);
+        tree.add(treeTop, treeTrunk, apple1, apple2, insidePart);
+        
+        // let axesheart = new THREE.AxesHelper(4);
+        // heart.add(axesheart);
+        heart.position.set(0.2, 0.4, -3.2);
+        
 
         tree.position.z = -7;
         tree.scale.set(1 / 3, 1 / 3, 1 / 3);
@@ -1516,7 +1521,7 @@
         // shiny geometries
         const wShinyGeometries = [];
         // bell
-        const wBell = new THREE.SphereGeometry(0.2, 10, 10);
+        wBell = new THREE.SphereGeometry(0.2, 10, 10);
         const colorsYellow = [];
         for (let i = 0; i < wBell.attributes.position.count; i++)
             colorsYellow.push(colorYellow.r, colorYellow.g, colorYellow.b);
@@ -1568,7 +1573,7 @@
 
         // his left arm 
         // shoulder
-        let wShoulderL = new THREE.Object3D();
+        wShoulderL = new THREE.Object3D();
         wShoulderL.position.set(0.65,0.35,0);
         wShoulderL.rotation.z = THREE.Math.degToRad(135);
         scene.add(wShoulderL);
@@ -1583,7 +1588,7 @@
 
         // his right arm 
         // shoulder
-        let wShoulderR = new THREE.Object3D();
+        wShoulderR = new THREE.Object3D();
         wShoulderR.position.set(-0.65, 0.35, 0);
         wShoulderR.rotation.z = THREE.Math.degToRad(45);
         scene.add(wShoulderR); 
@@ -1597,12 +1602,12 @@
         wArmUpR.receiveShadow = wArmUpR.castShadow = true;
 
         // elbow 
-        let wElbowR = new THREE.Object3D();
+        wElbowR = new THREE.Object3D();
         wElbowR.position.set(-0.2, 0, 0);
         wArmUpR.add(wElbowR); 
 
         // forearm 
-        let wArmDownR = new THREE.Mesh(
+        wArmDownR = new THREE.Mesh(
         new THREE.BoxGeometry(0.4, 0.4, 0.4),
         new THREE.MeshPhongMaterial({ color: colorBege, flatShading: true, shininess: 0}));
         wArmDownR.position.set(-0.25, 0, 0);
@@ -1624,12 +1629,12 @@
         whiteCat.castShadow = true;
         whiteCat.receiveShadow = true;
 
-        let whiteKittybody = new THREE.Group();
+        whiteKittybody = new THREE.Group();
         whiteKittybody.add(whiteCat, wShiny, wShoulderR, wShoulderL);
         whiteKitty = new THREE.Group();
         whiteKitty.add(whiteKittybody, wLegL, wLegR); 
        
-        whiteKitty.position.x = 4;
+        whiteKitty.position.x = 5;
         scene.add(whiteKitty);
 
         // ------------------------------------------------------------
@@ -1657,32 +1662,12 @@
             i++;
           } else if (i < 4 && i != 0) {
             tree.scale.set(i / 3, i / 3, i / 3);
+            heart.scale.set(i / 3, i / 3, i / 3);
             scene.add(tree);
+            scene.add(heart);
             tree.position.y += 0.3;
+            heart.position.y += 0.3;
             i++;
-          }
-        }
-
-        function grab() {
-          // tree.remove(heart);
-          new THREE.Box3().setFromObject( heart ).getCenter( heart.position ).multiplyScalar( - 1 );
-          whiteKittybody.rotation.x = THREE.Math.degToRad(0);
-          wArmDownR.add(heart);
-          let axesheart = new THREE.AxesHelper(4);
-          heart.add(axesheart);
-          heart.position.set(0.5,0,0);
-
-        }
-
-        function eat() {
-          if (wElbowR.rotation.y < THREE.Math.degToRad(60)){
-            wElbowR.rotation.y += 0.1;
-            setTimeout(function(){
-                heart.scale.set(0,0,0);
-                wShoulderR.rotation.y = THREE.Math.degToRad(0); 
-                wShoulderR.rotation.x = THREE.Math.degToRad(0); 
-                wElbowR.rotation.y = THREE.Math.degToRad(0);
-            },1500); 
           }
         }
 
@@ -1733,6 +1718,9 @@
               blackKitty.position.z >= tree.position.z - 3.5
             ) {
               toShake = true;
+              setTimeout(() => {
+                toFall = true;
+              }, 500);
             } else if (e.key == "x" && num == 1) {
               arm1.rotation.x +=
                 ((Math.sin(Date.now() * 0.01) * Math.PI) / 2) * 0.03;
@@ -1744,26 +1732,14 @@
               ) {
                 grow();
               }
-            } else if (e.key == "x" && num == 3){
-              // toBend = true;
-              if (whiteKittybody.rotation.x <= THREE.Math.degToRad(30)){
-                whiteKittybody.rotation.x += 0.02;
-                wShoulderR.rotation.x -= 0.03;
-                wShoulderR.rotation.y += 0.02;
-              }
-              
-            } else if (e.key == "g" && num == 3 && heart.position.y == -0.75) {     
-              // if (
-              //   whiteKitty.position.x <= heart.position.x - 3.5 + 1.2 &&
-              //   whiteKitty.position.x >= heart.position.x - 3.5 - 1.2 &&
-              //   whiteKitty.position.z <= heart.position.z - 5 + 1.2 &&
-              //   whiteKitty.position.z >= heart.position.z - 5 - 1.2 
-              // ){
-                grab();
-              // }
-            } else if (e.key == "e" && num == 3) {
-              eat();
-            }
+            } else if (e.key == "x" && num == 3 && heart.position.y == -0.55 && 
+              whiteKitty.position.x <= heart.position.x - 2 + 1.8 &&
+              whiteKitty.position.x >= heart.position.x - 2 - 1.8 &&
+              whiteKitty.position.z <= heart.position.z + 2 + 1.8 &&
+              whiteKitty.position.z >= heart.position.z + 2 - 1.8 ){
+              toBend = true;
+            } 
+
           }
           indicator.position.x = selectCat.position.x;
           indicator.position.z = selectCat.position.z;
@@ -1806,7 +1782,9 @@
               0;
 
           wLegL.rotation.x = wLegR.rotation.x = 0;
-          // wShoulderL.rotation.z = wShoulderR.rotation.z = 0;
+          wShoulderL.rotation.z = THREE.Math.degToRad(135);
+          wShoulderR.rotation.z = THREE.Math.degToRad(45);
+          wShoulderL.rotation.y = wShoulderR.rotation.y = 0;
           
         }
 
@@ -1923,12 +1901,12 @@
             selectCat.position.z = oldPos.z;
             //for the apple
           }
-          if (heart.position.y == -0.75) {
+          if (heart.position.y == -0.55) {
             if (
               selectCat.position.x <= heart.position.x - 2.5 + 1.2 &&
               selectCat.position.x >= heart.position.x - 2.5 - 1.2 &&
-              selectCat.position.z <= heart.position.z - 4 + 1.2 &&
-              selectCat.position.z >= heart.position.z - 4 - 1.2 
+              selectCat.position.z <= heart.position.z + 2.5 + 1.2 &&
+              selectCat.position.z >= heart.position.z + 2.5 - 1.2 
             ) {
               selectCat.position.x = oldPos.x;
               selectCat.position.z = oldPos.z;
@@ -1956,6 +1934,9 @@
         }
 
         if (toShake) {
+        // let BBox = new THREE.Box3().setFromObject(heart);
+        // bbHelper = new THREE.BoxHelper(heart, 0x00FFFF);
+        // scene.add(bbHelper);
           shoulderl.rotation.y = THREE.Math.degToRad(60);
           shoulderr.rotation.y = THREE.Math.degToRad(-60);
           elbowl.rotation.z = -THREE.Math.degToRad(20);
@@ -1992,7 +1973,6 @@
             treeTop.rotation.z = 0;
 
             toShake = false;
-            toFall = true;
           }, 1000);
         }
 
@@ -2006,36 +1986,61 @@
             heart.rotation.z = THREE.Math.degToRad(40);
           }
           heart.position.y -= 0.1;
-          if (heart.position.y <= -0.75) {
-            heart.position.y = -0.75;
+          if (heart.position.y <= -0.55) {
+            heart.position.y = -0.55;
+            toFall = false;
           }
-          toFall = false;
           // let axesheart = new THREE.AxesHelper(4);
           // heart.add(axesheart);
         }
 
         // actions white
-        // if(toBend) {
-        //   if (whiteKittybody.rotation.x <= THREE.Math.degToRad(30)){
-        //     whiteKittybody.rotation.x += 0.02;
-        //     wShoulderR.rotation.x -= 0.03;
-        //     wShoulderR.rotation.y += 0.02;
-        //   }
-        //   toBend = false;
-        //   toGrab = true;
-        // }
-        // if(toGrab) {
-        //     if (selectCat.position.x <= heart.position.x - 2.5 + 1.2 &&
-        //       selectCat.position.x >= heart.position.x - 2.5 - 1.2 &&
-        //       selectCat.position.z <= heart.position.z - 4 + 1.2 &&
-        //       selectCat.position.z >= heart.position.z - 4 - 1.2){
+        if(toBend) {
+          whiteKittybody.rotation.x = THREE.Math.degToRad(30)
+          indicator.rotation.x = whiteKittybody.rotation.x;
+          indicator.rotation.z = whiteKittybody.rotation.z;
+            // whiteKittybody.rotation.x += 0.02;
+            wShoulderR.rotation.x = THREE.Math.degToRad(-60);
+            wShoulderR.rotation.y = THREE.Math.degToRad(-90);
+            toBend = false;
+          
+          setInterval(function() {
+            toGrab = true;
+          }, 1000)
+          
+        }
+        if(toGrab) {
+          whiteKittybody.rotation.x = THREE.Math.degToRad(0);
+          indicator.rotation.x = whiteKittybody.rotation.x;
+          indicator.rotation.z = whiteKittybody.rotation.z;
+          scene.add(heart);
+          wArmDownR.add(heart);
+          heart.position.y = -4
+          heart.position.z = 0.2
+          heart.position.x = -0.8
+          heart.rotation.x = heart.rotation.z = heart.rotation.y = 0
+          toGrab = false;
+          
+          setInterval(function() {
+            toEat = true;
+          }, 1000)
+        
+        }
 
-        //      whiteKittybody.rotation.x = THREE.Math.degToRad(0);
-        //      wArmDownR.add(heart);
-        //      heart.position.set(-0.7,0,0);
-        //      toGrab = false;
-        //      }
-        // }
+        if(toEat) {
+          wElbowR.rotation.y += 0.1;
+          if (wElbowR.rotation.y >= THREE.Math.degToRad(60)){
+            wElbowR.rotation.y = THREE.Math.degToRad(60)
+            setInterval(function(){
+                heart.scale.set(0,0,0);
+                wShoulderR.rotation.y = THREE.Math.degToRad(0); 
+                wShoulderR.rotation.x = THREE.Math.degToRad(0); 
+                wElbowR.rotation.y = THREE.Math.degToRad(0);
+                toEat = false;
+            },1000); 
+            console.log(toEat)
+          }
+        }
 
         //default movimentation
 
@@ -2056,10 +2061,13 @@
         earr.rotation.z +=
           ((Math.sin(Date.now() * 0.01) * Math.PI) / 2) * 0.0015;
           
-        // wShoulderL.rotation.z +=
-        //   ((Math.sin(Date.now() * 0.009) * Math.PI) / 2) * 0.005;
-        // wShoulderR.rotation.z -=
-        //   ((Math.sin(Date.now() * 0.009) * Math.PI) / 2) * 0.005;
+        // white cat movement 
+        // wBell.position.y +=
+        //   ((Math.sin(Date.now() * 0.01) * Math.PI) / 2) * 0.0025;
+        // wBell.position.z -=
+        //   ((Math.sin(Date.now() * 0.01) * Math.PI) / 2) * 0.0025;
+        // wBell.rotation.x += 
+        //   ((Math.sin(Date.now() * 0.01) * Math.PI) / 2) * 0.01;
 
         renderer.render(scene, camera);
         // controls.update();
