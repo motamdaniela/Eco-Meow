@@ -1769,7 +1769,7 @@
               camera.position.x = 0;
               indicator.position.y = 0;
               indicator.rotation.y = 0;
-              if(!(heart.position.y >= 0.3)){
+              if(tree.position.y < 0.3){
                 setTimeout(() => {
                   scene.add(arrowHelp)
                 }, 4000);
@@ -1967,12 +1967,15 @@
           });
           //for the tree and the other 2 cats
           if(tree.position.y > 0.3){
-            if (
-              (selectCat.position.x <= tree.position.x + 2.5 &&
+            if(selectCat.position.x <= tree.position.x + 2.5 &&
                 selectCat.position.x >= tree.position.x - 2.5 &&
                 selectCat.position.z <= tree.position.z + 2.5 &&
-                selectCat.position.z >= tree.position.z - 2.5) ||
-              (selectCat.position.x <= otherKitty1.position.x + 2 &&
+                selectCat.position.z >= tree.position.z - 2.5){
+                  selectCat.position.x = oldPos.x;
+                  selectCat.position.z = oldPos.z;
+                }
+              }
+              if((selectCat.position.x <= otherKitty1.position.x + 2 &&
                 selectCat.position.x >= otherKitty1.position.x - 2 &&
                 selectCat.position.z <= otherKitty1.position.z + 2 &&
                 selectCat.position.z >= otherKitty1.position.z - 2) ||
@@ -1983,9 +1986,7 @@
             ) {
               selectCat.position.x = oldPos.x;
               selectCat.position.z = oldPos.z;
-              return true
             }
-          }
           //for the apple
           if (heart.position.y == -0.55) {
             if (
