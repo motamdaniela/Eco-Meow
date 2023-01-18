@@ -51,6 +51,8 @@
       let obstcls = [];
       let num = 2;
       let selectCat = blackKitty;
+      let arrowHelp;
+      let heartO, heartB, heartW;
 
       // let initialRot =[]
 
@@ -130,12 +132,13 @@
         const colorTongue = new THREE.Color(0xEBA598);
         const colorLightPurple = new THREE.Color(0xdaccff);
         const colorDarkPurple = new THREE.Color(0x766daa);
+        const colorDarkGreen = new THREE.Color(0x97BB8E);
 
         //pointer
         let ind = new THREE.Mesh(
           new THREE.CylinderGeometry(0.1, 0.1, 0.5),
           new THREE.MeshPhongMaterial({
-            color: colorGreen,
+            color: colorDarkGreen,
             flatShading: true,
             shininess: 0,
           })
@@ -145,7 +148,7 @@
         let ind2 = new THREE.Mesh(
           new THREE.CylinderGeometry(0.15, 0.1, 0.5),
           new THREE.MeshPhongMaterial({
-            color: colorGreen,
+            color: colorDarkGreen,
             flatShading: true,
             shininess: 0,
           })
@@ -162,10 +165,30 @@
         indicator.add(ind, ind2, ind3);
         indicator.position.y = -0.15;
         indicator.position.y = 1;
+        indicator.position.z = 3;
         scene.add(indicator);
 
         //-------------
+        //arrow that shows up to help player
 
+        arrowHelp = new THREE.Mesh(
+          new THREE.ConeGeometry(1,1.5,8),
+          new THREE.MeshPhongMaterial({
+            color: colorPurple,
+            transparent: true,
+            opacity: 0.6,
+            flatShading: true,
+            shininess: 0,
+          })
+        );
+
+        arrowHelp.position.set(0,2,-6);
+        arrowHelp.rotation.x = THREE.Math.degToRad(180);
+
+        //-------------
+
+
+        //shape of the apples
         const heartl = new THREE.Mesh(
           new THREE.SphereGeometry(0.5, 6, 6),
           new THREE.MeshStandardMaterial({
@@ -209,10 +232,22 @@
 
         let leaf = indicator.clone();
         leaf.scale.set(0.8, 0.8, 0.8);
+        leaf.position.z = 0;
         leaf.position.y = 2;
         heart = new THREE.Group();
         heart.add(heartl, heartr, heartbase, midl, midr, leaf);
         heart.castShadow = heart.receiveShadow = true;
+
+        //hearts for the end of the game------
+        let newheartl = heartl.clone(), newheartr = heartr.clone(), newheartbase = heartbase.clone(), newmidl = midl.clone(), newmidr = midr.clone()
+        heartO = new THREE.Group();
+        heartO.add(newheartl,newheartr,newheartbase,newmidl, newmidr);
+        heartO.position.y = 3
+        heartO.scale.set(0.5,0.5,0.5)
+
+        heartB = heartO.clone();
+        heartW = heartO.clone();
+        
 
         // background
 
@@ -233,7 +268,7 @@
 
         spot = new THREE.Mesh(new THREE.PlaneGeometry(9, 9), material);
         spot.rotation.x = THREE.Math.degToRad(-90);
-        spot.position.set(0, -0.7, -7);
+        spot.position.set(0, -0.7, -6);
         spot.receiveShadow = true;
         scene.add(spot);
 
@@ -1647,6 +1682,8 @@
         whiteKitty.position.x = 5;
         scene.add(whiteKitty);
 
+        whiteKitty.position.z = blackKitty.position.z = orangeKitty.position.z = 3;
+
         // ------------------------------------------------------------
 
         for (let i = 0; i < treeTop.geometry.attributes.position.count; i++) {
@@ -1668,6 +1705,7 @@
         function grow() {
           if (i == 0) {
             scene.add(tree);
+            scene.remove(arrowHelp);
             tree.position.y = -0.5;
             i++;
           } else if (i < 4 && i != 0) {
@@ -1702,6 +1740,11 @@
               camera.position.x = 0;
               indicator.position.y = 0;
               indicator.rotation.y = 0;
+              if(!(heart.position.y >= 0.3)){
+                setTimeout(() => {
+                  scene.add(arrowHelp)
+                }, 4000);
+              }
             }
           } else if (started) {
             if (e.key == "ArrowRight") {
@@ -1747,7 +1790,7 @@
               whiteKitty.position.x >= heart.position.x - 2 - 1.8 &&
               whiteKitty.position.z <= heart.position.z + 2 + 1.8 &&
               whiteKitty.position.z >= heart.position.z + 2 - 1.8 ){
-              toBend = true;
+              toBend = true;;
             } 
 
           }
@@ -1893,24 +1936,27 @@
             }
           });
           //for the tree and the other 2 cats
-          if (
-            (selectCat.position.x <= tree.position.x + 2.5 &&
-              selectCat.position.x >= tree.position.x - 2.5 &&
-              selectCat.position.z <= tree.position.z + 2.5 &&
-              selectCat.position.z >= tree.position.z - 2.5) ||
-            (selectCat.position.x <= otherKitty1.position.x + 2 &&
-              selectCat.position.x >= otherKitty1.position.x - 2 &&
-              selectCat.position.z <= otherKitty1.position.z + 2 &&
-              selectCat.position.z >= otherKitty1.position.z - 2) ||
-            (selectCat.position.x <= otherKitty2.position.x + 2 &&
-              selectCat.position.x >= otherKitty2.position.x - 2 &&
-              selectCat.position.z <= otherKitty2.position.z + 2 &&
-              selectCat.position.z >= otherKitty2.position.z - 2)
-          ) {
-            selectCat.position.x = oldPos.x;
-            selectCat.position.z = oldPos.z;
-            //for the apple
+          if(tree.position.y > 0.3){
+            if (
+              (selectCat.position.x <= tree.position.x + 2.5 &&
+                selectCat.position.x >= tree.position.x - 2.5 &&
+                selectCat.position.z <= tree.position.z + 2.5 &&
+                selectCat.position.z >= tree.position.z - 2.5) ||
+              (selectCat.position.x <= otherKitty1.position.x + 2 &&
+                selectCat.position.x >= otherKitty1.position.x - 2 &&
+                selectCat.position.z <= otherKitty1.position.z + 2 &&
+                selectCat.position.z >= otherKitty1.position.z - 2) ||
+              (selectCat.position.x <= otherKitty2.position.x + 2 &&
+                selectCat.position.x >= otherKitty2.position.x - 2 &&
+                selectCat.position.z <= otherKitty2.position.z + 2 &&
+                selectCat.position.z >= otherKitty2.position.z - 2)
+            ) {
+              selectCat.position.x = oldPos.x;
+              selectCat.position.z = oldPos.z;
+              return true
+            }
           }
+          //for the apple
           if (heart.position.y == -0.55) {
             if (
               selectCat.position.x <= heart.position.x - 2.5 + 1.2 &&
@@ -1929,6 +1975,36 @@
       };
 
       function render() {
+        heartO.position.x = orangeKitty.position.x
+        heartO.position.z = orangeKitty.position.z
+        heartB.position.x = blackKitty.position.x
+        heartB.position.z = blackKitty.position.z
+        heartW.position.x = whiteKitty.position.x
+        heartW.position.z = whiteKitty.position.z
+
+        //heart animations for the end of the game
+        heartO.position.y -= 0.04;
+        heartO.scale.x = heartO.scale.z = heartO.scale.y += 0.015
+        if(heartO.scale.x >= 1){
+          heartO.position.y = 3
+          heartO.scale.x = heartO.scale.z = heartO.scale.y = 0.1
+        }
+        heartB.position.y -= 0.04;
+        heartB.scale.x = heartB.scale.z = heartB.scale.y += 0.015
+        if(heartB.scale.x >= 1){
+          heartB.position.y = 3
+          heartB.scale.x = heartB.scale.z = heartB.scale.y = 0.1
+        }
+        heartW.position.y -= 0.04;
+        heartW.scale.x = heartW.scale.z = heartW.scale.y += 0.015
+        if(heartW.scale.x >= 1){
+          heartW.position.y = 3
+          heartW.scale.x = heartW.scale.z = heartW.scale.y = 0.1
+        }
+
+
+        arrowHelp.position.y -= (Math.sin(Date.now() * 0.008) * Math.PI/2 * 0.04)
+
         oEarL.rotation.x +=
           ((Math.sin(Date.now() * 0.01) * Math.PI) / 2) * 0.01;
         oEarR.rotation.x +=
@@ -1999,6 +2075,13 @@
           if (heart.position.y <= -0.55) {
             heart.position.y = -0.55;
             toFall = false;
+            setTimeout(() => {
+              arrowHelp.position.x = -2;
+              arrowHelp.position.z = 0;
+              if(heart.position.y == -0.55){
+                scene.add(arrowHelp)
+              }
+            }, 4000);
           }
           // let axesheart = new THREE.AxesHelper(4);
           // heart.add(axesheart);
@@ -2012,6 +2095,7 @@
           wShoulderR.rotation.x = THREE.Math.degToRad(-60);
           wShoulderR.rotation.y = THREE.Math.degToRad(-90);
           toBend = false;
+          scene.remove(arrowHelp)
           
           setInterval(function() {
             toGrab = true;
@@ -2045,8 +2129,10 @@
                 wShoulderR.rotation.x = THREE.Math.degToRad(0); 
                 wElbowR.rotation.y = THREE.Math.degToRad(0);
                 toEat = false;
-            },800); 
-            console.log(toEat)
+              },800); 
+              setTimeout(() => {
+                scene.add(heartO, heartB, heartW)
+              }, 1400);
           }
         }
 
