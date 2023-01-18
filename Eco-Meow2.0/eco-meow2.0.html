@@ -37,7 +37,10 @@
         oEarR;
       let started = false;
 
-      let heart, tree, treeTop, indicator, spot, bbHelper;
+      let heart, tree, treeTop, indicator, spot, bbHelper, arm1;
+
+      let n=0;
+      let waterTree=false;
 
       let shoulderl, elbowl, shoulderr, elbowr;
       let legl, legr, armUpl, armUpr, forearml, forearmr, earl, earr, tail;
@@ -911,7 +914,7 @@
         oArmR2.position.z = 0;
         oArmR2.rotation.x = 0;
 
-        let arm1 = new THREE.Group();
+        arm1 = new THREE.Group();
         arm1.add(oArmL, oArmL2);
 
         let arm2 = new THREE.Group();
@@ -1703,20 +1706,46 @@
 
         let i = 0;
         function grow() {
-          if (i == 0) {
+          if(n==0){
+            n=1
+            waterTree=true
             scene.add(tree);
             scene.remove(arrowHelp);
             tree.position.y = -0.5;
-            i++;
-          } else if (i < 4 && i != 0) {
-            tree.scale.set(i / 3, i / 3, i / 3);
-            heart.scale.set(i / 3, i / 3, i / 3);
-            scene.add(tree);
-            scene.add(heart);
-            tree.position.y += 0.3;
-            heart.position.y += 0.3;
-            i++;
+            setTimeout(function () {
+              tree.scale.set(1 / 3, 1 / 3, 1 / 3);
+              heart.scale.set(1 / 3, 1 / 3, 1 / 3);
+              tree.position.y += 0.3;
+              heart.position.y += 0.3;
+              scene.add(heart)
+              setTimeout(function () {
+              tree.scale.set(2 / 3, 2 / 3, 2 / 3);
+              heart.scale.set(2 / 3, 2 / 3, 2 / 3);
+              tree.position.y += 0.3;
+              heart.position.y += 0.3;
+              setTimeout(function () {
+              tree.scale.set(1, 1, 1 );
+              heart.scale.set(1, 1, 1 );
+              tree.position.y += 0.3;
+              heart.position.y += 0.3;
+              waterTree=false
+            },500)
+            },500)
+            },500)
           }
+          // if (i == 0) {
+          //   scene.add(tree);
+          //   tree.position.y = -0.5;
+          //   i++;
+          // } else if (i < 4 && i != 0) {
+          //   tree.scale.set(i / 3, i / 3, i / 3);
+          //   heart.scale.set(i / 3, i / 3, i / 3);
+          //   scene.add(tree);
+          //   scene.add(heart);
+          //   tree.position.y += 0.3;
+          //   heart.position.y += 0.3;
+          //   i++;
+          // }
         }
 
         function handleKeyDown(e) {
@@ -1775,14 +1804,15 @@
                 toFall = true;
               }, 500);
             } else if (e.key == "x" && num == 1) {
-              arm1.rotation.x +=
-                ((Math.sin(Date.now() * 0.01) * Math.PI) / 2) * 0.03;
+              // arm1.rotation.x +=
+              //   ((Math.sin(Date.now() * 0.01) * Math.PI) / 2) * 0.03;
               if (
                 spot.position.z + 4 > orangeKitty.position.z &&
                 orangeKitty.position.z > spot.position.z - 4 &&
                 spot.position.x + 4 > orangeKitty.position.x &&
                 orangeKitty.position.x > spot.position.x - 4
               ) {
+                waterTree=true
                 grow();
               }
             } else if (e.key == "x" && num == 3 && heart.position.y == -0.55 && 
@@ -2017,6 +2047,16 @@
           indicator.rotation.y += 0.02;
           indicator.position.y +=
             ((Math.sin(Date.now() * 0.0025) * Math.PI) / 2) * 0.008;
+        }
+
+        if(waterTree){
+          arm1.rotation.x +=
+          ((Math.sin(Date.now() * 0.01) * Math.PI) / 2) * 0.03;
+          setInterval(function(){
+            arm1.rotation.x =0
+            waterTree=false
+          },2000)
+
         }
 
         if (toShake) {
