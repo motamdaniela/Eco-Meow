@@ -67,7 +67,7 @@
 
         camera.position.z = 15;
         camera.position.x = 0;
-        camera.position.y = 4;
+        camera.position.y = 6;
 
         camera.lookAt(scene.position); //point the camera to the center of the scene
 
@@ -187,6 +187,7 @@
 
         arrowHelp.position.set(0,2,-7);
         arrowHelp.rotation.x = THREE.Math.degToRad(180);
+        arrowHelp.castShadow = true;
 
         //-------------
 
@@ -2068,7 +2069,7 @@
 
         }
 
-        if (toShake) {
+        if (toShake && tree.position.y > 0.6) {
         // let BBox = new THREE.Box3().setFromObject(heart);
         // bbHelper = new THREE.BoxHelper(heart, 0x00FFFF);
         // scene.add(bbHelper);
