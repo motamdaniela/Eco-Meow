@@ -67,7 +67,7 @@
 
         camera.position.z = 15;
         camera.position.x = 0;
-        camera.position.y = 6;
+        camera.position.y = 8;
 
         camera.lookAt(scene.position); //point the camera to the center of the scene
 
@@ -355,26 +355,24 @@
 
         //board with instructions----------------------------------------------------
 
-        const boardGeometries = [];
-
-        const colorboard = [];
-        const boardbase = new THREE.CylinderGeometry(0.2, 0.2, 3, 6);
-        for (let i = 0; i < boardbase.attributes.position.count; i++)
-          colorboard.push(colorBrown.r, colorBrown.g, colorBrown.b);
-        boardbase.setAttribute(
-          "color",
-          new THREE.BufferAttribute(new Float32Array(colorboard), 3)
+        const boardbase = new THREE.Mesh(
+           new THREE.CylinderGeometry(0.2, 0.2, 5, 6),
+           new THREE.MeshPhongMaterial({
+            color: colorBrown,
+            flatShading: true,
+            shininess: 0,
+          })
         );
-        boardGeometries.push(boardbase);
 
-        const boardplack = new THREE.BoxGeometry(5, 4, 0.3);
-        boardplack.setAttribute(
-          "color",
-          new THREE.BufferAttribute(new Float32Array(colorboard), 3)
-        );
-        boardGeometries.push(boardplack);
+        const boardplack = new THREE.Mesh(
+          new THREE.BoxGeometry(5, 4, 0.3),
+          new THREE.MeshPhongMaterial({
+            color: colorBrown,
+            flatShading: true,
+            shininess: 0,
+          }))
 
-        const colorWhitePart = [];
+        boardplack.rotateX = 1.6
 
         let texturei = new THREE.TextureLoader().load("./libs/instrucoes.png");
         let materiali = new THREE.MeshPhongMaterial({
@@ -386,29 +384,24 @@
           new THREE.BoxGeometry(4.5, 3.5, 0.3),
           materiali
         );
-        scene.add(info);
-
-        boardbase.translate(-12, 0, 5);
-        boardplack.translate(-12, 3.5, 5);
+        
+        boardbase.position.set(-12, 1, 5);
+        boardplack.position.set(-12, 3.5, 5.09);
         info.position.y = 3.5;
         info.position.z = 5.1;
         info.position.x = -12;
 
-        const board = new THREE.Mesh(
-          BufferGeometryUtils.mergeBufferGeometries(boardGeometries),
-          new THREE.MeshPhongMaterial({
-            vertexColors: true,
-            flatShading: true,
-            shininess: 0,
-          })
-        );
-
-        info.castShadow =
+        let board = new THREE.Group();
+        board.add(boardbase, boardplack, info);
+          
+          info.castShadow =
           info.receiveShadow =
           board.castShadow =
           board.receiveShadow =
-            true;
-        scene.add(board);
+          true;
+
+          info.rotation.x = boardplack.rotation.x = THREE.Math.degToRad(-30)
+          scene.add(board)
 
         let infoPos = info.position.clone();
         obstcls.push(infoPos);
