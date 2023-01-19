@@ -53,7 +53,7 @@
       let vertsTree = [];
       let obstcls = [];
       let num = 2;
-      let selectCat = blackKitty;
+      let selectCat = orangeKitty;
       let arrowHelp;
       let heartO, heartB, heartW;
 
@@ -166,7 +166,6 @@
 
         indicator = new THREE.Group();
         indicator.add(ind, ind2, ind3);
-        indicator.position.y = -0.15;
         indicator.position.y = 1;
         indicator.position.z = 3;
         scene.add(indicator);
@@ -1802,7 +1801,7 @@
               Actions(e);
               Walk(e);
             } else if (
-              e.key == "x" && num == 2 &&
+              e.key == "x" && num == 2 && n == 1 &&
               blackKitty.position.x <= tree.position.x + 3.5 &&
               blackKitty.position.x >= tree.position.x - 3.5 &&
               blackKitty.position.z <= tree.position.z + 3.5 &&
@@ -2069,7 +2068,7 @@
 
         }
 
-        if (toShake && tree.position.y > 0.6) {
+        if (toShake) {
         // let BBox = new THREE.Box3().setFromObject(heart);
         // bbHelper = new THREE.BoxHelper(heart, 0x00FFFF);
         // scene.add(bbHelper);
