@@ -19,7 +19,6 @@
       import * as THREE from "./libs/three.module.js";
       import * as BufferGeometryUtils from "./libs/BufferGeometryUtils.js";
 
-      // const geometry = new BufferGeometry();
       let controls;
       let camera, scene, renderer;
 
@@ -57,8 +56,6 @@
       let arrowHelp;
       let heartO, heartB, heartW;
 
-      // let initialRot =[]
-
       window.onload = function init() {
         scene = new THREE.Scene();
 
@@ -74,7 +71,7 @@
         renderer = new THREE.WebGLRenderer();
         renderer.setSize(window.innerWidth, window.innerHeight); // set output canvas and viewport size
 
-        controls = new OrbitControls(camera, renderer.domElement);
+        // controls = new OrbitControls(camera, renderer.domElement);
 
         // configure renderer clear color
         renderer.setClearColor("#9BD4C3");
@@ -84,12 +81,7 @@
         // add the output of the renderer to an HTML element (adds a Canvas element to the body)
         document.body.appendChild(renderer.domElement);
 
-        // const axeHelper = new THREE.AxesHelper(5);
-        // scene.add(axeHelper);
-
         //----------------------------------------------------------------
-        // lights
-        // let light = new THREE.AmbientLight(0xffffff, 0.7);
         let light = new THREE.AmbientLight(0xeae178, 0.7);
         scene.add(light);
 
@@ -102,12 +94,6 @@
         let light3 = new THREE.PointLight(0xffffff, 0.5, 100);
         light3.position.set(5, 8, 7);
         scene.add(light3);
-        // light helper
-        let pointLightHelper = new THREE.PointLightHelper(light2, 0.4);
-        let pointLightHelper1 = new THREE.PointLightHelper(light3, 0.4);
-        // pointLightHelper.name = "helper";
-        // scene.add(pointLightHelper);
-        // scene.add(pointLightHelper1);
 
         // ----------
         // colors
@@ -281,7 +267,6 @@
         const treeupPart = new THREE.TorusGeometry(2.3, 1.5, 10, 15);
         for (let i = 0; i < treeupPart.attributes.position.count; i++)
           colorTree.push(colorGreen.r, colorGreen.g, colorGreen.b);
-        // add color attribute to the upPart buffer geometry
         treeupPart.setAttribute(
           "color",
           new THREE.BufferAttribute(new Float32Array(colorTree), 3)
@@ -329,7 +314,7 @@
             shininess: 0,
           })
         );
-        // insidePart.position.z = -2;
+        
         insidePart.position.y = 5.2;
 
         let apple1 = heart.clone(),
@@ -342,16 +327,11 @@
         tree = new THREE.Group();
         tree.add(treeTop, treeTrunk, apple1, apple2, insidePart);
         
-        // let axesheart = new THREE.AxesHelper(4);
-        // heart.add(axesheart);
         heart.position.set(0.2, 0.4, -3.2);
         heart.scale.set(1 / 3, 1 / 3, 1 / 3);
         
-
         tree.position.z = -7;
         tree.scale.set(1 / 3, 1 / 3, 1 / 3);
-
-        // scene.add(tree);
 
         //board with instructions----------------------------------------------------
 
@@ -646,10 +626,6 @@
         smallBushes3.translate(22, 0, -3);
         bgGeometries.push(smallBushes1, smallBushes2, smallBushes3);
 
-        // let bushPos = bush.position.clone();
-        // let bigBushPos = bigBush.position.clone(); let smallBushPos = smallBush.position.clone();
-        // obstcls.push(bushPos, bigBushPos, smallBushPos)
-        // obstcls.push(bush, bigBush, smallBush, bigBush1, bigBush2, bigBush3, bigBush4, bigBush5, bigBush6, bigBush7,bush1, bush2, bush3, bush4, smallBush1, smallBush2, smallBush3, smallBush4, bigBushes1, bigBushes2,Bushes1, Bushes2)
         //----------------------------------------------------------------
 
         // orange cat
@@ -1018,7 +994,6 @@
 
         const body = new THREE.BoxGeometry(1.5, 1, 1);
         const colorsBody = []; // array of colors for each vertex of the leaves geometry
-        // Do this ONLY ONCE, since ALL 3 level catGeometries have the SAME number of vertices
         for (let i = 0; i < body.attributes.position.count; i++)
           colorsBody.push(colorGray.r, colorGray.g, colorGray.b);
         //body
@@ -1597,7 +1572,6 @@
         wShiny.castShadow = true;
         wShiny.receiveShadow = true;
 
-        // move it move it
         // legs
         let wLegL = new THREE.Mesh(
         new THREE.BoxGeometry(0.5, 0.75, 0.6),
@@ -1731,22 +1705,6 @@
             },500)
             },500)
           }
-
-
-          // if (i == 0) {
-          //   scene.add(tree);
-          //   scene.add(heart);
-          //   tree.position.y = -0.5;
-          //   heart.position.z= -5.5
-          //   heart.position.y= -0.3
-          //   i++;
-          // } else if (i < 4 && i != 0) {
-          //   tree.scale.set(i / 3, i / 3, i / 3);
-          //   heart.scale.set(i / 3, i / 3, i / 3);
-          //   tree.position.y += 0.3;
-          //   heart.position.y += 0.3;
-          //   i++;
-          // }
         }
 
         function handleKeyDown(e) {
@@ -1805,8 +1763,6 @@
                 toFall = true;
               }, 500);
             } else if (e.key == "x" && num == 1) {
-              // arm1.rotation.x +=
-              //   ((Math.sin(Date.now() * 0.01) * Math.PI) / 2) * 0.03;
               if (
                 spot.position.z + 4 > orangeKitty.position.z &&
                 orangeKitty.position.z > spot.position.z - 4 &&
@@ -1967,16 +1923,11 @@
             }
           });
           //for the tree and the other 2 cats
-          if(tree.position.y > 0.3){
-            if(selectCat.position.x <= tree.position.x + 2.5 &&
+            if((selectCat.position.x <= tree.position.x + 2.5 &&
                 selectCat.position.x >= tree.position.x - 2.5 &&
                 selectCat.position.z <= tree.position.z + 2.5 &&
-                selectCat.position.z >= tree.position.z - 2.5){
-                  selectCat.position.x = oldPos.x;
-                  selectCat.position.z = oldPos.z;
-                }
-              }
-              if((selectCat.position.x <= otherKitty1.position.x + 2 &&
+                selectCat.position.z >= tree.position.z - 2.5) ||
+              (selectCat.position.x <= otherKitty1.position.x + 2 &&
                 selectCat.position.x >= otherKitty1.position.x - 2 &&
                 selectCat.position.z <= otherKitty1.position.z + 2 &&
                 selectCat.position.z >= otherKitty1.position.z - 2) ||
@@ -2062,9 +2013,6 @@
         }
 
         if (toShake) {
-        // let BBox = new THREE.Box3().setFromObject(heart);
-        // bbHelper = new THREE.BoxHelper(heart, 0x00FFFF);
-        // scene.add(bbHelper);
           shoulderl.rotation.y = THREE.Math.degToRad(60);
           shoulderr.rotation.y = THREE.Math.degToRad(-60);
           elbowl.rotation.z = -THREE.Math.degToRad(20);
@@ -2125,8 +2073,6 @@
               }
             }, 4000);
           }
-          // let axesheart = new THREE.AxesHelper(4);
-          // heart.add(axesheart);
         }
 
         // actions white
@@ -2213,7 +2159,6 @@
           ((Math.sin(Date.now() * 0.01) * Math.PI) / 2) * 0.01;
 
         renderer.render(scene, camera);
-        // controls.update();
 
         for (let i = 0; i < bg.geometry.attributes.position.count; i++) {
           let vprops = verts[i];
